@@ -1,0 +1,728 @@
+@import url("https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap");
+:root {
+  color-scheme: light;
+
+  /* Font */
+  /* @link https://utopia.fyi/type/calculator?c=380,16,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+  --fs-100: clamp(0.6944rem, 0.6478rem + 0.1964vw, 0.8rem);
+  --fs-200: clamp(0.8333rem, 0.7597rem + 0.3101vw, 1rem);
+  --fs-300: clamp(1rem, 0.8895rem + 0.4651vw, 1.25rem);
+  --fs-400: clamp(1.2rem, 1.0398rem + 0.6744vw, 1.5625rem);
+  --fs-500: clamp(1.44rem, 1.2133rem + 0.9547vw, 1.9531rem);
+  --fs-600: clamp(1.728rem, 1.4128rem + 1.3273vw, 2.4414rem);
+  --fs-700: clamp(2.0736rem, 1.6414rem + 1.8198vw, 3.0518rem);
+  --fs-800: clamp(2.4883rem, 1.9022rem + 2.4677vw, 3.8147rem);
+  /* Space */
+  /* @link https://utopia.fyi/space/calculator?c=380,16,1.2,1240,20,1.25,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+  --space-3xs: clamp(0.25rem, 0.2224rem + 0.1163vw, 0.3125rem);
+  --space-2xs: clamp(0.5rem, 0.4448rem + 0.2326vw, 0.625rem);
+  --space-xs: clamp(0.75rem, 0.6672rem + 0.3488vw, 0.9375rem);
+  --space-s: clamp(1rem, 0.8895rem + 0.4651vw, 1.25rem);
+  --space-m: clamp(1.5rem, 1.3343rem + 0.6977vw, 1.875rem);
+  --space-l: clamp(2rem, 1.7791rem + 0.9302vw, 2.5rem);
+  --space-xl: clamp(3rem, 2.6686rem + 1.3953vw, 3.75rem);
+  --space-2xl: clamp(4rem, 3.5581rem + 1.8605vw, 5rem);
+  --space-3xl: clamp(6rem, 5.3372rem + 2.7907vw, 7.5rem);
+
+  /* Blues */
+  --bg-blue-50: hsl(214, 100%, 97%);
+  --bg-blue-200: hsl(213, 94%, 85%);
+  --bg-blue-700: hsl(217, 91%, 37%);
+  --bg-blue-800: hsl(217, 91%, 30%);
+  --bg-sky-100: hsl(204, 93%, 94%);
+  --bg-sky-200: hsl(200, 94%, 86%);
+  --text-blue-100: hsl(214, 100%, 91%);
+  --text-blue-200: hsl(213, 97%, 87%);
+  --text-blue-700: hsl(224, 76%, 48%);
+  --border-blue-700: hsl(217, 91%, 37%);
+
+  /* Slates */
+  --bg-slate-500: hsl(215.3, 16.3%, 46.9%);
+  --bg-slate-600: hsl(215.4, 19.3%, 34.5%);
+  --bg-slate-700: hsl(215.3, 25%, 26.7%);
+  --bg-slate-800: hsl(215.4, 31.8%, 17.1%);
+  --bg-slate-900: hsl(222.2, 47.4%, 11.2%);
+  --text-slate-100: hsl(210, 40%, 96%);
+  --text-slate-200: hsl(214, 32%, 91%);
+  --text-slate-300: hsl(213, 27%, 84%);
+  --border-slate-600: hsl(215.4, 19.3%, 34.5%);
+
+  /* Light Theme */
+  --background-gradient-1: var(--bg-blue-50);
+  --background-gradient-2: var(--bg-sky-100);
+  --background-header: var(--bg-blue-800);
+  --background-item: var(--bg-blue-200);
+  --background-modal: var(--bg-sky-100);
+  --border-color: var(--border-blue-700);
+  --button-background: var(--bg-blue-700);
+  --button-hover: var(--bg-blue-800);
+  --card-revealed: var(--bg-sky-200);
+  --text-accent: var(--text-blue-100); /* h1/button/scores text */
+  --text-primary: var(--text-blue-700);
+  --text-secondary: var(--text-blue-200);
+
+  --border: 4px solid var(--border-color);
+  --border2: 2px solid var(--border-color);
+
+  --match-color-1: hsl(42, 95%, 72%); /* Warm Yellow */
+  --match-color-2: hsl(20, 97%, 68%); /* Peach Orange */
+  --match-color-3: hsl(209, 26%, 76%); /* Light Steel Blue */
+  --match-color-4: hsl(347, 61%, 56%); /* Rose Pink */
+  --match-color-5: hsl(302, 22%, 44%); /* Purple */
+  --match-color-6: hsl(151, 47%, 72%); /* Pastel Mint Green */
+  --match-color-7: hsl(209, 22%, 55%); /* Steel Gray */
+  --match-color-8: hsl(240, 40%, 50%); /* Muted Cornflower Blue */
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Dark Theme */
+    --background-gradient-1: var(--bg-slate-900);
+    --background-gradient-2: var(--bg-slate-800);
+    --background-header: var(--bg-slate-800);
+    --background-item: var(--bg-slate-600);
+    --background-modal: var(--bg-slate-800);
+    --border-color: var(--border-slate-600);
+    --button-background: var(--bg-slate-600);
+    --button-hover: var(--bg-slate-500);
+    --card-revealed: var(--bg-slate-700);
+    --text-accent: var(--text-slate-200); /* h1,button,scores text */
+    --text-primary: var(--text-slate-100);
+    --text-secondary: var(--text-slate-300);
+  }
+}
+
+/* ///////////////
+  Reset
+  ////////////// */
+
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* remove all margin and padding,
+remove all default font sizes and font weights */
+/* * {
+    margin: 0;
+    padding: 0;
+    font: inherit;
+} */
+
+/* set default to dark mode and follows the user preference */
+html {
+  color-scheme: dark light;
+}
+
+/* set minimal height on the body */
+body {
+  min-height: 100vh;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+}
+
+/* Remove defaults for ul with a class */
+ul[class],
+ol[class] {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Make images and videos responsive */
+img,
+picture,
+svg,
+video {
+  max-width: 100%;
+  display: block;
+}
+
+input,
+textarea,
+button,
+select {
+  font: inherit;
+}
+
+/* Baseline for default links */
+a:not([class]) {
+  /* Relatively sized thickness and offset */
+  text-decoration-thickness: max(0.08em, 1px);
+  text-underline-offset: 0.15em;
+}
+
+/* Scroll padding allowance below focused elements
+  to ensure they are clearly in view */
+:focus {
+  scroll-padding-block-end: 8vh;
+}
+
+/* a keyboard user who accesses elements through tabbing will see a visible focus style. */
+:is(a, button, input, textarea, summary, select):focus-visible {
+  --outline-size: max(2px, 0.08em);
+  --outline-color: var(--button-background);
+
+  outline: var(--outline-width, var(--outline-size)) var(--outline-style, solid)
+    var(--outline-color, currentColor);
+  outline-offset: var(--outline-offset, var(--outline-size));
+}
+
+:is(a, button, input, textarea, summary, select):focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ///////////////
+  General Layout
+  ////////////// */
+
+body {
+  font-family: "Parkinsans", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue",
+    sans-serif;
+  font-optical-sizing: auto;
+  font-size: var(--fs-300);
+  text-align: center;
+  background-image: linear-gradient(
+    to bottom,
+    var(--background-gradient-1),
+    var(--background-gradient-2)
+  );
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+.container {
+  --container-max: 70rem;
+  width: min(100% - 3rem, var(--container-max, 60ch));
+  margin-inline: auto;
+}
+
+/* Header Styles */
+.header {
+  background-color: var(--background-header);
+  box-shadow: 0 5px 15px hsla(0, 0%, 2%, 0.2);
+  padding-block: var(--space-s);
+}
+
+.header-content {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.pairs-input-container {
+  grid-row: 2;
+  grid-column: 2;
+  align-self: center;
+  display: flex;
+  align-items: center;
+}
+
+.pairs-input {
+  width: 3rem;
+  max-width: fit-content;
+  border: none;
+  background-color: transparent;
+  color: var(--text-secondary);
+  text-align: center;
+  padding: 0;
+}
+
+.pairs-input:focus-visible {
+  --outline-color: var(--text-secondary);
+}
+
+.pairs-input-lable {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+
+  font-size: var(--fs-300);
+  color: var(--text-secondary);
+  max-width: fit-content;
+}
+
+.adjust-icon {
+  vertical-align: middle;
+  fill: currentColor; /* Add this line to ensure the SVG takes the current text color */
+}
+
+.header-title {
+  grid-row: 1;
+  grid-column: 2;
+  color: var(--text-accent);
+  font-size: var(--fs-800);
+  font-weight: 700;
+  text-shadow: 2px 2px 4px hsla(0, 0%, 2%, 0.1);
+  letter-spacing: 1px;
+}
+
+.tries-display {
+  grid-row: 2;
+  grid-column: 2;
+  justify-self: end;
+  align-self: center;
+  font-size: inherit;
+  color: var(--text-secondary);
+  max-width: fit-content;
+}
+
+.player-scores {
+  grid-row: 3;
+  grid-column: 1 / -1;
+  display: none; /* Will change to "display: flex" when players are added */
+  gap: var(--space-l);
+  flex-wrap: wrap;
+  justify-content: center;
+  font-size: var(--fs-400);
+  color: var(--text-accent);
+  margin-top: var(--space-s);
+}
+
+.current-player {
+  font-weight: bold;
+  color: hsl(47, 81%, 45%);
+}
+
+/* Game Board / Card Styles */
+.game-board {
+  --gap: var(--space-3xs);
+  --number-of-columns: 2;
+  /* display: grid; */
+  /* grid-template-columns: repeat(var(--number-of-columns), 1fr); */
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--gap);
+  place-content: center;
+  margin-top: var(--space-s);
+}
+
+.game-board:has(.card:nth-child(n + 9)) {
+  --number-of-columns: 3;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card {
+  aspect-ratio: 1;
+  flex-basis: calc(
+    (100% - (var(--gap) * (var(--number-of-columns) - 0.99))) /
+      var(--number-of-columns)
+  );
+  background-color: var(--background-item);
+  border: var(--border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.6s, box-shadow 0.3s;
+  transform-style: preserve-3d;
+  perspective: 1000px;
+  box-shadow: 0 2px 5px hsla(0, 0%, 2%, 0.1);
+
+  animation: slideIn 0.5s ease-out;
+  animation-fill-mode: backwards;
+  animation-delay: calc(var(--index, 0) * 0.075s);
+}
+
+.card:hover {
+  box-shadow: 0 5px 15px var(--box-shadow, hsla(0, 0%, 2%, 0.4));
+}
+
+.card.revealed {
+  background-color: var(--card-revealed);
+  transform: rotateY(180deg);
+}
+
+.card.matched {
+  background-color: var(--background-item);
+  background-color: transparent;
+  pointer-events: none;
+}
+
+.card.matched-1 {
+  --box-shadow: var(--match-color-1);
+  border-color: var(--match-color-1);
+}
+.card.matched-2 {
+  --box-shadow: var(--match-color-2);
+  border-color: var(--match-color-2);
+}
+.card.matched-3 {
+  --box-shadow: var(--match-color-3);
+  border-color: var(--match-color-3);
+}
+.card.matched-4 {
+  --box-shadow: var(--match-color-4);
+  border-color: var(--match-color-4);
+}
+.card.matched-5 {
+  --box-shadow: var(--match-color-5);
+  border-color: var(--match-color-5);
+}
+.card.matched-6 {
+  --box-shadow: var(--match-color-6);
+  border-color: var(--match-color-6);
+}
+.card.matched-7 {
+  --box-shadow: var(--match-color-7);
+  border-color: var(--match-color-7);
+}
+.card.matched-8 {
+  --box-shadow: var(--match-color-8);
+  border-color: var(--match-color-8);
+}
+
+.card.hidden {
+  transform: rotateY(0deg);
+}
+
+.card .number {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: var(--fs-800);
+  color: var(--text-primary);
+  transform: rotateY(0deg);
+}
+
+.card .word {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  font-size: var(--fs-700);
+  color: var(--text-primary);
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotateY(180deg);
+}
+
+/* Update the image styles */
+.card .image {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: rotateY(180deg);
+}
+
+.card .image img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: cover;
+}
+
+.card .player-tag {
+  position: absolute;
+  bottom: var(--space-3xs);
+  left: 50%;
+  transform: translateX(-50%) rotateY(180deg); /* Add translateX for centering */
+  font-size: var(--fs-100);
+  opacity: 0.7;
+  color: var(--text-primary);
+  padding: var(--space-3xs);
+  /* Add these properties to counter the card rotation */
+  /* transform: rotateY(180deg); */
+  backface-visibility: hidden;
+}
+
+.matched .image,
+.matched .word {
+  opacity: 0.5;
+  transition: opacity 2s ease-in;
+}
+
+/* Button Styles */
+button {
+  padding: var(--space-2xs) var(--space-s);
+  transition: background-color 0.2s;
+  min-width: fit-content;
+}
+
+button,
+select {
+  --outline-color: var(--button-background);
+  border: var(--border2);
+  border-radius: 0.25rem;
+  background-color: var(--button-background);
+  font-size: inherit;
+  color: var(--text-accent);
+  margin-top: var(--space-s);
+  cursor: pointer;
+}
+
+button:hover,
+select:hover {
+  background-color: var(--button-hover);
+  box-shadow: 0 2px 5px hsla(0, 0%, 2%, 0.1);
+}
+
+/* Unit Selector Styles */
+select {
+  appearance: none;
+  padding: var(--space-2xs) var(--space-l) var(--space-2xs) var(--space-s);
+  /* Add a custom dropdown arrow */
+  background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23000000%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E");
+  background-repeat: no-repeat;
+  background-position: right 15px top 50%;
+  background-size: 12px auto;
+  transition: all 0.2s ease;
+}
+
+optgroup {
+  font-weight: bold;
+  font-size: inherit;
+  padding: var(--space-3xs);
+  background-color: var(--background-item);
+}
+
+option {
+  font-weight: normal;
+  padding: var(--space-2xs);
+  font-size: inherit;
+  background-color: var(--background-item);
+}
+
+/* Player input Styles */
+.player-input-wrapper {
+  display: flex;
+  flex-direction: row;
+  gap: var(--space-3xs);
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-l);
+}
+
+.player-names-input {
+  width: 21ch;
+  height: 6ch;
+  padding: var(--space-3xs);
+  border: var(--border2);
+  border-radius: 0.25rem;
+  background-color: var(--background-item);
+  color: var(--text-primary);
+  font-size: var(--fs-300);
+  margin-top: var(--space-s);
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-color: hsla(0, 0%, 0%, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease;
+}
+
+.modal.visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal-content {
+  background-color: var(--background-modal);
+  padding: var(--space-l);
+  border-radius: 8px;
+  text-align: center;
+  transform: scale(0.7);
+  transition: transform 0.3s ease;
+  box-shadow: 0 4px 12px hsla(0, 0%, 0%, 0.2);
+  border: var(--border);
+  max-width: 90%;
+}
+
+.modal.visible .modal-content {
+  transform: scale(1);
+}
+
+.modal h2 {
+  color: var(--text-primary);
+  font-size: var(--fs-800);
+  margin-bottom: var(--space-s);
+}
+
+.modal p {
+  color: var(--text-primary);
+  font-size: var(--fs-700);
+  margin-bottom: var(--space-m);
+}
+
+#final-score {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.modal button {
+  margin-top: 0;
+  font-size: var(--fs-400);
+}
+
+.modal-scores {
+  margin: var(--space-m) 0;
+}
+
+#modal-player-scores {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  align-items: center;
+}
+
+.modal-player-score {
+  color: var(--text-primary);
+  font-size: var(--fs-600);
+}
+
+.winner-name {
+  color: hsl(42deg 100% 40%);
+}
+
+.ThemeSwitch {
+  --size: 40px;
+  --icon-fill: #495057;
+  --icon-fill-hover: #030507;
+  aspect-ratio: 1;
+  background: none;
+  block-size: var(--size);
+  border: none;
+  cursor: pointer;
+  inline-size: var(--size);
+  padding: calc(0.5rem + 2px);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.ThemeSwitch:is(:hover, :focus-visible) {
+  --icon-fill: var(--icon-fill-hover);
+}
+
+.icon-button {
+  --_shadow-size: 0;
+  --_shadow-color: hsl(217, 91%, 37%);
+  aspect-ratio: var(--ratio-square);
+  border-radius: 10000px;
+  box-shadow: 0 0 var(--_shadow-size) var(--_shadow-color);
+  padding: 0.5rem;
+  transition: outline-offset 145ms cubic-bezier(0.25, 0, 0.4, 1),
+    box-shadow 0.5s cubic-bezier(0, 0, 0.1, 1);
+}
+
+.icon-button:hover:not(:active) {
+  --_shadow-size: 5em;
+}
+
+/* ///////////////
+  Media Queries (Mobile First)
+  ////////////// */
+
+/* Larger mobile devices/small tablets - 600px and up*/
+@media (width >= 37.5rem) {
+  .pairs-input-container {
+    grid-row: 1;
+    grid-column: 1;
+    align-self: end;
+  }
+
+  .tries-display {
+    grid-row: 1;
+    grid-column: 3;
+    align-self: end;
+  }
+
+  .player-scores {
+    grid-row: 2;
+  }
+}
+
+/* Tablets - 768px and up */
+@media (width >= 48rem) {
+  .game-board {
+    --number-of-columns: 3;
+  }
+
+  .game-board:has(.card:nth-child(n + 9)) {
+    --number-of-columns: 4;
+  }
+}
+
+@media (width >= 48rem) and (height <= 900px) {
+  .game-board {
+    --number-of-columns: 4;
+  }
+
+  .game-board:has(.card:nth-child(n + 9)) {
+    --number-of-columns: 5;
+  }
+}
+
+/* Laptops/small desktops - 992px and up */
+@media (width >= 62rem) {
+  .game-board:has(.card:nth-child(n + 17)) {
+    --number-of-columns: 5;
+  }
+}
+
+/* Large desktops - 1200px and up */
+@media (width >= 75rem) and (height <= 1080px) {
+  /* .container {
+    --container-max: 77rem;
+  } */
+
+  .game-board {
+    --number-of-columns: 4;
+  }
+
+  .game-board:has(.card:nth-child(n + 13)) {
+    --number-of-columns: 5;
+  }
+
+  .game-board:has(.card:nth-child(n + 15)) {
+    --number-of-columns: 6;
+  }
+}
+
+/* XL desktops - 1800px and up */
+@media (width >= 112.5rem) {
+}

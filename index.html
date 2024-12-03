@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matching Game</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <header class="header">
+    <div class="container header-content">
+      <h1 class="header-title">Match Maker</h1>
+      <div class="pairs-input-container">
+        <label class="pairs-input-lable" for="pairs-input">
+          Matches
+          <svg class="adjust-icon" width="16" height="16" viewBox="0 0 24 24">
+            <path
+              d="m12 19.24-4.95-4.95-1.41 1.42L12 22.07l6.36-6.36-1.41-1.42L12 19.24zM5.64 8.29l1.41 1.42L12 4.76l4.95 4.95 1.41-1.42L12 1.93 5.64 8.29z" />
+          </svg>
+        </label>
+        <input type="number" id="pairs-input" min="2" value="6" class="pairs-input">
+      </div>
+      <div id="tries-display" class="tries-display">Tries: 0</div>
+      <div id="player-scores" class="player-scores">
+        <!-- Player scores will be added here dynamically -->
+      </div>
+      <!-- <button class="ThemeSwitch icon-button" id="theme-toggle" title="Toggles light &amp; dark" aria-label="light"
+        aria-live="polite"><svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
+          <mask class="moon" id="moon-mask">
+            <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
+            <circle cx="24" cy="10" r="6" fill="black"></circle>
+          </mask>
+          <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor"></circle>
+          <g class="sun-beams" stroke="currentColor">
+            <line x1="12" y1="1" x2="12" y2="3"></line>
+            <line x1="12" y1="21" x2="12" y2="23"></line>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+            <line x1="1" y1="12" x2="3" y2="12"></line>
+            <line x1="21" y1="12" x2="23" y2="12"></line>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+          </g>
+        </svg></button> -->
+    </div>
+  </header>
+
+  <div class="container">
+    <div id="game-board" class="game-board">
+      <!-- Cards will be added here dynamically -->
+    </div>
+    <select id="unit-selector"></select>
+    <button id="reset-button" class="button">Reset Game</button>
+
+    <div class="player-input-wrapper">
+      <textarea id="player-names-input" class="player-names-input"
+        placeholder="Sepearate names with a comma or a new line"></textarea>
+      <button id="add-players-btn">Add Players</button>
+    </div>
+
+  </div>
+
+  <div id="completion-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>Congratulations! 🎉</h2>
+      <p>You've completed the game in <span id="final-score"></span> tries.</p>
+      <div class="modal-scores">
+        <div id="modal-player-scores" class="player-scores">
+          <!-- Player scores will be added here dynamically -->
+        </div>
+      </div>
+      <button id="play-again-btn">Play Again</button>
+    </div>
+  </div>
+
+  <script type="module" src="script.js"></script>
+</body>
+
+</html>
