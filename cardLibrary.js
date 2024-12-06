@@ -788,9 +788,9 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit8/sounds/bun.mp3",
         },
         {
-          word: "gun",
-          image: "data/SmartPhonics/2/Unit8/pics/gun.jpg",
-          sound: "data/SmartPhonics/2/Unit8/sounds/gun.mp3",
+          word: "fun",
+          image: "data/SmartPhonics/2/Unit8/pics/fun.jpg",
+          sound: "data/SmartPhonics/2/Unit8/sounds/fun.mp3",
         },
         {
           word: "run",
@@ -1110,8 +1110,8 @@ export const cardLibrary = {
         },
         {
           word: "June",
-          image: "data/SmartPhonics/3/Unit7/pics/June.jpg",
-          sound: "data/SmartPhonics/3/Unit7/sounds/June.mp3",
+          image: "data/SmartPhonics/3/Unit7/pics/june.jpg",
+          sound: "data/SmartPhonics/3/Unit7/sounds/june.mp3",
         },
         {
           word: "tune",
