@@ -487,7 +487,8 @@ export const cardLibrary = {
       ],
     },
     2: {
-      "Unit 1": [
+      "Unit 1: Short Vowel a": [
+        { targetLetters: "a" },
         {
           word: "dam",
           image: "data/SmartPhonics/2/Unit1/pics/dam.jpg",
@@ -529,7 +530,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit1/sounds/nap.mp3",
         },
       ],
-      "Unit 2": [
+      "Unit 2: Short Vowel a": [
+        { targetLetters: "a" },
         {
           word: "can",
           image: "data/SmartPhonics/2/Unit2/pics/can.jpg",
@@ -571,7 +573,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit2/sounds/mat.mp3",
         },
       ],
-      "Unit 3": [
+      "Unit 3: Short Vowel e": [
+        { targetLetters: "e" },
         {
           word: "jet",
           image: "data/SmartPhonics/2/Unit3/pics/jet.jpg",
@@ -613,7 +616,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit3/sounds/pen.mp3",
         },
       ],
-      "Unit 4": [
+      "Unit 4: Short Vowel i": [
+        { targetLetters: "i" },
         {
           word: "bib",
           image: "data/SmartPhonics/2/Unit4/pics/bib.jpg",
@@ -655,7 +659,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit4/sounds/pin.mp3",
         },
       ],
-      "Unit 5": [
+      "Unit 5: Short Vowel i": [
+        { targetLetters: "i" },
         {
           word: "dip",
           image: "data/SmartPhonics/2/Unit5/pics/dip.jpg",
@@ -697,7 +702,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit5/sounds/six.mp3",
         },
       ],
-      "Unit 6": [
+      "Unit 6: Short Vowel o": [
+        { targetLetters: "o" },
         {
           word: "hot",
           image: "data/SmartPhonics/2/Unit6/pics/hot.jpg",
@@ -739,7 +745,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit6/sounds/log.mp3",
         },
       ],
-      "Unit 7": [
+      "Unit 7: Short Vowel u": [
+        { targetLetters: "u" },
         {
           word: "bug",
           image: "data/SmartPhonics/2/Unit7/pics/bug.jpg",
@@ -781,7 +788,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/2/Unit7/sounds/pup.mp3",
         },
       ],
-      "Unit 8": [
+      "Unit 8: Short Vowel u": [
+        { targetLetters: "u" },
         {
           word: "bun",
           image: "data/SmartPhonics/2/Unit8/pics/bun.jpg",
@@ -825,7 +833,8 @@ export const cardLibrary = {
       ],
     },
     3: {
-      "Unit 1": [
+      "Unit 1: Long Vowel a": [
+        { targetLetters: "a, e" },
         {
           word: "bake",
           image: "data/SmartPhonics/3/Unit1/pics/bake.jpg",
@@ -867,7 +876,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/3/Unit1/sounds/wave.mp3",
         },
       ],
-      "Unit 2": [
+      "Unit 2: Long Vowel a": [
+        { targetLetters: "a, e" },
         {
           word: "game",
           image: "data/SmartPhonics/3/Unit2/pics/game.jpg",
@@ -909,7 +919,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/3/Unit2/sounds/vase.mp3",
         },
       ],
-      "Unit 3": [
+      "Unit 3: Long Vowel i": [
+        { targetLetters: "i, e" },
         {
           word: "line",
           image: "data/SmartPhonics/3/Unit3/pics/line.jpg",
@@ -951,7 +962,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/3/Unit3/sounds/time.mp3",
         },
       ],
-      "Unit 4": [
+      "Unit 4: Long Vowel i": [
+        { targetLetters: "i, e" },
         {
           word: "hide",
           image: "data/SmartPhonics/3/Unit4/pics/hide.jpg",
@@ -993,7 +1005,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/3/Unit4/sounds/five.mp3",
         },
       ],
-      "Unit 5": [
+      "Unit 5: Long Vowel o": [
+        { targetLetters: "o, e" },
         {
           word: "hose",
           image: "data/SmartPhonics/3/Unit5/pics/hose.jpg",
@@ -1035,7 +1048,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/3/Unit5/sounds/vote.mp3",
         },
       ],
-      "Unit 6": [
+      "Unit 6: Long Vowel o": [
+        { targetLetters: "o, e" },
         {
           word: "hole",
           image: "data/SmartPhonics/3/Unit6/pics/hole.jpg",
@@ -1077,7 +1091,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/3/Unit6/sounds/cone.mp3",
         },
       ],
-      "Unit 7": [
+      "Unit 7: Long Vowel u": [
+        { targetLetters: "u, e" },
         {
           word: "cube",
           image: "data/SmartPhonics/3/Unit7/pics/cube.jpg",
@@ -1121,7 +1136,8 @@ export const cardLibrary = {
       ],
     },
     4: {
-      "Unit 1": [
+      "Unit 1: bl, cl, fl": [
+        { targetLetters: "bl, cl, fl" },
         {
           word: "blade",
           image: "data/SmartPhonics/4/Unit1/pics/blade.jpg",
@@ -1178,7 +1194,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit1/sounds/flute.mp3",
         },
       ],
-      "Unit 2": [
+      "Unit 2: br, cr, fr": [
+        { targetLetters: "br, cr, fr" },
         {
           word: "brake",
           image: "data/SmartPhonics/4/Unit2/pics/brake.jpg",
@@ -1240,7 +1257,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit2/sounds/frost.mp3",
         },
       ],
-      "Unit 3": [
+      "Unit 3: gl, pl, sl": [
+        { targetLetters: "gl, pl, sl" },
         {
           word: "glass",
           image: "data/SmartPhonics/4/Unit3/pics/glass.jpg",
@@ -1302,7 +1320,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit3/sounds/slim.mp3",
         },
       ],
-      "Unit 4": [
+      "Unit 4: dr, pr, tr": [
+        { targetLetters: "dr, pr, tr" },
         {
           word: "dragon",
           image: "data/SmartPhonics/4/Unit4/pics/dragon.jpg",
@@ -1364,7 +1383,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit4/sounds/trumpet.mp3",
         },
       ],
-      "Unit 5": [
+      "Unit 5: sm, sn, st, sw": [
+        { targetLetters: "sm, sn, st, sw" },
         {
           word: "smell",
           image: "data/SmartPhonics/4/Unit5/pics/smell.jpg",
@@ -1426,7 +1446,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit5/sounds/swing.mp3",
         },
       ],
-      "Unit 6": [
+      "Unit 6: ng, nk": [
+        { targetLetters: "ng, nk" },
         {
           word: "bang",
           image: "data/SmartPhonics/4/Unit6/pics/bang.jpg",
@@ -1488,7 +1509,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit6/sounds/junk.mp3",
         },
       ],
-      "Unit 7": [
+      "Unit 7: sh, ch": [
+        { targetLetters: "sh, ch" },
         {
           word: "shape",
           image: "data/SmartPhonics/4/Unit7/pics/shape.jpg",
@@ -1550,7 +1572,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/4/Unit7/sounds/catch.mp3",
         },
       ],
-      "Unit 8": [
+      "Unit 8: th, wh": [
+        { targetLetters: "th, wh" },
         {
           word: "thick",
           image: "data/SmartPhonics/4/Unit8/pics/thick.jpg",
@@ -1614,7 +1637,8 @@ export const cardLibrary = {
       ],
     },
     5: {
-      "Unit 1": [
+      "Unit 1: ee, ea": [
+        { targetLetters: "ee, ea" },
         {
           word: "bee",
           image: "data/SmartPhonics/5/Unit1/pics/bee.jpg",
@@ -1656,7 +1680,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit1/sounds/meat.mp3",
         },
       ],
-      "Unit 2": [
+      "Unit 2: oa, ow": [
+        { targetLetters: "oa, ow" },
         {
           word: "boat",
           image: "data/SmartPhonics/5/Unit2/pics/boat.jpg",
@@ -1698,7 +1723,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit2/sounds/bowl.mp3",
         },
       ],
-      "Unit 3": [
+      "Unit 3: ai, ay": [
+        { targetLetters: "ai, ay" },
         {
           word: "mail",
           image: "data/SmartPhonics/5/Unit3/pics/mail.jpg",
@@ -1740,7 +1766,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit3/sounds/gray.mp3",
         },
       ],
-      "Unit 4": [
+      "Unit 4: oi, oy": [
+        { targetLetters: "oi, oy" },
         {
           word: "boil",
           image: "data/SmartPhonics/5/Unit4/pics/boil.jpg",
@@ -1782,7 +1809,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit4/sounds/toilet.mp3",
         },
       ],
-      "Unit 5": [
+      "Unit 5: ow, ou": [
+        { targetLetters: "ow, ou" },
         {
           word: "brown",
           image: "data/SmartPhonics/5/Unit5/pics/brown.jpg",
@@ -1824,7 +1852,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit5/sounds/cloud.mp3",
         },
       ],
-      "Unit 6": [
+      "Unit 6: ir, er, ur": [
+        { targetLetters: "ir, er, ur" },
         {
           word: "bird",
           image: "data/SmartPhonics/5/Unit6/pics/bird.jpg",
@@ -1866,7 +1895,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit6/sounds/teacher.mp3",
         },
       ],
-      "Unit 7": [
+      "Unit 7: ar, or": [
+        { targetLetters: "ar, or" },
         {
           word: "arm",
           image: "data/SmartPhonics/5/Unit7/pics/arm.jpg",
@@ -1908,7 +1938,8 @@ export const cardLibrary = {
           sound: "data/SmartPhonics/5/Unit7/sounds/corn.mp3",
         },
       ],
-      "Unit 8": [
+      "Unit 8: oo": [
+        { targetLetters: "oo" },
         {
           word: "book",
           image: "data/SmartPhonics/5/Unit8/pics/book.jpg",

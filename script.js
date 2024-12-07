@@ -19,29 +19,32 @@ let maxPairs = 6
 let players = []
 let selectedWords = []
 let soundMap = {}
+let targetLetters = null
 let tries = 0
 let usedMatchColors = []
 let words = []
 
 // Function to preload audio
 function preloadSoundsArray(items) {
-  return items.reduce((acc, item) => {
-    // Preload the regular sound
-    const audio = new Audio()
-    audio.preload = "auto"
-    audio.src = item.sound
-    acc[item.word] = audio
+  return items
+    .filter((item) => item.sound)
+    .reduce((acc, item) => {
+      // Preload the regular sound
+      const audio = new Audio()
+      audio.preload = "auto"
+      audio.src = item.sound
+      acc[item.word] = audio
 
-    // Preload the image sound for Book1
-    if (item.imageSound) {
-      const imgAudio = new Audio()
-      imgAudio.preload = "auto"
-      imgAudio.src = item.imageSound
-      acc[item.image] = imgAudio
-    }
+      // Preload the image sound for Book1
+      if (item.imageSound) {
+        const imgAudio = new Audio()
+        imgAudio.preload = "auto"
+        imgAudio.src = item.imageSound
+        acc[item.image] = imgAudio
+      }
 
-    return acc
-  }, {})
+      return acc
+    }, {})
 }
 
 // Preload sound files
@@ -182,12 +185,13 @@ function loadPhonicsUnit(series, book, unit) {
   currentUnit = cardLibrary[series][book][unit]
 
   // Separate words, images, and create sound map
-  words = currentUnit.map((item) => item.word)
-  images = currentUnit.map((item) => item.image)
+  words = currentUnit.filter((item) => item.word).map((item) => item.word)
+  images = currentUnit.filter((item) => item.image).map((item) => item.image)
   soundMap = preloadSoundsArray(currentUnit)
+  targetLetters = currentUnit[0].targetLetters
 
   // Update pairs input max attribute based on available pairs
-  const availablePairs = currentUnit.length
+  const availablePairs = currentUnit.filter((item) => item.word).length
   pairsInput.max = availablePairs
   pairsInput.value = Math.min(maxPairs, availablePairs)
 
@@ -316,7 +320,30 @@ function createCards() {
     } else {
       const wordContainer = document.createElement("div")
       wordContainer.classList.add("word")
-      wordContainer.textContent = item
+
+      // targetLetters will be highlighted. The list comes from the cardLibrary
+      if (!targetLetters) {
+        wordContainer.textContent = item
+      } else {
+        // Split target letters
+        const targetLetterArray = targetLetters.split(", ")
+
+        // Create a new element with target letters wrapped in spans
+        const wordWithTargetSounds = targetLetterArray.reduce(
+          (modifiedWord, targetLetter) => {
+            // Use case-insensitive regex to find and wrap target letters
+            const regex = new RegExp(targetLetter, "gi")
+            return modifiedWord.replace(
+              regex,
+              (match) => `<span class="target-sounds">${match}</span>`
+            )
+          },
+          item
+        )
+
+        // Set the innerHTML to preserve the spans
+        wordContainer.innerHTML = wordWithTargetSounds
+      }
       card.appendChild(wordContainer)
     }
 
