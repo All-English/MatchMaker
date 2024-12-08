@@ -47,6 +47,8 @@
   --text-slate-300: hsl(213, 27%, 84%);
   --border-slate-600: hsl(215.4, 19.3%, 34.5%);
 
+  --raspberry: hsl(336, 100%, 64%);
+
   /* Light Theme */
   --background-gradient-1: var(--bg-blue-50);
   --background-gradient-2: var(--bg-sky-100);
@@ -57,6 +59,7 @@
   --button-background: var(--bg-blue-700);
   --button-hover: var(--bg-blue-800);
   --card-revealed: var(--bg-sky-200);
+  --color-accent: var(--raspberry);
   --text-accent: var(--text-blue-100); /* h1/button/scores text */
   --text-primary: var(--text-blue-700);
   --text-secondary: var(--text-blue-200);
@@ -428,8 +431,7 @@ body {
 }
 
 .card .target-sounds {
-  color: red; /* or any color you prefer */
-  color: #ff468f;
+  color: var(--color-accent);
 }
 
 /* Update the image styles */
