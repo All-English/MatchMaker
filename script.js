@@ -226,6 +226,12 @@ function createUnitSelector() {
     seriesGroup.label = series
 
     Object.keys(cardLibrary[series]).forEach((book) => {
+      // Create a separator between books
+      const separator = document.createElement("option")
+      separator.textContent = `---`
+      separator.disabled = true
+      seriesGroup.appendChild(separator)
+
       Object.keys(cardLibrary[series][book]).forEach((unit) => {
         const option = document.createElement("option")
         option.value = `${series}|${book}|${unit}`
@@ -243,9 +249,6 @@ function createUnitSelector() {
 
         seriesGroup.appendChild(option)
       })
-      // const line = document.createElement("option")
-      // line.textContent = "─────"
-      // seriesGroup.appendChild(line)
     })
 
     selector.appendChild(seriesGroup)
@@ -323,7 +326,16 @@ function createCards() {
 
       // targetLetters will be highlighted. The list comes from the cardLibrary
       if (!targetLetters) {
-        wordContainer.textContent = item
+        // If no targetLetters specified, wrap the second letter in a span
+        if (currentBook === "1" && currentSeries === "Smart Phonics") {
+          const modifiedWord =
+            item.slice(0, 1) +
+            `<span class="target-sounds">${item.slice(1, 2)}</span>` +
+            item.slice(2)
+          wordContainer.innerHTML = modifiedWord
+        } else {
+          wordContainer.textContent = item
+        }
       } else {
         // Split target letters
         const targetLetterArray = targetLetters.split(", ")
@@ -373,7 +385,12 @@ function resetTurn() {
 }
 
 function updatePlayerNames() {
-  const input = document.getElementById("player-names-input").value
+  const playerNameInput = document.getElementById("player-names-input")
+  const input = playerNameInput.value
+
+  // Save the raw input to localStorage
+  localStorage.setItem("playerNamesInput", input)
+
   // Split by comma or newline and clean up whitespace
   const names = input
     .split(/[,\n]/)
@@ -385,6 +402,21 @@ function updatePlayerNames() {
   currentPlayerIndex = 0
   updatePlayerScores()
   return true
+}
+
+// Add a function to load saved names when the page loads
+function loadSavedPlayerNames() {
+  const savedInput = localStorage.getItem("playerNamesInput")
+  if (savedInput) {
+    const playerNameInput = document.getElementById("player-names-input")
+    playerNameInput.value = savedInput
+  }
+}
+
+// Function to clear saved names
+function clearSavedPlayerNames() {
+  localStorage.removeItem("playerNamesInput")
+  document.getElementById("player-names-input").value = ""
 }
 
 function updatePlayerScores() {
@@ -598,7 +630,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })
 
+  loadSavedPlayerNames()
   createUnitSelector()
-  // updatePlayerNames() // Initialize player inputs
-  // loadPhonicsUnit("Smart Phonics", "1", "Unit 4")
 })
