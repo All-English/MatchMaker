@@ -125,22 +125,22 @@ function isMatch(first, second) {
   const secondContent = second.dataset.content
 
   // For all books except Book1, use the original exact matching
-  if (!currentBook || currentBook !== "1") {
-    const matchedItem = currentUnit.find(
-      (item) =>
-        (item.word === firstContent && item.image === secondContent) ||
-        (item.image === firstContent && item.word === secondContent)
-    )
+if (!(currentSeries === "Smart Phonics" && currentBook === "1")) {
+  const matchedItem = currentUnit.find(
+    (item) =>
+      (item.word === firstContent && item.image === secondContent) ||
+      (item.image === firstContent && item.word === secondContent)
+  )
 
-    if (matchedItem) {
-      const matchColor = getRandomMatchColor()
-      first.classList.add("matched", matchColor)
-      second.classList.add("matched", matchColor)
-      addPlayerTagsAndUpdateScore(first, second)
-      return true
-    }
-    return false
+  if (matchedItem) {
+    const matchColor = getRandomMatchColor()
+    first.classList.add("matched", matchColor)
+    second.classList.add("matched", matchColor)
+    addPlayerTagsAndUpdateScore(first, second)
+    return true
   }
+  return false
+}
 
   // Book1 special matching logic
   const isFirstImage = firstContent.includes(".jpg")
@@ -179,7 +179,7 @@ function updateScore() {
 }
 
 // Function to load a specific unit
-function loadPhonicsUnit(series, book, unit) {
+function loadUnit(series, book, unit) {
   currentSeries = series
   currentBook = book
   currentUnit = cardLibrary[series][book][unit]
@@ -187,11 +187,25 @@ function loadPhonicsUnit(series, book, unit) {
   // Separate words, images, and create sound map
   words = currentUnit.filter((item) => item.word).map((item) => item.word)
   images = currentUnit.filter((item) => item.image).map((item) => item.image)
+
+  // If less than 6 pairs, duplicate existing pairs
+  while (words.length < 6) {
+    // Select a random index from the existing words
+    const randomIndex = Math.floor(Math.random() * words.length)
+
+    // Add the randomly selected word and its corresponding image
+    words.push(words[randomIndex])
+    images.push(images[randomIndex])
+  }
+
   soundMap = preloadSoundsArray(currentUnit)
   targetLetters = currentUnit[0].targetLetters
 
   // Update pairs input max attribute based on available pairs
-  const availablePairs = currentUnit.filter((item) => item.word).length
+  const availablePairs = Math.max(
+    6,
+    currentUnit.filter((item) => item.word).length
+  )
   pairsInput.max = availablePairs
   pairsInput.value = Math.min(maxPairs, availablePairs)
 
@@ -264,13 +278,13 @@ function createUnitSelector() {
     url.searchParams.set("unit", unit)
     window.history.pushState({}, "", url)
 
-    loadPhonicsUnit(series, book, unit)
+    loadUnit(series, book, unit)
   })
 
   // If an option was preselected, load that unit
   if (preselectedOption) {
     const [series, book, unit] = preselectedOption.value.split("|")
-    loadPhonicsUnit(series, book, unit)
+    loadUnit(series, book, unit)
   }
 }
 
@@ -411,12 +425,6 @@ function loadSavedPlayerNames() {
     const playerNameInput = document.getElementById("player-names-input")
     playerNameInput.value = savedInput
   }
-}
-
-// Function to clear saved names
-function clearSavedPlayerNames() {
-  localStorage.removeItem("playerNamesInput")
-  document.getElementById("player-names-input").value = ""
 }
 
 function updatePlayerScores() {
