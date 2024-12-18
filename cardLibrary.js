@@ -1983,5 +1983,2253 @@ export const cardLibrary = {
       ],
     },
   },
-  "Let's Smile": {},
+  "Let's Smile": {
+    1: {
+      "Unit 1": [
+        {
+          word: "board",
+          image: "data/LetsSmile/1/Unit1/pics/board.jpg",
+          sound: "data/LetsSmile/1/Unit1/sounds/board.mp3",
+        },
+        {
+          word: "bookcase",
+          image: "data/LetsSmile/1/Unit1/pics/bookcase.jpg",
+          sound: "data/LetsSmile/1/Unit1/sounds/bookcase.mp3",
+        },
+        {
+          word: "chair",
+          image: "data/LetsSmile/1/Unit1/pics/chair.jpg",
+          sound: "data/LetsSmile/1/Unit1/sounds/chair.mp3",
+        },
+        {
+          word: "desk",
+          image: "data/LetsSmile/1/Unit1/pics/desk.jpg",
+          sound: "data/LetsSmile/1/Unit1/sounds/desk.mp3",
+        },
+      ],
+      "Unit 2": [
+        {
+          word: "backpack",
+          image: "data/LetsSmile/1/Unit2/pics/backpack.jpg",
+          sound: "data/LetsSmile/1/Unit2/sounds/backpack.mp3",
+        },
+        {
+          word: "book",
+          image: "data/LetsSmile/1/Unit2/pics/book.jpg",
+          sound: "data/LetsSmile/1/Unit2/sounds/book.mp3",
+        },
+        {
+          word: "crayon",
+          image: "data/LetsSmile/1/Unit2/pics/crayon.jpg",
+          sound: "data/LetsSmile/1/Unit2/sounds/crayon.mp3",
+        },
+        {
+          word: "pencil",
+          image: "data/LetsSmile/1/Unit2/pics/pencil.jpg",
+          sound: "data/LetsSmile/1/Unit2/sounds/pencil.mp3",
+        },
+      ],
+      "Unit 4": [
+        {
+          word: "black",
+          image: "data/LetsSmile/1/Unit4/pics/black.jpg",
+          sound: "data/LetsSmile/1/Unit4/sounds/black.mp3",
+        },
+        {
+          word: "brown",
+          image: "data/LetsSmile/1/Unit4/pics/brown.jpg",
+          sound: "data/LetsSmile/1/Unit4/sounds/brown.mp3",
+        },
+        {
+          word: "gray",
+          image: "data/LetsSmile/1/Unit4/pics/gray.jpg",
+          sound: "data/LetsSmile/1/Unit4/sounds/gray.mp3",
+        },
+        {
+          word: "pink",
+          image: "data/LetsSmile/1/Unit4/pics/pink.jpg",
+          sound: "data/LetsSmile/1/Unit4/sounds/pink.mp3",
+        },
+        {
+          word: "white",
+          image: "data/LetsSmile/1/Unit4/pics/white.jpg",
+          sound: "data/LetsSmile/1/Unit4/sounds/white.mp3",
+        },
+      ],
+      "Unit 6": [
+        {
+          word: "car",
+          image: "data/LetsSmile/1/Unit6/pics/car.jpg",
+          sound: "data/LetsSmile/1/Unit6/sounds/car.mp3",
+        },
+        {
+          word: "plane",
+          image: "data/LetsSmile/1/Unit6/pics/plane.jpg",
+          sound: "data/LetsSmile/1/Unit6/sounds/plane.mp3",
+        },
+        {
+          word: "robot",
+          image: "data/LetsSmile/1/Unit6/pics/robot.jpg",
+          sound: "data/LetsSmile/1/Unit6/sounds/robot.mp3",
+        },
+        {
+          word: "train",
+          image: "data/LetsSmile/1/Unit6/pics/train.jpg",
+          sound: "data/LetsSmile/1/Unit6/sounds/train.mp3",
+        },
+      ],
+      "Unit 7": [
+        {
+          word: "bears",
+          image: "data/LetsSmile/1/Unit7/pics/bears.jpg",
+          sound: "data/LetsSmile/1/Unit7/sounds/bears.mp3",
+        },
+        {
+          word: "elephants",
+          image: "data/LetsSmile/1/Unit7/pics/elephants.jpg",
+          sound: "data/LetsSmile/1/Unit7/sounds/elephants.mp3",
+        },
+        {
+          word: "giraffes",
+          image: "data/LetsSmile/1/Unit7/pics/giraffes.jpg",
+          sound: "data/LetsSmile/1/Unit7/sounds/giraffes.mp3",
+        },
+        {
+          word: "lions",
+          image: "data/LetsSmile/1/Unit7/pics/lions.jpg",
+          sound: "data/LetsSmile/1/Unit7/sounds/lions.mp3",
+        },
+      ],
+      "Unit 8": [
+        {
+          word: "erasers",
+          image: "data/LetsSmile/1/Unit8/pics/erasers.jpg",
+          sound: "data/LetsSmile/1/Unit8/sounds/erasers.mp3",
+        },
+        {
+          word: "markers",
+          image: "data/LetsSmile/1/Unit8/pics/markers.jpg",
+          sound: "data/LetsSmile/1/Unit8/sounds/markers.mp3",
+        },
+        {
+          word: "pens",
+          image: "data/LetsSmile/1/Unit8/pics/pens.jpg",
+          sound: "data/LetsSmile/1/Unit8/sounds/pens.mp3",
+        },
+        {
+          word: "rulers",
+          image: "data/LetsSmile/1/Unit8/pics/rulers.jpg",
+          sound: "data/LetsSmile/1/Unit8/sounds/rulers.mp3",
+        },
+      ],
+      "Unit 10": [
+        {
+          word: "apples",
+          image: "data/LetsSmile/1/Unit10/pics/apples.jpg",
+          sound: "data/LetsSmile/1/Unit10/sounds/apples.mp3",
+        },
+        {
+          word: "bananas",
+          image: "data/LetsSmile/1/Unit10/pics/bananas.jpg",
+          sound: "data/LetsSmile/1/Unit10/sounds/bananas.mp3",
+        },
+        {
+          word: "oranges",
+          image: "data/LetsSmile/1/Unit10/pics/oranges.jpg",
+          sound: "data/LetsSmile/1/Unit10/sounds/oranges.mp3",
+        },
+        {
+          word: "watermelons",
+          image: "data/LetsSmile/1/Unit10/pics/watermelons.jpg",
+          sound: "data/LetsSmile/1/Unit10/sounds/watermelons.mp3",
+        },
+      ],
+      "Unit 11": [
+        {
+          word: "mom",
+          image: "data/LetsSmile/1/Unit11/pics/mom.jpg",
+          sound: "data/LetsSmile/1/Unit11/sounds/mom.mp3",
+        },
+        {
+          word: "dad",
+          image: "data/LetsSmile/1/Unit11/pics/dad.jpg",
+          sound: "data/LetsSmile/1/Unit11/sounds/dad.mp3",
+        },
+        {
+          word: "brother",
+          image: "data/LetsSmile/1/Unit11/pics/brother.jpg",
+          sound: "data/LetsSmile/1/Unit11/sounds/brother.mp3",
+        },
+        {
+          word: "sister",
+          image: "data/LetsSmile/1/Unit11/pics/sister.jpg",
+          sound: "data/LetsSmile/1/Unit11/sounds/sister.mp3",
+        },
+        {
+          word: "grandma",
+          image: "data/LetsSmile/1/Unit11/pics/grandma.jpg",
+          sound: "data/LetsSmile/1/Unit11/sounds/grandma.mp3",
+        },
+        {
+          word: "grandpa",
+          image: "data/LetsSmile/1/Unit11/pics/grandpa.jpg",
+          sound: "data/LetsSmile/1/Unit11/sounds/grandpa.mp3",
+        },
+      ],
+      "Unit 12": [
+        {
+          word: "cook",
+          image: "data/LetsSmile/1/Unit12/pics/cook.jpg",
+          sound: "data/LetsSmile/1/Unit12/sounds/cook.mp3",
+        },
+        {
+          word: "doctor",
+          image: "data/LetsSmile/1/Unit12/pics/doctor.jpg",
+          sound: "data/LetsSmile/1/Unit12/sounds/doctor.mp3",
+        },
+        {
+          word: "student",
+          image: "data/LetsSmile/1/Unit12/pics/student.jpg",
+          sound: "data/LetsSmile/1/Unit12/sounds/student.mp3",
+        },
+        {
+          word: "teacher",
+          image: "data/LetsSmile/1/Unit12/pics/teacher.jpg",
+          sound: "data/LetsSmile/1/Unit12/sounds/teacher.mp3",
+        },
+      ],
+    },
+    2: {
+      "Unit 1": [
+        {
+          word: "angry",
+          image: "data/LetsSmile/2/Unit1/pics/angry.jpg",
+          sound: "data/LetsSmile/2/Unit1/sounds/angry.mp3",
+        },
+        {
+          word: "happy",
+          image: "data/LetsSmile/2/Unit1/pics/happy.jpg",
+          sound: "data/LetsSmile/2/Unit1/sounds/happy.mp3",
+        },
+        {
+          word: "hungry",
+          image: "data/LetsSmile/2/Unit1/pics/hungry.jpg",
+          sound: "data/LetsSmile/2/Unit1/sounds/hungry.mp3",
+        },
+        {
+          word: "sad",
+          image: "data/LetsSmile/2/Unit1/pics/sad.jpg",
+          sound: "data/LetsSmile/2/Unit1/sounds/sad.mp3",
+        },
+        {
+          word: "tired",
+          image: "data/LetsSmile/2/Unit1/pics/tired.jpg",
+          sound: "data/LetsSmile/2/Unit1/sounds/tired.mp3",
+        },
+      ],
+      "Unit 2": [
+        {
+          word: "big",
+          image: "data/LetsSmile/2/Unit2/pics/big.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/big.mp3",
+        },
+        {
+          word: "small",
+          image: "data/LetsSmile/2/Unit2/pics/small.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/small.mp3",
+        },
+        {
+          word: "long",
+          image: "data/LetsSmile/2/Unit2/pics/long.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/long.mp3",
+        },
+        {
+          word: "short",
+          image: "data/LetsSmile/2/Unit2/pics/short.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/short.mp3",
+        },
+        {
+          word: "new",
+          image: "data/LetsSmile/2/Unit2/pics/new.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/new.mp3",
+        },
+        {
+          word: "old",
+          image: "data/LetsSmile/2/Unit2/pics/old.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/old.mp3",
+        },
+        {
+          word: "backpack",
+          image: "data/LetsSmile/2/Unit2/pics/backpack.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/backpack.mp3",
+        },
+        {
+          word: "book",
+          image: "data/LetsSmile/2/Unit2/pics/book.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/book.mp3",
+        },
+        {
+          word: "pencil",
+          image: "data/LetsSmile/2/Unit2/pics/pencil.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/pencil.mp3",
+        },
+      ],
+      "Unit 3": [
+        {
+          word: "bench",
+          image: "data/LetsSmile/2/Unit3/pics/bench.jpg",
+          sound: "data/LetsSmile/2/Unit3/sounds/bench.mp3",
+        },
+        {
+          word: "birds",
+          image: "data/LetsSmile/2/Unit3/pics/birds.jpg",
+          sound: "data/LetsSmile/2/Unit3/sounds/birds.mp3",
+        },
+        {
+          word: "flowers",
+          image: "data/LetsSmile/2/Unit3/pics/flowers.jpg",
+          sound: "data/LetsSmile/2/Unit3/sounds/flowers.mp3",
+        },
+        {
+          word: "picnic table",
+          image: "data/LetsSmile/2/Unit3/pics/picnictable.jpg",
+          sound: "data/LetsSmile/2/Unit3/sounds/picnictable.mp3",
+        },
+        {
+          word: "trees",
+          image: "data/LetsSmile/2/Unit3/pics/trees.jpg",
+          sound: "data/LetsSmile/2/Unit3/sounds/trees.mp3",
+        },
+      ],
+      "Unit 4": [
+        {
+          word: "bed",
+          image: "data/LetsSmile/2/Unit4/pics/bed.jpg",
+          sound: "data/LetsSmile/2/Unit4/sounds/bed.mp3",
+        },
+        {
+          word: "desk",
+          image: "data/LetsSmile/2/Unit4/pics/desk.jpg",
+          sound: "data/LetsSmile/2/Unit4/sounds/desk.mp3",
+        },
+        {
+          word: "lamp",
+          image: "data/LetsSmile/2/Unit4/pics/lamp.jpg",
+          sound: "data/LetsSmile/2/Unit4/sounds/lamp.mp3",
+        },
+        {
+          word: "pillows",
+          image: "data/LetsSmile/2/Unit4/pics/pillows.jpg",
+          sound: "data/LetsSmile/2/Unit4/sounds/pillows.mp3",
+        },
+        {
+          word: "toys",
+          image: "data/LetsSmile/2/Unit4/pics/toys.jpg",
+          sound: "data/LetsSmile/2/Unit4/sounds/toys.mp3",
+        },
+      ],
+      "Unit 5": [
+        {
+          word: "ball",
+          image: "data/LetsSmile/2/Unit5/pics/ball.jpg",
+          sound: "data/LetsSmile/2/Unit5/sounds/ball.mp3",
+        },
+        {
+          word: "doll",
+          image: "data/LetsSmile/2/Unit5/pics/doll.jpg",
+          sound: "data/LetsSmile/2/Unit5/sounds/doll.mp3",
+        },
+        {
+          word: "kite",
+          image: "data/LetsSmile/2/Unit5/pics/kite.jpg",
+          sound: "data/LetsSmile/2/Unit5/sounds/kite.mp3",
+        },
+        {
+          word: "robot",
+          image: "data/LetsSmile/2/Unit5/pics/robot.jpg",
+          sound: "data/LetsSmile/2/Unit5/sounds/robot.mp3",
+        },
+      ],
+      "Unit 6": [
+        {
+          word: "in",
+          image: "data/LetsSmile/2/Unit6/pics/in.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/in.mp3",
+        },
+        {
+          word: "on",
+          image: "data/LetsSmile/2/Unit6/pics/on.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/on.mp3",
+        },
+        {
+          word: "under",
+          image: "data/LetsSmile/2/Unit6/pics/under.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/under.mp3",
+        },
+      ],
+      "Unit 7": [
+        {
+          word: "notebook",
+          image: "data/LetsSmile/2/Unit7/pics/notebook.jpg",
+          sound: "data/LetsSmile/2/Unit7/sounds/notebook.mp3",
+        },
+        {
+          word: "pencil case",
+          image: "data/LetsSmile/2/Unit7/pics/pencilcase.jpg",
+          sound: "data/LetsSmile/2/Unit7/sounds/pencilcase.mp3",
+        },
+        {
+          word: "umbrella",
+          image: "data/LetsSmile/2/Unit7/pics/umbrella.jpg",
+          sound: "data/LetsSmile/2/Unit7/sounds/umbrella.mp3",
+        },
+        {
+          word: "wallet",
+          image: "data/LetsSmile/2/Unit7/pics/wallet.jpg",
+          sound: "data/LetsSmile/2/Unit7/sounds/wallet.mp3",
+        },
+        {
+          word: "water bottle",
+          image: "data/LetsSmile/2/Unit7/pics/waterbottle.jpg",
+          sound: "data/LetsSmile/2/Unit7/sounds/waterbottle.mp3",
+        },
+      ],
+      "Unit 8": [
+        {
+          word: "glue stick",
+          image: "data/LetsSmile/2/Unit8/pics/gluestick.jpg",
+          sound: "data/LetsSmile/2/Unit8/sounds/gluestick.mp3",
+        },
+        {
+          word: "paints",
+          image: "data/LetsSmile/2/Unit8/pics/paints.jpg",
+          sound: "data/LetsSmile/2/Unit8/sounds/paints.mp3",
+        },
+        {
+          word: "paintbrush",
+          image: "data/LetsSmile/2/Unit8/pics/paintbrush.jpg",
+          sound: "data/LetsSmile/2/Unit8/sounds/paintbrush.mp3",
+        },
+        {
+          word: "paper",
+          image: "data/LetsSmile/2/Unit8/pics/paper.jpg",
+          sound: "data/LetsSmile/2/Unit8/sounds/paper.mp3",
+        },
+        {
+          word: "scissors",
+          image: "data/LetsSmile/2/Unit8/pics/scissors.jpg",
+          sound: "data/LetsSmile/2/Unit8/sounds/scissors.mp3",
+        },
+      ],
+      "Unit 9": [
+        {
+          word: "head",
+          image: "data/LetsSmile/2/Unit9/pics/head.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/head.mp3",
+        },
+        {
+          word: "shoulders",
+          image: "data/LetsSmile/2/Unit9/pics/shoulders.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/shoulders.mp3",
+        },
+        {
+          word: "arms",
+          image: "data/LetsSmile/2/Unit9/pics/arms.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/arms.mp3",
+        },
+        {
+          word: "legs",
+          image: "data/LetsSmile/2/Unit9/pics/legs.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/legs.mp3",
+        },
+        {
+          word: "hands",
+          image: "data/LetsSmile/2/Unit9/pics/hands.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/hands.mp3",
+        },
+        {
+          word: "feet",
+          image: "data/LetsSmile/2/Unit9/pics/feet.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/feet.mp3",
+        },
+        {
+          word: "shake",
+          image: "data/LetsSmile/2/Unit9/pics/shake.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/shake.mp3",
+        },
+        {
+          word: "touch",
+          image: "data/LetsSmile/2/Unit9/pics/touch.jpg",
+          sound: "data/LetsSmile/2/Unit9/sounds/touch.mp3",
+        },
+      ],
+      "Unit 10": [
+        {
+          word: "ears",
+          image: "data/LetsSmile/2/Unit10/pics/ears.jpg",
+          sound: "data/LetsSmile/2/Unit10/sounds/ears.mp3",
+        },
+        {
+          word: "eyes",
+          image: "data/LetsSmile/2/Unit10/pics/eyes.jpg",
+          sound: "data/LetsSmile/2/Unit10/sounds/eyes.mp3",
+        },
+        {
+          word: "mouth",
+          image: "data/LetsSmile/2/Unit10/pics/mouth.jpg",
+          sound: "data/LetsSmile/2/Unit10/sounds/mouth.mp3",
+        },
+        {
+          word: "nose",
+          image: "data/LetsSmile/2/Unit10/pics/nose.jpg",
+          sound: "data/LetsSmile/2/Unit10/sounds/nose.mp3",
+        },
+      ],
+      "Unit 11": [
+        {
+          word: "bike",
+          image: "data/LetsSmile/2/Unit11/pics/bike.jpg",
+          sound: "data/LetsSmile/2/Unit11/sounds/bike.mp3",
+        },
+        {
+          word: "hula hoop",
+          image: "data/LetsSmile/2/Unit11/pics/hulahoop.jpg",
+          sound: "data/LetsSmile/2/Unit11/sounds/hulahoop.mp3",
+        },
+        {
+          word: "inline skates",
+          image: "data/LetsSmile/2/Unit11/pics/inlineskates.jpg",
+          sound: "data/LetsSmile/2/Unit11/sounds/inlineskates.mp3",
+        },
+        {
+          word: "skateboard",
+          image: "data/LetsSmile/2/Unit11/pics/skateboard.jpg",
+          sound: "data/LetsSmile/2/Unit11/sounds/skateboard.mp3",
+        },
+        {
+          word: "soccer ball",
+          image: "data/LetsSmile/2/Unit11/pics/soccerball.jpg",
+          sound: "data/LetsSmile/2/Unit11/sounds/soccerball.mp3",
+        },
+      ],
+      "Unit 12": [
+        {
+          word: "blue eyes",
+          image: "data/LetsSmile/2/Unit12/pics/blueeyes.jpg",
+          sound: "data/LetsSmile/2/Unit12/sounds/blueeyes.mp3",
+        },
+        {
+          word: "brown eyes",
+          image: "data/LetsSmile/2/Unit12/pics/brownneyes.jpg",
+          sound: "data/LetsSmile/2/Unit12/sounds/browneyes.mp3",
+        },
+        {
+          word: "green eyes",
+          image: "data/LetsSmile/2/Unit12/pics/greeneyes.jpg",
+          sound: "data/LetsSmile/2/Unit12/sounds/greeneyes.mp3",
+        },
+        {
+          word: "curly hair",
+          image: "data/LetsSmile/2/Unit12/pics/curlyhair.jpg",
+          sound: "data/LetsSmile/2/Unit12/sounds/curlyhair.mp3",
+        },
+        {
+          word: "long hair",
+          image: "data/LetsSmile/2/Unit12/pics/longhair.jpg",
+          sound: "data/LetsSmile/2/Unit12/sounds/longhair.mp3",
+        },
+        {
+          word: "short hair",
+          image: "data/LetsSmile/2/Unit12/pics/shorthair.jpg",
+          sound: "data/LetsSmile/2/Unit12/sounds/shorthair.mp3",
+        },
+      ],
+    },
+    3: {
+      "Unit 1": [
+        {
+          word: "dancing",
+          image: "data/LetsSmile/3/Unit1/pics/dancing.jpg",
+          sound: "data/LetsSmile/3/Unit1/sounds/dancing.mp3",
+        },
+        {
+          word: "jumping",
+          image: "data/LetsSmile/3/Unit1/pics/jumping.jpg",
+          sound: "data/LetsSmile/3/Unit1/sounds/jumping.mp3",
+        },
+        {
+          word: "running",
+          image: "data/LetsSmile/3/Unit1/pics/running.jpg",
+          sound: "data/LetsSmile/3/Unit1/sounds/running.mp3",
+        },
+        {
+          word: "singing",
+          image: "data/LetsSmile/3/Unit1/pics/singing.jpg",
+          sound: "data/LetsSmile/3/Unit1/sounds/singing.mp3",
+        },
+        {
+          word: "sitting",
+          image: "data/LetsSmile/3/Unit1/pics/sitting.jpg",
+          sound: "data/LetsSmile/3/Unit1/sounds/sitting.mp3",
+        },
+        {
+          word: "walking",
+          image: "data/LetsSmile/3/Unit1/pics/walking.jpg",
+          sound: "data/LetsSmile/3/Unit1/sounds/walking.mp3",
+        },
+      ],
+      "Unit 2": [
+        {
+          word: "drinking",
+          image: "data/LetsSmile/3/Unit2/pics/drinking.jpg",
+          sound: "data/LetsSmile/3/Unit2/sounds/drinking.mp3",
+        },
+        {
+          word: "eating",
+          image: "data/LetsSmile/3/Unit2/pics/eating.jpg",
+          sound: "data/LetsSmile/3/Unit2/sounds/eating.mp3",
+        },
+        {
+          word: "reading",
+          image: "data/LetsSmile/3/Unit2/pics/reading.jpg",
+          sound: "data/LetsSmile/3/Unit2/sounds/reading.mp3",
+        },
+        {
+          word: "sleeping",
+          image: "data/LetsSmile/3/Unit2/pics/sleeping.jpg",
+          sound: "data/LetsSmile/3/Unit2/sounds/sleeping.mp3",
+        },
+        {
+          word: "talking",
+          image: "data/LetsSmile/3/Unit2/pics/talking.jpg",
+          sound: "data/LetsSmile/3/Unit2/sounds/talking.mp3",
+        },
+        {
+          word: "writing",
+          image: "data/LetsSmile/3/Unit2/pics/writing.jpg",
+          sound: "data/LetsSmile/3/Unit2/sounds/writing.mp3",
+        },
+      ],
+      "Unit 3": [
+        {
+          word: "clean",
+          image: "data/LetsSmile/3/Unit3/pics/clean.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/clean.mp3",
+        },
+        {
+          word: "dirty",
+          image: "data/LetsSmile/3/Unit3/pics/dirty.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/dirty.mp3",
+        },
+        {
+          word: "dry",
+          image: "data/LetsSmile/3/Unit3/pics/dry.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/dry.mp3",
+        },
+        {
+          word: "wet",
+          image: "data/LetsSmile/3/Unit3/pics/wet.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/wet.mp3",
+        },
+        {
+          word: "heavy",
+          image: "data/LetsSmile/3/Unit3/pics/heavy.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/heavy.mp3",
+        },
+        {
+          word: "light",
+          image: "data/LetsSmile/3/Unit3/pics/light.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/light.mp3",
+        },
+        {
+          word: "backpack",
+          image: "data/LetsSmile/3/Unit3/pics/backpack.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/backpack.mp3",
+        },
+        {
+          word: "boots",
+          image: "data/LetsSmile/3/Unit3/pics/boots.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/boots.mp3",
+        },
+        {
+          word: "umbrella",
+          image: "data/LetsSmile/3/Unit3/pics/umbrella.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/umbrella.mp3",
+        },
+      ],
+      "Unit 4": [
+        {
+          word: "friendly",
+          image: "data/LetsSmile/3/Unit4/pics/friendly.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/friendly.mp3",
+        },
+        {
+          word: "helpful",
+          image: "data/LetsSmile/3/Unit4/pics/helpful.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/helpful.mp3",
+        },
+        {
+          word: "smart",
+          image: "data/LetsSmile/3/Unit4/pics/smart.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/smart.mp3",
+        },
+        {
+          word: "strong",
+          image: "data/LetsSmile/3/Unit4/pics/strong.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/strong.mp3",
+        },
+        {
+          word: "tall",
+          image: "data/LetsSmile/3/Unit4/pics/tall.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/tall.mp3",
+        },
+        {
+          word: "short",
+          image: "data/LetsSmile/3/Unit4/pics/short.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/short.mp3",
+        },
+        {
+          word: "robot",
+          image: "data/LetsSmile/3/Unit4/pics/robot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/robot.mp3",
+        },
+      ],
+      "Unit 5": [
+        {
+          word: "jacket",
+          image: "data/LetsSmile/3/Unit5/pics/jacket.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/jacket.mp3",
+        },
+        {
+          word: "jeans",
+          image: "data/LetsSmile/3/Unit5/pics/jeans.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/jeans.mp3",
+        },
+        {
+          word: "shoes",
+          image: "data/LetsSmile/3/Unit5/pics/shoes.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/shoes.mp3",
+        },
+        {
+          word: "shorts",
+          image: "data/LetsSmile/3/Unit5/pics/shorts.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/shorts.mp3",
+        },
+        {
+          word: "skirt",
+          image: "data/LetsSmile/3/Unit5/pics/skirt.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/skirt.mp3",
+        },
+        {
+          word: "T-shirt",
+          image: "data/LetsSmile/3/Unit5/pics/tshirt.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/tshirt.mp3",
+        },
+      ],
+      "Unit 6": [
+        {
+          word: "boots",
+          image: "data/LetsSmile/3/Unit6/pics/boots.jpg",
+          sound: "data/LetsSmile/3/Unit6/sounds/boots.mp3",
+        },
+        {
+          word: "coat",
+          image: "data/LetsSmile/3/Unit6/pics/coat.jpg",
+          sound: "data/LetsSmile/3/Unit6/sounds/coat.mp3",
+        },
+        {
+          word: "gloves",
+          image: "data/LetsSmile/3/Unit6/pics/gloves.jpg",
+          sound: "data/LetsSmile/3/Unit6/sounds/gloves.mp3",
+        },
+        {
+          word: "scarf",
+          image: "data/LetsSmile/3/Unit6/pics/scarf.jpg",
+          sound: "data/LetsSmile/3/Unit6/sounds/scarf.mp3",
+        },
+        {
+          word: "sweater",
+          image: "data/LetsSmile/3/Unit6/pics/sweater.jpg",
+          sound: "data/LetsSmile/3/Unit6/sounds/sweater.mp3",
+        },
+        {
+          word: "wool hat",
+          image: "data/LetsSmile/3/Unit6/pics/woolhat.jpg",
+          sound: "data/LetsSmile/3/Unit6/sounds/woolhat.mp3",
+        },
+      ],
+      "Unit 7": [
+        {
+          word: "cooking",
+          image: "data/LetsSmile/3/Unit7/pics/cooking.jpg",
+          sound: "data/LetsSmile/3/Unit7/sounds/cooking.mp3",
+        },
+        {
+          word: "doing puzzles",
+          image: "data/LetsSmile/3/Unit7/pics/doingpuzzles.jpg",
+          sound: "data/LetsSmile/3/Unit7/sounds/doingpuzzles.mp3",
+        },
+        {
+          word: "drawing",
+          image: "data/LetsSmile/3/Unit7/pics/drawing.jpg",
+          sound: "data/LetsSmile/3/Unit7/sounds/drawing.mp3",
+        },
+        {
+          word: "painting",
+          image: "data/LetsSmile/3/Unit7/pics/painting.jpg",
+          sound: "data/LetsSmile/3/Unit7/sounds/painting.mp3",
+        },
+        {
+          word: "playing games",
+          image: "data/LetsSmile/3/Unit7/pics/playinggames.jpg",
+          sound: "data/LetsSmile/3/Unit7/sounds/playinggames.mp3",
+        },
+        {
+          word: "reading books",
+          image: "data/LetsSmile/3/Unit7/pics/readingbooks.jpg",
+          sound: "data/LetsSmile/3/Unit7/sounds/readingbooks.mp3",
+        },
+      ],
+      "Unit 8": [
+        {
+          word: "carrots",
+          image: "data/LetsSmile/3/Unit8/pics/carrots.jpg",
+          sound: "data/LetsSmile/3/Unit8/sounds/carrots.mp3",
+        },
+        {
+          word: "cucumbers",
+          image: "data/LetsSmile/3/Unit8/pics/cucumbers.jpg",
+          sound: "data/LetsSmile/3/Unit8/sounds/cucumbers.mp3",
+        },
+        {
+          word: "grapes",
+          image: "data/LetsSmile/3/Unit8/pics/grapes.jpg",
+          sound: "data/LetsSmile/3/Unit8/sounds/grapes.mp3",
+        },
+        {
+          word: "lemons",
+          image: "data/LetsSmile/3/Unit8/pics/lemons.jpg",
+          sound: "data/LetsSmile/3/Unit8/sounds/lemons.mp3",
+        },
+        {
+          word: "strawberries",
+          image: "data/LetsSmile/3/Unit8/pics/strawberries.jpg",
+          sound: "data/LetsSmile/3/Unit8/sounds/strawberries.mp3",
+        },
+        {
+          word: "tomatoes",
+          image: "data/LetsSmile/3/Unit8/pics/tomatoes.jpg",
+          sound: "data/LetsSmile/3/Unit8/sounds/tomatoes.mp3",
+        },
+      ],
+      "Unit 9": [
+        {
+          word: "chicken",
+          image: "data/LetsSmile/3/Unit9/pics/chicken.jpg",
+          sound: "data/LetsSmile/3/Unit9/sounds/chicken.mp3",
+        },
+        {
+          word: "hamburger",
+          image: "data/LetsSmile/3/Unit9/pics/hamburger.jpg",
+          sound: "data/LetsSmile/3/Unit9/sounds/hamburger.mp3",
+        },
+        {
+          word: "noodles",
+          image: "data/LetsSmile/3/Unit9/pics/noodles.jpg",
+          sound: "data/LetsSmile/3/Unit9/sounds/noodles.mp3",
+        },
+        {
+          word: "pizza",
+          image: "data/LetsSmile/3/Unit9/pics/pizza.jpg",
+          sound: "data/LetsSmile/3/Unit9/sounds/pizza.mp3",
+        },
+        {
+          word: "sandwich",
+          image: "data/LetsSmile/3/Unit9/pics/sandwich.jpg",
+          sound: "data/LetsSmile/3/Unit9/sounds/sandwich.mp3",
+        },
+        {
+          word: "spaghetti",
+          image: "data/LetsSmile/3/Unit9/pics/spaghetti.jpg",
+          sound: "data/LetsSmile/3/Unit9/sounds/spaghetti.mp3",
+        },
+      ],
+      "Unit 10": [
+        {
+          word: "iced tea",
+          image: "data/LetsSmile/3/Unit10/pics/icedtea.jpg",
+          sound: "data/LetsSmile/3/Unit10/sounds/icedtea.mp3",
+        },
+        {
+          word: "juice",
+          image: "data/LetsSmile/3/Unit10/pics/juice.jpg",
+          sound: "data/LetsSmile/3/Unit10/sounds/juice.mp3",
+        },
+        {
+          word: "lemonade",
+          image: "data/LetsSmile/3/Unit10/pics/lemonade.jpg",
+          sound: "data/LetsSmile/3/Unit10/sounds/lemonade.mp3",
+        },
+        {
+          word: "milk",
+          image: "data/LetsSmile/3/Unit10/pics/milk.jpg",
+          sound: "data/LetsSmile/3/Unit10/sounds/milk.mp3",
+        },
+        {
+          word: "soda",
+          image: "data/LetsSmile/3/Unit10/pics/soda.jpg",
+          sound: "data/LetsSmile/3/Unit10/sounds/soda.mp3",
+        },
+        {
+          word: "water",
+          image: "data/LetsSmile/3/Unit10/pics/water.jpg",
+          sound: "data/LetsSmile/3/Unit10/sounds/water.mp3",
+        },
+      ],
+      "Unit 11": [
+        {
+          word: "bakery",
+          image: "data/LetsSmile/3/Unit11/pics/bakery.jpg",
+          sound: "data/LetsSmile/3/Unit11/sounds/bakery.mp3",
+        },
+        {
+          word: "bank",
+          image: "data/LetsSmile/3/Unit11/pics/bank.jpg",
+          sound: "data/LetsSmile/3/Unit11/sounds/bank.mp3",
+        },
+        {
+          word: "bookstore",
+          image: "data/LetsSmile/3/Unit11/pics/bookstore.jpg",
+          sound: "data/LetsSmile/3/Unit11/sounds/bookstore.mp3",
+        },
+        {
+          word: "post office",
+          image: "data/LetsSmile/3/Unit11/pics/postoffice.jpg",
+          sound: "data/LetsSmile/3/Unit11/sounds/postoffice.mp3",
+        },
+        {
+          word: "restaurant",
+          image: "data/LetsSmile/3/Unit11/pics/restaurant.jpg",
+          sound: "data/LetsSmile/3/Unit11/sounds/restaurant.mp3",
+        },
+        {
+          word: "school",
+          image: "data/LetsSmile/3/Unit11/pics/school.jpg",
+          sound: "data/LetsSmile/3/Unit11/sounds/school.mp3",
+        },
+      ],
+      "Unit 12": [
+        {
+          word: "across from",
+          image: "data/LetsSmile/3/Unit12/pics/acrossfrom.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/acrossfrom.mp3",
+        },
+        {
+          word: "between",
+          image: "data/LetsSmile/3/Unit12/pics/between.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/between.mp3",
+        },
+        {
+          word: "next to",
+          image: "data/LetsSmile/3/Unit12/pics/nextto.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/nextto.mp3",
+        },
+        {
+          word: "library",
+          image: "data/LetsSmile/3/Unit12/pics/library.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/library.mp3",
+        },
+        {
+          word: "park",
+          image: "data/LetsSmile/3/Unit12/pics/park.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/park.mp3",
+        },
+        {
+          word: "pet shop",
+          image: "data/LetsSmile/3/Unit12/pics/petshop.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/petshop.mp3",
+        },
+        {
+          word: "pool",
+          image: "data/LetsSmile/3/Unit12/pics/pool.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/pool.mp3",
+        },
+        {
+          word: "supermarket",
+          image: "data/LetsSmile/3/Unit12/pics/supermarket.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/supermarket.mp3",
+        },
+        {
+          word: "toy store",
+          image: "data/LetsSmile/3/Unit12/pics/toystore.jpg",
+          sound: "data/LetsSmile/3/Unit12/sounds/toystore.mp3",
+        },
+      ],
+    },
+    4: {
+      "Unit 1": [
+        {
+          word: "play baseball",
+          image: "data/LetsSmile/4/Unit1/pics/playbaseball.jpg",
+          sound: "data/LetsSmile/4/Unit1/sounds/playbaseball.mp3",
+        },
+        {
+          word: "play basketball",
+          image: "data/LetsSmile/4/Unit1/pics/playbasketball.jpg",
+          sound: "data/LetsSmile/4/Unit1/sounds/playbasketball.mp3",
+        },
+        {
+          word: "play soccer",
+          image: "data/LetsSmile/4/Unit1/pics/playsoccer.jpg",
+          sound: "data/LetsSmile/4/Unit1/sounds/playsoccer.mp3",
+        },
+        {
+          word: "skateboard",
+          image: "data/LetsSmile/4/Unit1/pics/skateboard.jpg",
+          sound: "data/LetsSmile/4/Unit1/sounds/skateboard.mp3",
+        },
+        {
+          word: "snowboard",
+          image: "data/LetsSmile/4/Unit1/pics/snowboard.jpg",
+          sound: "data/LetsSmile/4/Unit1/sounds/snowboard.mp3",
+        },
+        {
+          word: "swim",
+          image: "data/LetsSmile/4/Unit1/pics/swim.jpg",
+          sound: "data/LetsSmile/4/Unit1/sounds/swim.mp3",
+        },
+      ],
+      "Unit 2": [
+        {
+          word: "play the drums",
+          image: "data/LetsSmile/4/Unit2/pics/playthedrums.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playthedrums.mp3",
+        },
+        {
+          word: "play the flute",
+          image: "data/LetsSmile/4/Unit2/pics/playtheflute.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playtheflute.mp3",
+        },
+        {
+          word: "play the guitar",
+          image: "data/LetsSmile/4/Unit2/pics/playguitar.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playguitar.mp3",
+        },
+        {
+          word: "play the piano",
+          image: "data/LetsSmile/4/Unit2/pics/playthepiano.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playthepiano.mp3",
+        },
+        {
+          word: "play the trumpet",
+          image: "data/LetsSmile/4/Unit2/pics/playthetrumpet.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playthetrumpet.mp3",
+        },
+        {
+          word: "play the violin",
+          image: "data/LetsSmile/4/Unit2/pics/playtheviolin.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playtheviolin.mp3",
+        },
+      ],
+      "Unit 3": [
+        {
+          word: "brush my teeth",
+          image: "data/LetsSmile/4/Unit3/pics/brushmyteeth.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/brushmyteeth.mp3",
+        },
+        {
+          word: "wash my face",
+          image: "data/LetsSmile/4/Unit3/pics/washmyface.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/washmyface.mp3",
+        },
+        {
+          word: "do my homework",
+          image: "data/LetsSmile/4/Unit3/pics/domyhomework.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/domyhomework.mp3",
+        },
+        {
+          word: "play with my friends",
+          image: "data/LetsSmile/4/Unit3/pics/playwithmyfriends.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/playwithmyfriends.mp3",
+        },
+        {
+          word: "read a book",
+          image: "data/LetsSmile/4/Unit3/pics/readabook.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/readabook.mp3",
+        },
+        {
+          word: "go to bed",
+          image: "data/LetsSmile/4/Unit3/pics/gotobed.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/gotobed.mp3",
+        },
+        {
+          word: "morning",
+          image: "data/LetsSmile/4/Unit3/pics/morning.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/morning.mp3",
+        },
+        {
+          word: "afternoon",
+          image: "data/LetsSmile/4/Unit3/pics/afternoon.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/afternoon.mp3",
+        },
+        {
+          word: "evening",
+          image: "data/LetsSmile/4/Unit3/pics/evening.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/evening.mp3",
+        },
+        {
+          word: "night",
+          image: "data/LetsSmile/4/Unit3/pics/night.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/night.mp3",
+        },
+      ],
+      "Unit 4": [
+        {
+          word: "clean my room",
+          image: "data/LetsSmile/4/Unit4/pics/cleanmyroom.jpg",
+          sound: "data/LetsSmile/4/Unit4/sounds/cleanmyroom.mp3",
+        },
+        {
+          word: "do the laundry",
+          image: "data/LetsSmile/4/Unit4/pics/dothelaundry.jpg",
+          sound: "data/LetsSmile/4/Unit4/sounds/dothelaundry.mp3",
+        },
+        {
+          word: "go shopping",
+          image: "data/LetsSmile/4/Unit4/pics/goshopping.jpg",
+          sound: "data/LetsSmile/4/Unit4/sounds/goshopping.mp3",
+        },
+        {
+          word: "go to the park",
+          image: "data/LetsSmile/4/Unit4/pics/gotothepark.jpg",
+          sound: "data/LetsSmile/4/Unit4/sounds/gotothepark.mp3",
+        },
+        {
+          word: "ride my bike",
+          image: "data/LetsSmile/4/Unit4/pics/ridemybike.jpg",
+          sound: "data/LetsSmile/4/Unit4/sounds/ridemybike.mp3",
+        },
+        {
+          word: "wash the car",
+          image: "data/LetsSmile/4/Unit4/pics/washthecar.jpg",
+          sound: "data/LetsSmile/4/Unit4/sounds/washthecar.mp3",
+        },
+      ],
+      "Unit 5": [
+        {
+          word: "art",
+          image: "data/LetsSmile/4/Unit5/pics/art.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/art.mp3",
+        },
+        {
+          word: "English",
+          image: "data/LetsSmile/4/Unit5/pics/english.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/english.mp3",
+        },
+        {
+          word: "math",
+          image: "data/LetsSmile/4/Unit5/pics/math.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/math.mp3",
+        },
+        {
+          word: "music",
+          image: "data/LetsSmile/4/Unit5/pics/music.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/music.mp3",
+        },
+        {
+          word: "P.E.",
+          image: "data/LetsSmile/4/Unit5/pics/pe.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/pe.mp3",
+        },
+        {
+          word: "science",
+          image: "data/LetsSmile/4/Unit5/pics/science.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/science.mp3",
+        },
+        {
+          word: "social studies",
+          image: "data/LetsSmile/4/Unit5/pics/socialstudies.jpg",
+          sound: "data/LetsSmile/4/Unit5/sounds/socialstudies.mp3",
+        },
+      ],
+      "Unit 6": [
+        {
+          word: "arts and crafts",
+          image: "data/LetsSmile/4/Unit6/pics/artsandcrafts.jpg",
+          sound: "data/LetsSmile/4/Unit6/sounds/artsandcrafts.mp3",
+        },
+        {
+          word: "band practice",
+          image: "data/LetsSmile/4/Unit6/pics/bandpractice.jpg",
+          sound: "data/LetsSmile/4/Unit6/sounds/bandpractice.mp3",
+        },
+        {
+          word: "dance lesson",
+          image: "data/LetsSmile/4/Unit6/pics/dancelesson.jpg",
+          sound: "data/LetsSmile/4/Unit6/sounds/dancelesson.mp3",
+        },
+        {
+          word: "soccer practice",
+          image: "data/LetsSmile/4/Unit6/pics/soccerpractice.jpg",
+          sound: "data/LetsSmile/4/Unit6/sounds/soccerpractice.mp3",
+        },
+        {
+          word: "swimming lesson",
+          image: "data/LetsSmile/4/Unit6/pics/swimminglesson.jpg",
+          sound: "data/LetsSmile/4/Unit6/sounds/swimminglesson.mp3",
+        },
+        {
+          word: "taekwondo",
+          image: "data/LetsSmile/4/Unit6/pics/taekwondo.jpg",
+          sound: "data/LetsSmile/4/Unit6/sounds/taekwondo.mp3",
+        },
+      ],
+      "Unit 7": [
+        {
+          word: "bake",
+          image: "data/LetsSmile/4/Unit7/pics/bake.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/bake.mp3",
+        },
+        {
+          word: "farmer",
+          image: "data/LetsSmile/4/Unit7/pics/farmer.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/farmer.mp3",
+        },
+        {
+          word: "firefighter",
+          image: "data/LetsSmile/4/Unit7/pics/firefighter.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/firefighter.mp3",
+        },
+        {
+          word: "nurse",
+          image: "data/LetsSmile/4/Unit7/pics/nurse.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/nurse.mp3",
+        },
+        {
+          word: "pilot",
+          image: "data/LetsSmile/4/Unit7/pics/pilot.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/pilot.mp3",
+        },
+        {
+          word: "police officer",
+          image: "data/LetsSmile/4/Unit7/pics/policeofficer.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/policeofficer.mp3",
+        },
+      ],
+      "Unit 8": [
+        {
+          word: "catch thieves",
+          image: "data/LetsSmile/4/Unit8/pics/catchthieves.jpg",
+          sound: "data/LetsSmile/4/Unit8/sounds/catchthieves.mp3",
+        },
+        {
+          word: "fly planes",
+          image: "data/LetsSmile/4/Unit8/pics/flyplanes.jpg",
+          sound: "data/LetsSmile/4/Unit8/sounds/flyplanes.mp3",
+        },
+        {
+          word: "grow food",
+          image: "data/LetsSmile/4/Unit8/pics/growfood.jpg",
+          sound: "data/LetsSmile/4/Unit8/sounds/growfood.mp3",
+        },
+        {
+          word: "help sick people",
+          image: "data/LetsSmile/4/Unit8/pics/helpsickpeople.jpg",
+          sound: "data/LetsSmile/4/Unit8/sounds/helpsickpeople.mp3",
+        },
+        {
+          word: "make bread",
+          image: "data/LetsSmile/4/Unit8/pics/makebread.jpg",
+          sound: "data/LetsSmile/4/Unit8/sounds/makebread.mp3",
+        },
+        {
+          word: "put out fires",
+          image: "data/LetsSmile/4/Unit8/pics/putoutfires.jpg",
+          sound: "data/LetsSmile/4/Unit8/sounds/putoutfires.mp3",
+        },
+      ],
+      "Unit 9": [
+        {
+          word: "bathroom",
+          image: "data/LetsSmile/4/Unit9/pics/bathroom.jpg",
+          sound: "data/LetsSmile/4/Unit9/sounds/bathroom.mp3",
+        },
+        {
+          word: "bedroom",
+          image: "data/LetsSmile/4/Unit9/pics/bedroom.jpg",
+          sound: "data/LetsSmile/4/Unit9/sounds/bedroom.mp3",
+        },
+        {
+          word: "dining room",
+          image: "data/LetsSmile/4/Unit9/pics/diningroom.jpg",
+          sound: "data/LetsSmile/4/Unit9/sounds/diningroom.mp3",
+        },
+        {
+          word: "kitchen",
+          image: "data/LetsSmile/4/Unit9/pics/kitchen.jpg",
+          sound: "data/LetsSmile/4/Unit9/sounds/kitchen.mp3",
+        },
+        {
+          word: "laundry room",
+          image: "data/LetsSmile/4/Unit9/pics/laundryroom.jpg",
+          sound: "data/LetsSmile/4/Unit9/sounds/laundryroom.mp3",
+        },
+        {
+          word: "living room",
+          image: "data/LetsSmile/4/Unit9/pics/livingroom.jpg",
+          sound: "data/LetsSmile/4/Unit9/sounds/livingroom.mp3",
+        },
+      ],
+      "Unit 10": [
+        {
+          word: "bathtub",
+          image: "data/LetsSmile/4/Unit10/pics/bathtub.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/bathtub.mp3",
+        },
+        {
+          word: "bed",
+          image: "data/LetsSmile/4/Unit10/pics/bed.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/bed.mp3",
+        },
+        {
+          word: "closet",
+          image: "data/LetsSmile/4/Unit10/pics/closet.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/closet.mp3",
+        },
+        {
+          word: "coffee table",
+          image: "data/LetsSmile/4/Unit10/pics/coffeetable.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/coffeetable.mp3",
+        },
+        {
+          word: "refrigerator",
+          image: "data/LetsSmile/4/Unit10/pics/refrigerator.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/refrigerator.mp3",
+        },
+        {
+          word: "sofa",
+          image: "data/LetsSmile/4/Unit10/pics/sofa.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/sofa.mp3",
+        },
+        {
+          word: "stove",
+          image: "data/LetsSmile/4/Unit10/pics/stove.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/stove.mp3",
+        },
+        {
+          word: "toilet",
+          image: "data/LetsSmile/4/Unit10/pics/toilet.jpg",
+          sound: "data/LetsSmile/4/Unit10/sounds/toilet.mp3",
+        },
+      ],
+      "Unit 11": [
+        {
+          word: "airport",
+          image: "data/LetsSmile/4/Unit11/pics/airport.jpg",
+          sound: "data/LetsSmile/4/Unit11/sounds/airport.mp3",
+        },
+        {
+          word: "fire station",
+          image: "data/LetsSmile/4/Unit11/pics/firestation.jpg",
+          sound: "data/LetsSmile/4/Unit11/sounds/firestation.mp3",
+        },
+        {
+          word: "movie theater",
+          image: "data/LetsSmile/4/Unit11/pics/movietheater.jpg",
+          sound: "data/LetsSmile/4/Unit11/sounds/movietheater.mp3",
+        },
+        {
+          word: "museum",
+          image: "data/LetsSmile/4/Unit11/pics/museum.jpg",
+          sound: "data/LetsSmile/4/Unit11/sounds/museum.mp3",
+        },
+        {
+          word: "police station",
+          image: "data/LetsSmile/4/Unit11/pics/policestation.jpg",
+          sound: "data/LetsSmile/4/Unit11/sounds/policestation.mp3",
+        },
+        {
+          word: "shopping mall",
+          image: "data/LetsSmile/4/Unit11/pics/shoppingmall.jpg",
+          sound: "data/LetsSmile/4/Unit11/sounds/shoppingmall.mp3",
+        },
+      ],
+      "Unit 12": [
+        {
+          word: "cloudy",
+          image: "data/LetsSmile/4/Unit12/pics/cloudy.jpg",
+          sound: "data/LetsSmile/4/Unit12/sounds/cloudy.mp3",
+        },
+        {
+          word: "foggy",
+          image: "data/LetsSmile/4/Unit12/pics/foggy.jpg",
+          sound: "data/LetsSmile/4/Unit12/sounds/foggy.mp3",
+        },
+        {
+          word: "rainy",
+          image: "data/LetsSmile/4/Unit12/pics/rainy.jpg",
+          sound: "data/LetsSmile/4/Unit12/sounds/rainy.mp3",
+        },
+        {
+          word: "snowy",
+          image: "data/LetsSmile/4/Unit12/pics/snowy.jpg",
+          sound: "data/LetsSmile/4/Unit12/sounds/snowy.mp3",
+        },
+        {
+          word: "sunny",
+          image: "data/LetsSmile/4/Unit12/pics/sunny.jpg",
+          sound: "data/LetsSmile/4/Unit12/sounds/sunny.mp3",
+        },
+        {
+          word: "windy",
+          image: "data/LetsSmile/4/Unit12/pics/windy.jpg",
+          sound: "data/LetsSmile/4/Unit12/sounds/windy.mp3",
+        },
+      ],
+    },
+    5: {
+      "Unit 1": [
+        {
+          word: "get up",
+          image: "data/LetsSmile/5/Unit1/pics/getup.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/getup.mp3",
+        },
+        {
+          word: "have breakfast",
+          image: "data/LetsSmile/5/Unit1/pics/havebreakfast.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/havebreakfast.mp3",
+        },
+        {
+          word: "go to school",
+          image: "data/LetsSmile/5/Unit1/pics/gotoschool.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/gotoschool.mp3",
+        },
+        {
+          word: "eat lunch",
+          image: "data/LetsSmile/5/Unit1/pics/eatlunch.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/eatlunch.mp3",
+        },
+        {
+          word: "finish school",
+          image: "data/LetsSmile/5/Unit1/pics/finishschool.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/finishschool.mp3",
+        },
+        {
+          word: "come home",
+          image: "data/LetsSmile/5/Unit1/pics/comehome.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/comehome.mp3",
+        },
+        {
+          word: "eat dinner",
+          image: "data/LetsSmile/5/Unit1/pics/eatdinner.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/eatdinner.mp3",
+        },
+        {
+          word: "go to bed",
+          image: "data/LetsSmile/5/Unit1/pics/gotobed.jpg",
+          sound: "data/LetsSmile/5/Unit1/sounds/gotobed.mp3",
+        },
+      ],
+      "Unit 2": [
+        {
+          word: "drive",
+          image: "data/LetsSmile/5/Unit2/pics/drive.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/drive.mp3",
+        },
+        {
+          word: "ride my bike",
+          image: "data/LetsSmile/5/Unit2/pics/ridemybike.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/ridemybike.mp3",
+        },
+        {
+          word: "take a taxi",
+          image: "data/LetsSmile/5/Unit2/pics/takeatoxi.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/takeatoxi.mp3",
+        },
+        {
+          word: "take the bus",
+          image: "data/LetsSmile/5/Unit2/pics/takethebus.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/takethebus.mp3",
+        },
+        {
+          word: "take the subway",
+          image: "data/LetsSmile/5/Unit2/pics/takethesubway.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/takethesubway.mp3",
+        },
+        {
+          word: "take the train",
+          image: "data/LetsSmile/5/Unit2/pics/takethetrain.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/takethetrain.mp3",
+        },
+        {
+          word: "take the tram",
+          image: "data/LetsSmile/5/Unit2/pics/takethetram.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/takethetram.mp3",
+        },
+        {
+          word: "walk",
+          image: "data/LetsSmile/5/Unit2/pics/walk.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/walk.mp3",
+        },
+      ],
+      "Unit 3": [
+        {
+          word: "go to a resort",
+          image: "data/LetsSmile/5/Unit3/pics/gotoaresort.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotoaresort.mp3",
+        },
+        {
+          word: "go to an island",
+          image: "data/LetsSmile/5/Unit3/pics/gotoanisland.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotoanisland.mp3",
+        },
+        {
+          word: "go to the beach",
+          image: "data/LetsSmile/5/Unit3/pics/gotothebeach.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotothebeach.mp3",
+        },
+        {
+          word: "go to the desert",
+          image: "data/LetsSmile/5/Unit3/pics/gotothedesert.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotothedesert.mp3",
+        },
+        {
+          word: "go to the jungle",
+          image: "data/LetsSmile/5/Unit3/pics/gotothejungle.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotothejungle.mp3",
+        },
+        {
+          word: "go to the lake",
+          image: "data/LetsSmile/5/Unit3/pics/gotolake.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotolake.mp3",
+        },
+        {
+          word: "go to the mountains",
+          image: "data/LetsSmile/5/Unit3/pics/gotothemountains.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotothemountains.mp3",
+        },
+        {
+          word: "go to the river",
+          image: "data/LetsSmile/5/Unit3/pics/gototheriver.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gototheriver.mp3",
+        },
+      ],
+      "Unit 4": [
+        {
+          word: "go bike riding",
+          image: "data/LetsSmile/5/Unit4/pics/gobakeriding.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gobakeriding.mp3",
+        },
+        {
+          word: "go camping",
+          image: "data/LetsSmile/5/Unit4/pics/gocamping.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gocamping.mp3",
+        },
+        {
+          word: "go fishing",
+          image: "data/LetsSmile/5/Unit4/pics/gofishing.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gofishing.mp3",
+        },
+        {
+          word: "go hiking",
+          image: "data/LetsSmile/5/Unit4/pics/gohiking.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gohiking.mp3",
+        },
+        {
+          word: "go horseback riding",
+          image: "data/LetsSmile/5/Unit4/pics/gohorsebackriding.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gohorsebackriding.mp3",
+        },
+        {
+          word: "go snorkeling",
+          image: "data/LetsSmile/5/Unit4/pics/gosnorkeling.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gosnorkeling.mp3",
+        },
+        {
+          word: "go surfing",
+          image: "data/LetsSmile/5/Unit4/pics/gosurfing.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gosurfing.mp3",
+        },
+        {
+          word: "go swimming",
+          image: "data/LetsSmile/5/Unit4/pics/goswimming.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/goswimming.mp3",
+        },
+      ],
+      "Unit 5": [
+        {
+          word: "bake cookies",
+          image: "data/LetsSmile/5/Unit5/pics/bakecookies.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/bakecookies.mp3",
+        },
+        {
+          word: "go shopping",
+          image: "data/LetsSmile/5/Unit5/pics/goshopping.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/goshopping.mp3",
+        },
+        {
+          word: "go to the movies",
+          image: "data/LetsSmile/5/Unit5/pics/gotothemovies.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/gotothemovies.mp3",
+        },
+        {
+          word: "play basketball",
+          image: "data/LetsSmile/5/Unit5/pics/playbasketball.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/playbasketball.mp3",
+        },
+        {
+          word: "play video games",
+          image: "data/LetsSmile/5/Unit5/pics/playvideogames.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/playvideogames.mp3",
+        },
+        {
+          word: "read comic books",
+          image: "data/LetsSmile/5/Unit5/pics/readcomicbooks.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/readcomicbooks.mp3",
+        },
+        {
+          word: "take a nap",
+          image: "data/LetsSmile/5/Unit5/pics/takeanap.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/takeanap.mp3",
+        },
+        {
+          word: "visit my grandma",
+          image: "data/LetsSmile/5/Unit5/pics/visitmygrandma.jpg",
+          sound: "data/LetsSmile/5/Unit5/sounds/visitmygrandma.mp3",
+        },
+      ],
+      "Unit 6": [
+        {
+          word: "do yoga",
+          image: "data/LetsSmile/5/Unit6/pics/doyoga.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/doyoga.mp3",
+        },
+        {
+          word: "fly drones",
+          image: "data/LetsSmile/5/Unit6/pics/flydrones.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/flydrones.mp3",
+        },
+        {
+          word: "make model planes",
+          image: "data/LetsSmile/5/Unit6/pics/makemodelplanes.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/makemodelplanes.mp3",
+        },
+        {
+          word: "play badminton",
+          image: "data/LetsSmile/5/Unit6/pics/playbadminton.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/playbadminton.mp3",
+        },
+        {
+          word: "play chess",
+          image: "data/LetsSmile/5/Unit6/pics/playchess.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/playchess.mp3",
+        },
+        {
+          word: "play the drums",
+          image: "data/LetsSmile/5/Unit6/pics/playthedrums.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/playthedrums.mp3",
+        },
+        {
+          word: "sing in the band",
+          image: "data/LetsSmile/5/Unit6/pics/singintheband.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/singintheband.mp3",
+        },
+        {
+          word: "take pictures",
+          image: "data/LetsSmile/5/Unit6/pics/takepictures.jpg",
+          sound: "data/LetsSmile/5/Unit6/sounds/takepictures.mp3",
+        },
+      ],
+      "Unit 7": [
+        {
+          word: "clean the house",
+          image: "data/LetsSmile/5/Unit7/pics/cleanhouse.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/cleanhouse.mp3",
+        },
+        {
+          word: "cook dinner",
+          image: "data/LetsSmile/5/Unit7/pics/cookdinner.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/cookdinner.mp3",
+        },
+        {
+          word: "listen to music",
+          image: "data/LetsSmile/5/Unit7/pics/listentomusic.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/listentomusic.mp3",
+        },
+        {
+          word: "paint a picture",
+          image: "data/LetsSmile/5/Unit7/pics/paintapicture.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/paintapicture.mp3",
+        },
+        {
+          word: "play a board game",
+          image: "data/LetsSmile/5/Unit7/pics/playaboardgame.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/playaboardgame.mp3",
+        },
+        {
+          word: "study for a test",
+          image: "data/LetsSmile/5/Unit7/pics/studyforatest.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/studyforatest.mp3",
+        },
+        {
+          word: "talk on the phone",
+          image: "data/LetsSmile/5/Unit7/pics/talkononthephone.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/talkononthephone.mp3",
+        },
+        {
+          word: "watch TV",
+          image: "data/LetsSmile/5/Unit7/pics/watchtv.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/watchtv.mp3",
+        },
+      ],
+      "Unit 8": [
+        {
+          word: "drink soda",
+          image: "data/LetsSmile/5/Unit8/pics/drinksoda.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/drinksoda.mp3",
+        },
+        {
+          word: "eat a sandwich",
+          image: "data/LetsSmile/5/Unit8/pics/eatandwich.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/eatandwich.mp3",
+        },
+        {
+          word: "feed the ducks",
+          image: "data/LetsSmile/5/Unit8/pics/feedtheducks.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/feedtheducks.mp3",
+        },
+        {
+          word: "fly a kite",
+          image: "data/LetsSmile/5/Unit8/pics/flyakite.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/flyakite.mp3",
+        },
+        {
+          word: "make water balloons",
+          image: "data/LetsSmile/5/Unit8/pics/makewaterballoons.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/makewaterballoons.mp3",
+        },
+        {
+          word: "read a book",
+          image: "data/LetsSmile/5/Unit8/pics/readabook.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/readabook.mp3",
+        },
+        {
+          word: "ride a bike",
+          image: "data/LetsSmile/5/Unit8/pics/rideabike.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/rideabike.mp3",
+        },
+        {
+          word: "take pictures",
+          image: "data/LetsSmile/5/Unit8/pics/takepictures.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/takepictures.mp3",
+        },
+      ],
+      "Unit 9": [
+        {
+          word: "build an igloo",
+          image: "data/LetsSmile/5/Unit9/pics/buildanigloo.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/buildanigloo.mp3",
+        },
+        {
+          word: "go ice fishing",
+          image: "data/LetsSmile/5/Unit9/pics/goicefishing.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/goicefishing.mp3",
+        },
+        {
+          word: "go ice-skating",
+          image: "data/LetsSmile/5/Unit9/pics/goiceskating.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/goiceskating.mp3",
+        },
+        {
+          word: "go skiing",
+          image: "data/LetsSmile/5/Unit9/pics/goskiing.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/goskiing.mp3",
+        },
+        {
+          word: "go sledding",
+          image: "data/LetsSmile/5/Unit9/pics/gosledding.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/gosledding.mp3",
+        },
+        {
+          word: "have a snowball fight",
+          image: "data/LetsSmile/5/Unit9/pics/haveasnowballfight.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/haveasnowballfight.mp3",
+        },
+        {
+          word: "make a snowman",
+          image: "data/LetsSmile/5/Unit9/pics/makeasnowman.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/makeasnowman.mp3",
+        },
+        {
+          word: "play ice hockey",
+          image: "data/LetsSmile/5/Unit9/pics/playicehockey.jpg",
+          sound: "data/LetsSmile/5/Unit9/sounds/playicehockey.mp3",
+        },
+      ],
+      "Unit 10": [
+        {
+          word: "build a sandcastle",
+          image: "data/LetsSmile/5/Unit10/pics/buildasandcastle.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/buildasandcastle.mp3",
+        },
+        {
+          word: "collect seashells",
+          image: "data/LetsSmile/5/Unit10/pics/collectseashells.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/collectseashells.mp3",
+        },
+        {
+          word: "get a suntan",
+          image: "data/LetsSmile/5/Unit10/pics/getasuntan.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/getasuntan.mp3",
+        },
+        {
+          word: "go sailing",
+          image: "data/LetsSmile/5/Unit10/pics/gosailing.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/gosailing.mp3",
+        },
+        {
+          word: "go windsurfing",
+          image: "data/LetsSmile/5/Unit10/pics/gowindsurfing.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/gowindsurfing.mp3",
+        },
+        {
+          word: "learn to water-ski",
+          image: "data/LetsSmile/5/Unit10/pics/learntowatersski.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/learntowatersski.mp3",
+        },
+        {
+          word: "play beach volleyball",
+          image: "data/LetsSmile/5/Unit10/pics/playbeachvolleyball.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/playbeachvolleyball.mp3",
+        },
+        {
+          word: "play catch",
+          image: "data/LetsSmile/5/Unit10/pics/playcatch.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/playcatch.mp3",
+        },
+      ],
+      "Unit 11": [
+        {
+          word: "architect",
+          image: "data/LetsSmile/5/Unit11/pics/architect.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/architect.mp3",
+        },
+        {
+          word: "astronaut",
+          image: "data/LetsSmile/5/Unit11/pics/astronaut.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/astronaut.mp3",
+        },
+        {
+          word: "fashion designer",
+          image: "data/LetsSmile/5/Unit11/pics/fashiondesigner.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/fashiondesigner.mp3",
+        },
+        {
+          word: "movie director",
+          image: "data/LetsSmile/5/Unit11/pics/moviedirector.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/moviedirector.mp3",
+        },
+        {
+          word: "reporter",
+          image: "data/LetsSmile/5/Unit11/pics/reporter.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/reporter.mp3",
+        },
+        {
+          word: "scientist",
+          image: "data/LetsSmile/5/Unit11/pics/scientist.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/scientist.mp3",
+        },
+        {
+          word: "vet",
+          image: "data/LetsSmile/5/Unit11/pics/vet.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/vet.mp3",
+        },
+        {
+          word: "writer",
+          image: "data/LetsSmile/5/Unit11/pics/writer.jpg",
+          sound: "data/LetsSmile/5/Unit11/sounds/writer.mp3",
+        },
+      ],
+      "Unit 12": [
+        {
+          word: "build birdhouses",
+          image: "data/LetsSmile/5/Unit12/pics/buildbirdhouses.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/buildbirdhouses.mp3",
+        },
+        {
+          word: "build robots",
+          image: "data/LetsSmile/5/Unit12/pics/buildrobots.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/buildrobots.mp3",
+        },
+        {
+          word: "give presentations",
+          image: "data/LetsSmile/5/Unit12/pics/givepresentations.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/givepresentations.mp3",
+        },
+        {
+          word: "learn about space",
+          image: "data/LetsSmile/5/Unit12/pics/learnaboutspace.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/learnaboutspace.mp3",
+        },
+        {
+          word: "make doll clothes",
+          image: "data/LetsSmile/5/Unit12/pics/makedollclothes.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/makedollclothes.mp3",
+        },
+        {
+          word: "make videos",
+          image: "data/LetsSmile/5/Unit12/pics/makevideos.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/makevideos.mp3",
+        },
+        {
+          word: "take care of animals",
+          image: "data/LetsSmile/5/Unit12/pics/takecareofanimals.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/takecareofanimals.mp3",
+        },
+        {
+          word: "write stories",
+          image: "data/LetsSmile/5/Unit12/pics/writestories.jpg",
+          sound: "data/LetsSmile/5/Unit12/sounds/writestories.mp3",
+        },
+      ],
+    },
+    6: {
+      "Unit 1": [
+        {
+          word: "get a haircut",
+          image: "data/LetsSmile/6/Unit1/pics/getahaircut.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/getahaircut.mp3",
+        },
+        {
+          word: "go for a walk",
+          image: "data/LetsSmile/6/Unit1/pics/goforawalk.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/goforawalk.mp3",
+        },
+        {
+          word: "go to a concert",
+          image: "data/LetsSmile/6/Unit1/pics/gotoconvert.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/gotoconvert.mp3",
+        },
+        {
+          word: "go to a soccer game",
+          image: "data/LetsSmile/6/Unit1/pics/gotoasoccergame.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/gotoasoccergame.mp3",
+        },
+        {
+          word: "go to the movies",
+          image: "data/LetsSmile/6/Unit1/pics/gotothemovies.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/gotothemovies.mp3",
+        },
+        {
+          word: "practice the guitar",
+          image: "data/LetsSmile/6/Unit1/pics/practicetheguitar.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/practicetheguitar.mp3",
+        },
+        {
+          word: "visit a museum",
+          image: "data/LetsSmile/6/Unit1/pics/visitamuseum.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/visitamuseum.mp3",
+        },
+        {
+          word: "work on my science project",
+          image: "data/LetsSmile/6/Unit1/pics/workonmyscienceproject.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/workonmyscienceproject.mp3",
+        },
+      ],
+      "Unit 2": [
+        {
+          word: "do magic tricks",
+          image: "data/LetsSmile/6/Unit2/pics/domagictricks.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/domagictricks.mp3",
+        },
+        {
+          word: "paint a pumpkin",
+          image: "data/LetsSmile/6/Unit2/pics/paintapumpkin.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/paintapumpkin.mp3",
+        },
+        {
+          word: "ride a pony",
+          image: "data/LetsSmile/6/Unit2/pics/rideapony.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/rideapony.mp3",
+        },
+        {
+          word: "ride the Ferris wheel",
+          image: "data/LetsSmile/6/Unit2/pics/ridethefarriswheel.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/ridethefarriswheel.mp3",
+        },
+        {
+          word: "sell homemade cookies",
+          image: "data/LetsSmile/6/Unit2/pics/sellhomemadecookies.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/sellhomemadecookies.mp3",
+        },
+        {
+          word: "sing at the talent show",
+          image: "data/LetsSmile/6/Unit2/pics/singatthetalentshow.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/singatthetalentshow.mp3",
+        },
+        {
+          word: "walk in the parade",
+          image: "data/LetsSmile/6/Unit2/pics/walkinthepatade.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/walkinthepatade.mp3",
+        },
+        {
+          word: "watch fireworks",
+          image: "data/LetsSmile/6/Unit2/pics/watchfireworks.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/watchfireworks.mp3",
+        },
+      ],
+      "Unit 5": [
+        {
+          word: "drink a milkshake",
+          image: "data/LetsSmile/6/Unit5/pics/drinkamilkshake.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/drinkamilkshake.mp3",
+        },
+        {
+          word: "have a sack race",
+          image: "data/LetsSmile/6/Unit5/pics/haveasackrace.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/haveasackrace.mp3",
+        },
+        {
+          word: "make a team poster",
+          image: "data/LetsSmile/6/Unit5/pics/makeateamposter.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/makeateamposter.mp3",
+        },
+        {
+          word: "run in a race",
+          image: "data/LetsSmile/6/Unit5/pics/runinrace.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/runinrace.mp3",
+        },
+        {
+          word: "sing the school song",
+          image: "data/LetsSmile/6/Unit5/pics/singtheschoolsong.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/singtheschoolsong.mp3",
+        },
+        {
+          word: "throw water balloons",
+          image: "data/LetsSmile/6/Unit5/pics/throwwaterballoons.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/throwwaterballoons.mp3",
+        },
+        {
+          word: "wear team T-shirts",
+          image: "data/LetsSmile/6/Unit5/pics/wearteamtshirts.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/wearteamtshirts.mp3",
+        },
+        {
+          word: "win tug-of-war",
+          image: "data/LetsSmile/6/Unit5/pics/wintugowar.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/wintugowar.mp3",
+        },
+      ],
+      "Unit 6": [
+        {
+          word: "bake a cake",
+          image: "data/LetsSmile/6/Unit6/pics/bakeacake.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/bakeacake.mp3",
+        },
+        {
+          word: "blow out the candles",
+          image: "data/LetsSmile/6/Unit6/pics/blowoutthecandles.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/blowoutthecandles.mp3",
+        },
+        {
+          word: "cut the cake",
+          image: "data/LetsSmile/6/Unit6/pics/cutthecake.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/cutthecake.mp3",
+        },
+        {
+          word: "eat the cake",
+          image: "data/LetsSmile/6/Unit6/pics/eatcake.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/eatcake.mp3",
+        },
+        {
+          word: "invite my friends",
+          image: "data/LetsSmile/6/Unit6/pics/invitemyfriends.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/invitemyfriends.mp3",
+        },
+        {
+          word: "make a banner",
+          image: "data/LetsSmile/6/Unit6/pics/makeabanner.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/makeabanner.mp3",
+        },
+        {
+          word: "open the presents",
+          image: "data/LetsSmile/6/Unit6/pics/openthepresents.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/openthepresents.mp3",
+        },
+        {
+          word: "watch a magic show",
+          image: "data/LetsSmile/6/Unit6/pics/watchamagicshow.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/watchamagicshow.mp3",
+        },
+      ],
+      "Unit 7": [
+        {
+          word: "cold",
+          image: "data/LetsSmile/6/Unit7/pics/cold.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/cold.mp3",
+        },
+        {
+          word: "earache",
+          image: "data/LetsSmile/6/Unit7/pics/earache.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/earache.mp3",
+        },
+        {
+          word: "fever",
+          image: "data/LetsSmile/6/Unit7/pics/fever.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/fever.mp3",
+        },
+        {
+          word: "flu",
+          image: "data/LetsSmile/6/Unit7/pics/flu.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/flu.mp3",
+        },
+        {
+          word: "headache",
+          image: "data/LetsSmile/6/Unit7/pics/headache.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/headache.mp3",
+        },
+        {
+          word: "sore throat",
+          image: "data/LetsSmile/6/Unit7/pics/sorethroat.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/sorethroat.mp3",
+        },
+        {
+          word: "stomachache",
+          image: "data/LetsSmile/6/Unit7/pics/stomachache.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/stomachache.mp3",
+        },
+        {
+          word: "toothache",
+          image: "data/LetsSmile/6/Unit7/pics/toothache.jpg",
+          sound: "data/LetsSmile/6/Unit7/sounds/toothache.mp3",
+        },
+      ],
+      "Unit 8": [
+        {
+          word: "do the dishes",
+          image: "data/LetsSmile/6/Unit8/pics/dothedishes.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/dothedishes.mp3",
+        },
+        {
+          word: "do the laundry",
+          image: "data/LetsSmile/6/Unit8/pics/dothelaundry.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/dothelaundry.mp3",
+        },
+        {
+          word: "feed the dog",
+          image: "data/LetsSmile/6/Unit8/pics/feedthedog.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/feedthedog.mp3",
+        },
+        {
+          word: "make my bed",
+          image: "data/LetsSmile/6/Unit8/pics/makemybed.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/makemybed.mp3",
+        },
+        {
+          word: "set the table",
+          image: "data/LetsSmile/6/Unit8/pics/setthetable.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/setthetable.mp3",
+        },
+        {
+          word: "take out the garbage",
+          image: "data/LetsSmile/6/Unit8/pics/takeoutthegarbage.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/takeoutthegarbage.mp3",
+        },
+        {
+          word: "vacuum the floor",
+          image: "data/LetsSmile/6/Unit8/pics/vacuumthefloor.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/vacuumthefloor.mp3",
+        },
+        {
+          word: "water the plants",
+          image: "data/LetsSmile/6/Unit8/pics/watertheplants.jpg",
+          sound: "data/LetsSmile/6/Unit8/sounds/watertheplants.mp3",
+        },
+      ],
+      "Unit 11": [
+        {
+          word: "go on a nature walk",
+          image: "data/LetsSmile/6/Unit11/pics/goonanaturewalke.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/goonanaturewalke.mp3",
+        },
+        {
+          word: "go to an amusement park",
+          image: "data/LetsSmile/6/Unit11/pics/gotoamusementpark.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/gotoamusementpark.mp3",
+        },
+        {
+          word: "go to a flower festival",
+          image: "data/LetsSmile/6/Unit11/pics/gotoaflowerfestival.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/gotoaflowerfestival.mp3",
+        },
+        {
+          word: "go to a petting farm",
+          image: "data/LetsSmile/6/Unit11/pics/gotoappetingfarm.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/gotoappetingfarm.mp3",
+        },
+        {
+          word: "have a yard sale",
+          image: "data/LetsSmile/6/Unit11/pics/haveapardsale.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/haveapardsale.mp3",
+        },
+        {
+          word: "make a birdhouse",
+          image: "data/LetsSmile/6/Unit11/pics/makeabirdhouse.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/makeabirdhouse.mp3",
+        },
+        {
+          word: "paint the fence",
+          image: "data/LetsSmile/6/Unit11/pics/paintthefence.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/paintthefence.mp3",
+        },
+        {
+          word: "plant flowers",
+          image: "data/LetsSmile/6/Unit11/pics/plantflowers.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/plantflowers.mp3",
+        },
+      ],
+      "Unit 12": [
+        {
+          word: "be the president",
+          image: "data/LetsSmile/6/Unit12/pics/bethepresident.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/bethepresident.mp3",
+        },
+        {
+          word: "build tree houses",
+          image: "data/LetsSmile/6/Unit12/pics/buildtreehouses.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/buildtreehouses.mp3",
+        },
+        {
+          word: "create videos",
+          image: "data/LetsSmile/6/Unit12/pics/createvideos.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/createvideos.mp3",
+        },
+        {
+          word: "make international friends",
+          image: "data/LetsSmile/6/Unit12/pics/makeinternationalfriends.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/makeinternationalfriends.mp3",
+        },
+        {
+          word: "run in the Olympics",
+          image: "data/LetsSmile/6/Unit12/pics/runintheolympics.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/runintheolympics.mp3",
+        },
+        {
+          word: "travel to space",
+          image: "data/LetsSmile/6/Unit12/pics/traveltosoace.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/traveltosoace.mp3",
+        },
+        {
+          word: "visit foreign countries",
+          image: "data/LetsSmile/6/Unit12/pics/visitforeigncountries.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/visitforeigncountries.mp3",
+        },
+        {
+          word: "write novels",
+          image: "data/LetsSmile/6/Unit12/pics/writenovels.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/writenovels.mp3",
+        },
+      ],
+    },
+  },
 }
