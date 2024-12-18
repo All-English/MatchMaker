@@ -2029,6 +2029,38 @@ export const cardLibrary = {
           sound: "data/LetsSmile/1/Unit2/sounds/pencil.mp3",
         },
       ],
+      "Unit 3": [
+        {
+          word: "red",
+          image: "data/LetsSmile/1/Unit3/pics/red.jpg",
+          sound: "data/LetsSmile/1/Unit3/sounds/red.mp3",
+        },
+        {
+          word: "orange",
+          image: "data/LetsSmile/1/Unit3/pics/orange.jpg",
+          sound: "data/LetsSmile/1/Unit3/sounds/orange.mp3",
+        },
+        {
+          word: "yellow",
+          image: "data/LetsSmile/1/Unit3/pics/yellow.jpg",
+          sound: "data/LetsSmile/1/Unit3/sounds/yellow.mp3",
+        },
+        {
+          word: "green",
+          image: "data/LetsSmile/1/Unit3/pics/green.jpg",
+          sound: "data/LetsSmile/1/Unit3/sounds/green.mp3",
+        },
+        {
+          word: "blue",
+          image: "data/LetsSmile/1/Unit3/pics/blue.jpg",
+          sound: "data/LetsSmile/1/Unit3/sounds/blue.mp3",
+        },
+        {
+          word: "purple",
+          image: "data/LetsSmile/1/Unit3/pics/purple.jpg",
+          sound: "data/LetsSmile/1/Unit3/sounds/purple.mp3",
+        },
+      ],
       "Unit 4": [
         {
           word: "black",
@@ -2054,6 +2086,28 @@ export const cardLibrary = {
           word: "white",
           image: "data/LetsSmile/1/Unit4/pics/white.jpg",
           sound: "data/LetsSmile/1/Unit4/sounds/white.mp3",
+        },
+      ],
+      "Unit 5": [
+        {
+          word: "cat",
+          image: "data/LetsSmile/1/Unit5/pics/cat.jpg",
+          sound: "data/LetsSmile/1/Unit5/sounds/cat.mp3",
+        },
+        {
+          word: "dog",
+          image: "data/LetsSmile/1/Unit5/pics/dog.jpg",
+          sound: "data/LetsSmile/1/Unit5/sounds/dog.mp3",
+        },
+        {
+          word: "rabbit",
+          image: "data/LetsSmile/1/Unit5/pics/rabbit.jpg",
+          sound: "data/LetsSmile/1/Unit5/sounds/rabbit.mp3",
+        },
+        {
+          word: "turtle",
+          image: "data/LetsSmile/1/Unit5/pics/turtle.jpg",
+          sound: "data/LetsSmile/1/Unit5/sounds/turtle.mp3",
         },
       ],
       "Unit 6": [
@@ -2229,49 +2283,34 @@ export const cardLibrary = {
       ],
       "Unit 2": [
         {
-          word: "big",
-          image: "data/LetsSmile/2/Unit2/pics/big.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/big.mp3",
+          word: "big book",
+          image: "data/LetsSmile/2/Unit2/pics/bigbook.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/bigbook.mp3",
         },
         {
-          word: "small",
-          image: "data/LetsSmile/2/Unit2/pics/small.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/small.mp3",
+          word: "small book",
+          image: "data/LetsSmile/2/Unit2/pics/smallbook.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/smallbook.mp3",
         },
         {
-          word: "long",
-          image: "data/LetsSmile/2/Unit2/pics/long.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/long.mp3",
+          word: "long pencil",
+          image: "data/LetsSmile/2/Unit2/pics/longpencil.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/longpencil.mp3",
         },
         {
-          word: "short",
-          image: "data/LetsSmile/2/Unit2/pics/short.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/short.mp3",
+          word: "short pencil ",
+          image: "data/LetsSmile/2/Unit2/pics/shortpencil.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/shortpencil.mp3",
         },
         {
-          word: "new",
-          image: "data/LetsSmile/2/Unit2/pics/new.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/new.mp3",
+          word: "new backpack",
+          image: "data/LetsSmile/2/Unit2/pics/newbackpack.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/newbackpack.mp3",
         },
         {
-          word: "old",
-          image: "data/LetsSmile/2/Unit2/pics/old.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/old.mp3",
-        },
-        {
-          word: "backpack",
-          image: "data/LetsSmile/2/Unit2/pics/backpack.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/backpack.mp3",
-        },
-        {
-          word: "book",
-          image: "data/LetsSmile/2/Unit2/pics/book.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/book.mp3",
-        },
-        {
-          word: "pencil",
-          image: "data/LetsSmile/2/Unit2/pics/pencil.jpg",
-          sound: "data/LetsSmile/2/Unit2/sounds/pencil.mp3",
+          word: "old backpack",
+          image: "data/LetsSmile/2/Unit2/pics/oldbackpack.jpg",
+          sound: "data/LetsSmile/2/Unit2/sounds/oldbackpack.mp3",
         },
       ],
       "Unit 3": [
@@ -2352,19 +2391,29 @@ export const cardLibrary = {
       ],
       "Unit 6": [
         {
-          word: "in",
-          image: "data/LetsSmile/2/Unit6/pics/in.jpg",
-          sound: "data/LetsSmile/2/Unit6/sounds/in.mp3",
+          word: "monkey bars",
+          image: "data/LetsSmile/2/Unit6/pics/monkeybars.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/monkeybars.mp3",
         },
         {
-          word: "on",
-          image: "data/LetsSmile/2/Unit6/pics/on.jpg",
-          sound: "data/LetsSmile/2/Unit6/sounds/on.mp3",
+          word: "sandbox",
+          image: "data/LetsSmile/2/Unit6/pics/sandbox.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/sandbox.mp3",
         },
         {
-          word: "under",
-          image: "data/LetsSmile/2/Unit6/pics/under.jpg",
-          sound: "data/LetsSmile/2/Unit6/sounds/under.mp3",
+          word: "seesaw",
+          image: "data/LetsSmile/2/Unit6/pics/seesaw.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/seesaw.mp3",
+        },
+        {
+          word: "slide",
+          image: "data/LetsSmile/2/Unit6/pics/slide.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/slide.mp3",
+        },
+        {
+          word: "swing",
+          image: "data/LetsSmile/2/Unit6/pics/swing.jpg",
+          sound: "data/LetsSmile/2/Unit6/sounds/swing.mp3",
         },
       ],
       "Unit 7": [
@@ -2452,16 +2501,6 @@ export const cardLibrary = {
           image: "data/LetsSmile/2/Unit9/pics/feet.jpg",
           sound: "data/LetsSmile/2/Unit9/sounds/feet.mp3",
         },
-        {
-          word: "shake",
-          image: "data/LetsSmile/2/Unit9/pics/shake.jpg",
-          sound: "data/LetsSmile/2/Unit9/sounds/shake.mp3",
-        },
-        {
-          word: "touch",
-          image: "data/LetsSmile/2/Unit9/pics/touch.jpg",
-          sound: "data/LetsSmile/2/Unit9/sounds/touch.mp3",
-        },
       ],
       "Unit 10": [
         {
@@ -2520,7 +2559,7 @@ export const cardLibrary = {
         },
         {
           word: "brown eyes",
-          image: "data/LetsSmile/2/Unit12/pics/brownneyes.jpg",
+          image: "data/LetsSmile/2/Unit12/pics/browneyes.jpg",
           sound: "data/LetsSmile/2/Unit12/sounds/browneyes.mp3",
         },
         {
@@ -2612,86 +2651,66 @@ export const cardLibrary = {
       ],
       "Unit 3": [
         {
-          word: "clean",
-          image: "data/LetsSmile/3/Unit3/pics/clean.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/clean.mp3",
+          word: "clean boots",
+          image: "data/LetsSmile/3/Unit3/pics/cleanboots.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/cleanboots.mp3",
         },
         {
-          word: "dirty",
-          image: "data/LetsSmile/3/Unit3/pics/dirty.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/dirty.mp3",
+          word: "dirty boots",
+          image: "data/LetsSmile/3/Unit3/pics/dirtyboots.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/dirtyboots.mp3",
         },
         {
-          word: "dry",
-          image: "data/LetsSmile/3/Unit3/pics/dry.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/dry.mp3",
+          word: "dry umbrella",
+          image: "data/LetsSmile/3/Unit3/pics/dryumbrella.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/dryumbrella.mp3",
         },
         {
-          word: "wet",
-          image: "data/LetsSmile/3/Unit3/pics/wet.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/wet.mp3",
+          word: "wet umbrella",
+          image: "data/LetsSmile/3/Unit3/pics/wetumbrella.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/wetumbrella.mp3",
         },
         {
-          word: "heavy",
-          image: "data/LetsSmile/3/Unit3/pics/heavy.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/heavy.mp3",
+          word: "heavy backpack",
+          image: "data/LetsSmile/3/Unit3/pics/heavybackpack.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/heavybackpack.mp3",
         },
         {
-          word: "light",
-          image: "data/LetsSmile/3/Unit3/pics/light.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/light.mp3",
-        },
-        {
-          word: "backpack",
-          image: "data/LetsSmile/3/Unit3/pics/backpack.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/backpack.mp3",
-        },
-        {
-          word: "boots",
-          image: "data/LetsSmile/3/Unit3/pics/boots.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/boots.mp3",
-        },
-        {
-          word: "umbrella",
-          image: "data/LetsSmile/3/Unit3/pics/umbrella.jpg",
-          sound: "data/LetsSmile/3/Unit3/sounds/umbrella.mp3",
+          word: "light backpack",
+          image: "data/LetsSmile/3/Unit3/pics/lightbackpack.jpg",
+          sound: "data/LetsSmile/3/Unit3/sounds/lightbackpack.mp3",
         },
       ],
       "Unit 4": [
         {
-          word: "friendly",
-          image: "data/LetsSmile/3/Unit4/pics/friendly.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/friendly.mp3",
+          word: "friendly robot",
+          image: "data/LetsSmile/3/Unit4/pics/friendlyrobot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/friendlyrobot.mp3",
         },
         {
-          word: "helpful",
-          image: "data/LetsSmile/3/Unit4/pics/helpful.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/helpful.mp3",
+          word: "helpful robot",
+          image: "data/LetsSmile/3/Unit4/pics/helpfulrobot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/helpfulrobot.mp3",
         },
         {
-          word: "smart",
-          image: "data/LetsSmile/3/Unit4/pics/smart.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/smart.mp3",
+          word: "smart robot",
+          image: "data/LetsSmile/3/Unit4/pics/smartrobot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/smartrobot.mp3",
         },
         {
-          word: "strong",
-          image: "data/LetsSmile/3/Unit4/pics/strong.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/strong.mp3",
+          word: "strong robot",
+          image: "data/LetsSmile/3/Unit4/pics/strongrobot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/strongrobot.mp3",
         },
         {
-          word: "tall",
-          image: "data/LetsSmile/3/Unit4/pics/tall.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/tall.mp3",
+          word: "tall robot",
+          image: "data/LetsSmile/3/Unit4/pics/tallrobot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/tallrobot.mp3",
         },
         {
-          word: "short",
-          image: "data/LetsSmile/3/Unit4/pics/short.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/short.mp3",
-        },
-        {
-          word: "robot",
-          image: "data/LetsSmile/3/Unit4/pics/robot.jpg",
-          sound: "data/LetsSmile/3/Unit4/sounds/robot.mp3",
+          word: "short robot",
+          image: "data/LetsSmile/3/Unit4/pics/shortrobot.jpg",
+          sound: "data/LetsSmile/3/Unit4/sounds/shortrobot.mp3",
         },
       ],
       "Unit 5": [
@@ -2722,8 +2741,8 @@ export const cardLibrary = {
         },
         {
           word: "T-shirt",
-          image: "data/LetsSmile/3/Unit5/pics/tshirt.jpg",
-          sound: "data/LetsSmile/3/Unit5/sounds/tshirt.mp3",
+          image: "data/LetsSmile/3/Unit5/pics/Tshirt.jpg",
+          sound: "data/LetsSmile/3/Unit5/sounds/Tshirt.mp3",
         },
       ],
       "Unit 6": [
@@ -2920,21 +2939,6 @@ export const cardLibrary = {
       ],
       "Unit 12": [
         {
-          word: "across from",
-          image: "data/LetsSmile/3/Unit12/pics/acrossfrom.jpg",
-          sound: "data/LetsSmile/3/Unit12/sounds/acrossfrom.mp3",
-        },
-        {
-          word: "between",
-          image: "data/LetsSmile/3/Unit12/pics/between.jpg",
-          sound: "data/LetsSmile/3/Unit12/sounds/between.mp3",
-        },
-        {
-          word: "next to",
-          image: "data/LetsSmile/3/Unit12/pics/nextto.jpg",
-          sound: "data/LetsSmile/3/Unit12/sounds/nextto.mp3",
-        },
-        {
           word: "library",
           image: "data/LetsSmile/3/Unit12/pics/library.jpg",
           sound: "data/LetsSmile/3/Unit12/sounds/library.mp3",
@@ -3012,8 +3016,8 @@ export const cardLibrary = {
         },
         {
           word: "play the guitar",
-          image: "data/LetsSmile/4/Unit2/pics/playguitar.jpg",
-          sound: "data/LetsSmile/4/Unit2/sounds/playguitar.mp3",
+          image: "data/LetsSmile/4/Unit2/pics/playtheguitar.jpg",
+          sound: "data/LetsSmile/4/Unit2/sounds/playtheguitar.mp3",
         },
         {
           word: "play the piano",
@@ -3033,54 +3037,34 @@ export const cardLibrary = {
       ],
       "Unit 3": [
         {
-          word: "brush my teeth",
-          image: "data/LetsSmile/4/Unit3/pics/brushmyteeth.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/brushmyteeth.mp3",
+          word: "brush their teeth",
+          image: "data/LetsSmile/4/Unit3/pics/brushtheirteeth.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/brushtheirteeth.mp3",
         },
         {
-          word: "wash my face",
-          image: "data/LetsSmile/4/Unit3/pics/washmyface.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/washmyface.mp3",
+          word: "washes his face",
+          image: "data/LetsSmile/4/Unit3/pics/washeshisface.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/washeshisface.mp3",
         },
         {
-          word: "do my homework",
-          image: "data/LetsSmile/4/Unit3/pics/domyhomework.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/domyhomework.mp3",
+          word: "do their homework",
+          image: "data/LetsSmile/4/Unit3/pics/dotheirhomework.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/dotheirhomework.mp3",
         },
         {
-          word: "play with my friends",
-          image: "data/LetsSmile/4/Unit3/pics/playwithmyfriends.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/playwithmyfriends.mp3",
+          word: "plays with her friends",
+          image: "data/LetsSmile/4/Unit3/pics/playswithherfriends.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/playswithherfriends.mp3",
         },
         {
-          word: "read a book",
-          image: "data/LetsSmile/4/Unit3/pics/readabook.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/readabook.mp3",
+          word: "read books",
+          image: "data/LetsSmile/4/Unit3/pics/readbooks.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/readbooks.mp3",
         },
         {
-          word: "go to bed",
-          image: "data/LetsSmile/4/Unit3/pics/gotobed.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/gotobed.mp3",
-        },
-        {
-          word: "morning",
-          image: "data/LetsSmile/4/Unit3/pics/morning.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/morning.mp3",
-        },
-        {
-          word: "afternoon",
-          image: "data/LetsSmile/4/Unit3/pics/afternoon.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/afternoon.mp3",
-        },
-        {
-          word: "evening",
-          image: "data/LetsSmile/4/Unit3/pics/evening.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/evening.mp3",
-        },
-        {
-          word: "night",
-          image: "data/LetsSmile/4/Unit3/pics/night.jpg",
-          sound: "data/LetsSmile/4/Unit3/sounds/night.mp3",
+          word: "goes to bed",
+          image: "data/LetsSmile/4/Unit3/pics/goestobed.jpg",
+          sound: "data/LetsSmile/4/Unit3/sounds/goestobed.mp3",
         },
       ],
       "Unit 4": [
@@ -3186,9 +3170,9 @@ export const cardLibrary = {
       ],
       "Unit 7": [
         {
-          word: "bake",
-          image: "data/LetsSmile/4/Unit7/pics/bake.jpg",
-          sound: "data/LetsSmile/4/Unit7/sounds/bake.mp3",
+          word: "baker",
+          image: "data/LetsSmile/4/Unit7/pics/baker.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/baker.mp3",
         },
         {
           word: "farmer",
@@ -3206,14 +3190,14 @@ export const cardLibrary = {
           sound: "data/LetsSmile/4/Unit7/sounds/nurse.mp3",
         },
         {
-          word: "pilot",
-          image: "data/LetsSmile/4/Unit7/pics/pilot.jpg",
-          sound: "data/LetsSmile/4/Unit7/sounds/pilot.mp3",
+          word: "pilots",
+          image: "data/LetsSmile/4/Unit7/pics/pilots.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/pilots.mp3",
         },
         {
-          word: "police officer",
-          image: "data/LetsSmile/4/Unit7/pics/policeofficer.jpg",
-          sound: "data/LetsSmile/4/Unit7/sounds/policeofficer.mp3",
+          word: "police officers",
+          image: "data/LetsSmile/4/Unit7/pics/policeofficers.jpg",
+          sound: "data/LetsSmile/4/Unit7/sounds/policeofficers.mp3",
         },
       ],
       "Unit 8": [
@@ -3443,8 +3427,8 @@ export const cardLibrary = {
         },
         {
           word: "take a taxi",
-          image: "data/LetsSmile/5/Unit2/pics/takeatoxi.jpg",
-          sound: "data/LetsSmile/5/Unit2/sounds/takeatoxi.mp3",
+          image: "data/LetsSmile/5/Unit2/pics/takeataxi.jpg",
+          sound: "data/LetsSmile/5/Unit2/sounds/takeataxi.mp3",
         },
         {
           word: "take the bus",
@@ -3500,8 +3484,8 @@ export const cardLibrary = {
         },
         {
           word: "go to the lake",
-          image: "data/LetsSmile/5/Unit3/pics/gotolake.jpg",
-          sound: "data/LetsSmile/5/Unit3/sounds/gotolake.mp3",
+          image: "data/LetsSmile/5/Unit3/pics/gotothelake.jpg",
+          sound: "data/LetsSmile/5/Unit3/sounds/gotothelake.mp3",
         },
         {
           word: "go to the mountains",
@@ -3517,8 +3501,8 @@ export const cardLibrary = {
       "Unit 4": [
         {
           word: "go bike riding",
-          image: "data/LetsSmile/5/Unit4/pics/gobakeriding.jpg",
-          sound: "data/LetsSmile/5/Unit4/sounds/gobakeriding.mp3",
+          image: "data/LetsSmile/5/Unit4/pics/gobikeriding.jpg",
+          sound: "data/LetsSmile/5/Unit4/sounds/gobikeriding.mp3",
         },
         {
           word: "go camping",
@@ -3643,8 +3627,8 @@ export const cardLibrary = {
       "Unit 7": [
         {
           word: "clean the house",
-          image: "data/LetsSmile/5/Unit7/pics/cleanhouse.jpg",
-          sound: "data/LetsSmile/5/Unit7/sounds/cleanhouse.mp3",
+          image: "data/LetsSmile/5/Unit7/pics/cleanthehouse.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/cleanthehouse.mp3",
         },
         {
           word: "cook dinner",
@@ -3673,13 +3657,13 @@ export const cardLibrary = {
         },
         {
           word: "talk on the phone",
-          image: "data/LetsSmile/5/Unit7/pics/talkononthephone.jpg",
-          sound: "data/LetsSmile/5/Unit7/sounds/talkononthephone.mp3",
+          image: "data/LetsSmile/5/Unit7/pics/talkonthephone.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/talkonthephone.mp3",
         },
         {
           word: "watch TV",
-          image: "data/LetsSmile/5/Unit7/pics/watchtv.jpg",
-          sound: "data/LetsSmile/5/Unit7/sounds/watchtv.mp3",
+          image: "data/LetsSmile/5/Unit7/pics/watchTV.jpg",
+          sound: "data/LetsSmile/5/Unit7/sounds/watchTV.mp3",
         },
       ],
       "Unit 8": [
@@ -3690,8 +3674,8 @@ export const cardLibrary = {
         },
         {
           word: "eat a sandwich",
-          image: "data/LetsSmile/5/Unit8/pics/eatandwich.jpg",
-          sound: "data/LetsSmile/5/Unit8/sounds/eatandwich.mp3",
+          image: "data/LetsSmile/5/Unit8/pics/eatasandwich.jpg",
+          sound: "data/LetsSmile/5/Unit8/sounds/eatasandwich.mp3",
         },
         {
           word: "feed the ducks",
@@ -3794,8 +3778,8 @@ export const cardLibrary = {
         },
         {
           word: "learn to water-ski",
-          image: "data/LetsSmile/5/Unit10/pics/learntowatersski.jpg",
-          sound: "data/LetsSmile/5/Unit10/sounds/learntowatersski.mp3",
+          image: "data/LetsSmile/5/Unit10/pics/learntowaterski.jpg",
+          sound: "data/LetsSmile/5/Unit10/sounds/learntowaterski.mp3",
         },
         {
           word: "play beach volleyball",
@@ -3907,8 +3891,8 @@ export const cardLibrary = {
         },
         {
           word: "go to a concert",
-          image: "data/LetsSmile/6/Unit1/pics/gotoconvert.jpg",
-          sound: "data/LetsSmile/6/Unit1/sounds/gotoconvert.mp3",
+          image: "data/LetsSmile/6/Unit1/pics/gotoaconcert.jpg",
+          sound: "data/LetsSmile/6/Unit1/sounds/gotoaconcert.mp3",
         },
         {
           word: "go to a soccer game",
@@ -3954,8 +3938,8 @@ export const cardLibrary = {
         },
         {
           word: "ride the Ferris wheel",
-          image: "data/LetsSmile/6/Unit2/pics/ridethefarriswheel.jpg",
-          sound: "data/LetsSmile/6/Unit2/sounds/ridethefarriswheel.mp3",
+          image: "data/LetsSmile/6/Unit2/pics/ridetheferriswheel.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/ridetheferriswheel.mp3",
         },
         {
           word: "sell homemade cookies",
@@ -3969,13 +3953,97 @@ export const cardLibrary = {
         },
         {
           word: "walk in the parade",
-          image: "data/LetsSmile/6/Unit2/pics/walkinthepatade.jpg",
-          sound: "data/LetsSmile/6/Unit2/sounds/walkinthepatade.mp3",
+          image: "data/LetsSmile/6/Unit2/pics/walkintheparade.jpg",
+          sound: "data/LetsSmile/6/Unit2/sounds/walkintheparade.mp3",
         },
         {
           word: "watch fireworks",
           image: "data/LetsSmile/6/Unit2/pics/watchfireworks.jpg",
           sound: "data/LetsSmile/6/Unit2/sounds/watchfireworks.mp3",
+        },
+      ],
+      "Unit 3": [
+        {
+          word: "a few carrots",
+          image: "data/LetsSmile/6/Unit3/pics/afewcarrots.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/afewcarrots.mp3",
+        },
+        {
+          word: "a lot of eggs",
+          image: "data/LetsSmile/6/Unit3/pics/alotofeggs.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/alotofeggs.mp3",
+        },
+        {
+          word: "a few onions",
+          image: "data/LetsSmile/6/Unit3/pics/afewonions.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/afewonions.mp3",
+        },
+        {
+          word: "a lot of potatoes",
+          image: "data/LetsSmile/6/Unit3/pics/alotofpotatoes.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/alotofpotatoes.mp3",
+        },
+        {
+          word: "a little butter",
+          image: "data/LetsSmile/6/Unit3/pics/alittlebutter.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/alittlebutter.mp3",
+        },
+        {
+          word: "a lot of cheese",
+          image: "data/LetsSmile/6/Unit3/pics/alotofcheese.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/alotofcheese.mp3",
+        },
+        {
+          word: "a little meat",
+          image: "data/LetsSmile/6/Unit3/pics/alittlemeat.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/alittlemeat.mp3",
+        },
+        {
+          word: "a lot of pasta",
+          image: "data/LetsSmile/6/Unit3/pics/alotofpasta.jpg",
+          sound: "data/LetsSmile/6/Unit3/sounds/alotofpasta.mp3",
+        },
+      ],
+      "Unit 4": [
+        {
+          word: "bread",
+          image: "data/LetsSmile/6/Unit4/pics/bread.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/bread.mp3",
+        },
+        {
+          word: "chicken",
+          image: "data/LetsSmile/6/Unit4/pics/chicken.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/chicken.mp3",
+        },
+        {
+          word: "fish",
+          image: "data/LetsSmile/6/Unit4/pics/fish.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/fish.mp3",
+        },
+        {
+          word: "French fries",
+          image: "data/LetsSmile/6/Unit4/pics/frenchfries.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/frenchfries.mp3",
+        },
+        {
+          word: "meatballs",
+          image: "data/LetsSmile/6/Unit4/pics/meatballs.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/meatballs.mp3",
+        },
+        {
+          word: "rice",
+          image: "data/LetsSmile/6/Unit4/pics/rice.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/rice.mp3",
+        },
+        {
+          word: "salad",
+          image: "data/LetsSmile/6/Unit4/pics/salad.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/salad.mp3",
+        },
+        {
+          word: "soup",
+          image: "data/LetsSmile/6/Unit4/pics/soup.jpg",
+          sound: "data/LetsSmile/6/Unit4/sounds/soup.mp3",
         },
       ],
       "Unit 5": [
@@ -3996,8 +4064,8 @@ export const cardLibrary = {
         },
         {
           word: "run in a race",
-          image: "data/LetsSmile/6/Unit5/pics/runinrace.jpg",
-          sound: "data/LetsSmile/6/Unit5/sounds/runinrace.mp3",
+          image: "data/LetsSmile/6/Unit5/pics/runinarace.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/runinarace.mp3",
         },
         {
           word: "sing the school song",
@@ -4016,8 +4084,8 @@ export const cardLibrary = {
         },
         {
           word: "win tug-of-war",
-          image: "data/LetsSmile/6/Unit5/pics/wintugowar.jpg",
-          sound: "data/LetsSmile/6/Unit5/sounds/wintugowar.mp3",
+          image: "data/LetsSmile/6/Unit5/pics/wintugofwar.jpg",
+          sound: "data/LetsSmile/6/Unit5/sounds/wintugofwar.mp3",
         },
       ],
       "Unit 6": [
@@ -4038,8 +4106,8 @@ export const cardLibrary = {
         },
         {
           word: "eat the cake",
-          image: "data/LetsSmile/6/Unit6/pics/eatcake.jpg",
-          sound: "data/LetsSmile/6/Unit6/sounds/eatcake.mp3",
+          image: "data/LetsSmile/6/Unit6/pics/eatthecake.jpg",
+          sound: "data/LetsSmile/6/Unit6/sounds/eatthecake.mp3",
         },
         {
           word: "invite my friends",
@@ -4146,16 +4214,100 @@ export const cardLibrary = {
           sound: "data/LetsSmile/6/Unit8/sounds/watertheplants.mp3",
         },
       ],
+      "Unit 9": [
+        {
+          word: "faster",
+          image: "data/LetsSmile/6/Unit9/pics/faster.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/faster.mp3",
+        },
+        {
+          word: "fastest",
+          image: "data/LetsSmile/6/Unit9/pics/fastest.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/fastest.mp3",
+        },
+        {
+          word: "slower",
+          image: "data/LetsSmile/6/Unit9/pics/slower.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/slower.mp3",
+        },
+        {
+          word: "slowest",
+          image: "data/LetsSmile/6/Unit9/pics/slowest.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/slowest.mp3",
+        },
+        {
+          word: "heavier",
+          image: "data/LetsSmile/6/Unit9/pics/heavier.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/heavier.mp3",
+        },
+        {
+          word: "heaviest",
+          image: "data/LetsSmile/6/Unit9/pics/heaviest.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/heaviest.mp3",
+        },
+        {
+          word: "lighter",
+          image: "data/LetsSmile/6/Unit9/pics/lighter.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/lighter.mp3",
+        },
+        {
+          word: "lightest",
+          image: "data/LetsSmile/6/Unit9/pics/lightest.jpg",
+          sound: "data/LetsSmile/6/Unit9/sounds/lightest.mp3",
+        },
+      ],
+      "Unit 10": [
+        {
+          word: "more colorful",
+          image: "data/LetsSmile/6/Unit10/pics/morecolorful.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/morecolorful.mp3",
+        },
+        {
+          word: "most colorful",
+          image: "data/LetsSmile/6/Unit10/pics/mostcolorful.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/mostcolorful.mp3",
+        },
+        {
+          word: "more comfortable",
+          image: "data/LetsSmile/6/Unit10/pics/morecomfortable.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/morecomfortable.mp3",
+        },
+        {
+          word: "most comfortable",
+          image: "data/LetsSmile/6/Unit10/pics/mostcomfortable.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/mostcomfortable.mp3",
+        },
+        {
+          word: "more difficult",
+          image: "data/LetsSmile/6/Unit10/pics/moredifficult.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/moredifficult.mp3",
+        },
+        {
+          word: "most difficult",
+          image: "data/LetsSmile/6/Unit10/pics/mostdifficult.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/mostdifficult.mp3",
+        },
+        {
+          word: "more expensive",
+          image: "data/LetsSmile/6/Unit10/pics/moreexpensive.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/moreexpensive.mp3",
+        },
+        {
+          word: "most expensive",
+          image: "data/LetsSmile/6/Unit10/pics/mostexpensive.jpg",
+          sound: "data/LetsSmile/6/Unit10/sounds/mostexpensive.mp3",
+        },
+      ],
       "Unit 11": [
         {
           word: "go on a nature walk",
-          image: "data/LetsSmile/6/Unit11/pics/goonanaturewalke.jpg",
-          sound: "data/LetsSmile/6/Unit11/sounds/goonanaturewalke.mp3",
+          image: "data/LetsSmile/6/Unit11/pics/goonanaturewalk.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/goonanaturewalk.mp3",
         },
         {
           word: "go to an amusement park",
-          image: "data/LetsSmile/6/Unit11/pics/gotoamusementpark.jpg",
-          sound: "data/LetsSmile/6/Unit11/sounds/gotoamusementpark.mp3",
+          image: "data/LetsSmile/6/Unit11/pics/gotoanamusementpark.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/gotoanamusementpark.mp3",
         },
         {
           word: "go to a flower festival",
@@ -4164,13 +4316,13 @@ export const cardLibrary = {
         },
         {
           word: "go to a petting farm",
-          image: "data/LetsSmile/6/Unit11/pics/gotoappetingfarm.jpg",
-          sound: "data/LetsSmile/6/Unit11/sounds/gotoappetingfarm.mp3",
+          image: "data/LetsSmile/6/Unit11/pics/gotoapettingfarm.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/gotoapettingfarm.mp3",
         },
         {
           word: "have a yard sale",
-          image: "data/LetsSmile/6/Unit11/pics/haveapardsale.jpg",
-          sound: "data/LetsSmile/6/Unit11/sounds/haveapardsale.mp3",
+          image: "data/LetsSmile/6/Unit11/pics/haveayardsale.jpg",
+          sound: "data/LetsSmile/6/Unit11/sounds/haveayardsale.mp3",
         },
         {
           word: "make a birdhouse",
@@ -4216,8 +4368,8 @@ export const cardLibrary = {
         },
         {
           word: "travel to space",
-          image: "data/LetsSmile/6/Unit12/pics/traveltosoace.jpg",
-          sound: "data/LetsSmile/6/Unit12/sounds/traveltosoace.mp3",
+          image: "data/LetsSmile/6/Unit12/pics/traveltospace.jpg",
+          sound: "data/LetsSmile/6/Unit12/sounds/traveltospace.mp3",
         },
         {
           word: "visit foreign countries",
