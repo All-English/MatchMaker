@@ -429,20 +429,19 @@ gameBoard.addEventListener("click", async function (event) {
 
     if (soundItem) {
       lockBoard = true
+      const isImageCard = clickedContent.includes(".jpg")
 
-      // Determine which sound to play based on whether it's a word or image card
-      if (currentBook === "1" && currentSeries === "Smart Phonics") {
-        const isImageCard = clickedContent.includes(".jpg")
-        if (isImageCard) {
+      // For Smart Phonics 1, images and words have different sounds
+      if (
+        currentBook === "1" &&
+        currentSeries === "Smart Phonics" &&
+        isImageCard
+      ) {
           // Play the image vocabulary sound
           const imgSound = new Audio(soundItem.imageSound)
           await playSound(imgSound)
-        } else {
-          // Play the letter sound
-          await playSound(soundMap[soundItem.word])
-        }
       } else {
-        // For other books, play the regular sound
+        // Play the regular sound
         await playSound(soundMap[soundItem.word])
       }
 
