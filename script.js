@@ -124,8 +124,6 @@ function isMatch(first, second) {
   const firstContent = first.dataset.content
   const secondContent = second.dataset.content
 
-  // For all books except Book1, use the original exact matching
-if (!(currentSeries === "Smart Phonics" && currentBook === "1")) {
   const matchedItem = currentUnit.find(
     (item) =>
       (item.word === firstContent && item.image === secondContent) ||
@@ -139,38 +137,6 @@ if (!(currentSeries === "Smart Phonics" && currentBook === "1")) {
     addPlayerTagsAndUpdateScore(first, second)
     return true
   }
-  return false
-}
-
-  // Book1 special matching logic
-  const isFirstImage = firstContent.includes(".jpg")
-  const isSecondImage = secondContent.includes(".jpg")
-
-  // Make sure one is image and one is letter
-  if (isFirstImage === isSecondImage) return false
-
-  const imagePath = isFirstImage ? firstContent : secondContent
-  const letter = isFirstImage ? secondContent : firstContent
-
-  // Extract the image name from the path
-  const imageName = imagePath.split("/").pop().split(".")[0] // gets 'dog' from path
-  // Check if the letter card is a double-letter format (like 'Aa', 'Bb', etc.)
-  const isDoubleLetterFormat = /^[A-Z][a-z]$/.test(letter)
-  if (!isDoubleLetterFormat) return false
-
-  // Get the first letter of the image name and the first letter of the double-letter card
-  const imageFirstLetter = imageName[0].toLowerCase()
-  const letterCardFirstLetter = letter[0].toLowerCase()
-
-  // Check if they match
-  if (imageFirstLetter === letterCardFirstLetter) {
-    const matchColor = getRandomMatchColor()
-    first.classList.add("matched", matchColor)
-    second.classList.add("matched", matchColor)
-    addPlayerTagsAndUpdateScore(first, second)
-    return true
-  }
-
   return false
 }
 
@@ -188,7 +154,7 @@ function loadUnit(series, book, unit) {
   words = currentUnit.filter((item) => item.word).map((item) => item.word)
   images = currentUnit.filter((item) => item.image).map((item) => item.image)
 
-  // If less than 6 pairs, duplicate existing pairs
+  // If less than 6 pairs, duplicate existing pairs to make 6 pairs
   while (words.length < 6) {
     // Select a random index from the existing words
     const randomIndex = Math.floor(Math.random() * words.length)
@@ -310,6 +276,7 @@ function createCards() {
   let items = [...selectedWords, ...selectedImages]
   // console.log("Random words chosen:", selectedWords)
 
+  // Randomly shuffle the array using a simple randomization sort method
   items = items.sort(() => 0.5 - Math.random())
 
   items.forEach((item, index) => {
