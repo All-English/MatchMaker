@@ -24,6 +24,11 @@ let tries = 0
 let usedMatchColors = []
 let words = []
 
+// Preload sound files
+const matchSound = preloadSingleSound("data/soundfx/match-sound.mp3")
+const completeSound = preloadSingleSound("data/soundfx/complete-sound.mp3")
+const wrongSound = preloadSingleSound("data/soundfx/wrong-sound.mp3")
+
 // Function to preload audio
 function preloadSoundsArray(items) {
   return items
@@ -46,11 +51,6 @@ function preloadSoundsArray(items) {
       return acc
     }, {})
 }
-
-// Preload sound files
-const matchSound = preloadSingleSound("data/soundfx/match-sound.mp3")
-const completeSound = preloadSingleSound("data/soundfx/complete-sound.mp3")
-const wrongSound = preloadSingleSound("data/soundfx/wrong-sound.mp3")
 
 function preloadSingleSound(src) {
   const audio = new Audio()
@@ -140,46 +140,7 @@ function isMatch(first, second) {
   return false
 }
 
-function updateScore() {
-  triesDisplay.textContent = `Tries: ${tries}`
-}
-
-// Function to load a specific unit
-function loadUnit(series, book, unit) {
-  currentSeries = series
-  currentBook = book
-  currentUnit = cardLibrary[series][book][unit]
-
-  // Separate words, images, and create sound map
-  words = currentUnit.filter((item) => item.word).map((item) => item.word)
-  images = currentUnit.filter((item) => item.image).map((item) => item.image)
-
-  // If less than 6 pairs, duplicate existing pairs to make 6 pairs
-  while (words.length < 6) {
-    // Select a random index from the existing words
-    const randomIndex = Math.floor(Math.random() * words.length)
-
-    // Add the randomly selected word and its corresponding image
-    words.push(words[randomIndex])
-    images.push(images[randomIndex])
-  }
-
-  soundMap = preloadSoundsArray(currentUnit)
-  targetLetters = currentUnit[0].targetLetters
-
-  // Update pairs input max attribute based on available pairs
-  const availablePairs = Math.max(
-    6,
-    currentUnit.filter((item) => item.word).length
-  )
-  pairsInput.max = availablePairs
-  pairsInput.value = Math.min(maxPairs, availablePairs)
-
-  // Reset the game with new words and images
-  resetGame()
-}
-
-// Add a dropdown or buttons to select units
+// Add a dropdown to select units
 function createUnitSelector() {
   // Parse URL parameters
   const urlParams = new URLSearchParams(window.location.search)
@@ -344,6 +305,40 @@ function createCards() {
   })
 }
 
+function loadUnit(series, book, unit) {
+  currentSeries = series
+  currentBook = book
+  currentUnit = cardLibrary[series][book][unit]
+
+  // Separate words, images, and create sound map
+  words = currentUnit.filter((item) => item.word).map((item) => item.word)
+  images = currentUnit.filter((item) => item.image).map((item) => item.image)
+
+  // If less than 6 pairs, duplicate existing pairs to make 6 pairs
+  while (words.length < 6) {
+    // Select a random index from the existing words
+    const randomIndex = Math.floor(Math.random() * words.length)
+
+    // Add the randomly selected word and its corresponding image
+    words.push(words[randomIndex])
+    images.push(images[randomIndex])
+  }
+
+  soundMap = preloadSoundsArray(currentUnit)
+  targetLetters = currentUnit[0].targetLetters
+
+  // Update pairs input max attribute based on available pairs
+  const availablePairs = Math.max(
+    6,
+    currentUnit.filter((item) => item.word).length
+  )
+  pairsInput.max = availablePairs
+  pairsInput.value = Math.min(maxPairs, availablePairs)
+
+  // Reset the game with new words and images
+  resetGame()
+}
+
 function resetGame() {
   gameBoard.innerHTML = ""
   firstSelected = null
@@ -385,13 +380,17 @@ function updatePlayerNames() {
   return true
 }
 
-// Add a function to load saved names when the page loads
+// Load saved names when the page loads
 function loadSavedPlayerNames() {
   const savedInput = localStorage.getItem("playerNamesInput")
   if (savedInput) {
     const playerNameInput = document.getElementById("player-names-input")
     playerNameInput.value = savedInput
   }
+}
+
+function updateScore() {
+  triesDisplay.textContent = `Tries: ${tries}`
 }
 
 function updatePlayerScores() {
@@ -408,6 +407,71 @@ function updatePlayerScores() {
       scoresDiv.appendChild(playerScore)
     })
   }
+}
+
+function showCompletionModal(tries) {
+  const modal = document.getElementById("completion-modal")
+  const finalScore = document.getElementById("final-score")
+  const modalScores = document.getElementById("modal-player-scores")
+  finalScore.textContent = tries
+
+  // Only show player scores if players array exists and has entries
+  if (players && players.length > 0) {
+    // Clear and update modal scores
+    modalScores.innerHTML = ""
+
+    // Sort players by score in descending order
+    const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+
+    // Get the highest score
+    const highestScore = sortedPlayers[0].score
+
+    // Add each player's score to the modal
+    sortedPlayers.forEach((player) => {
+      const playerScore = document.createElement("div")
+      playerScore.className = "modal-player-score"
+
+      // Add winner-name class to all players with the highest score
+      if (player.score === highestScore) {
+        playerScore.classList.add("winner-name")
+
+        // Create trophy icon
+        const trophyIcon = document.createElement("span")
+        trophyIcon.className = "trophy-icon"
+        trophyIcon.innerHTML = "🏆" // Unicode trophy emoji
+
+        // Create a wrapper for the name and trophy
+        const playerNameWrapper = document.createElement("span")
+        playerNameWrapper.appendChild(trophyIcon)
+        playerNameWrapper.appendChild(
+          document.createTextNode(` ${player.name}`)
+        )
+
+        playerScore.textContent = "" // Clear previous text
+        playerScore.appendChild(playerNameWrapper)
+        playerScore.innerHTML += `: ${player.score}`
+      } else {
+        playerScore.textContent = `${player.name}: ${player.score}`
+      }
+
+      modalScores.appendChild(playerScore)
+    })
+    // Show the scores section
+    modalScores.closest(".modal-scores").style.display = "block"
+  } else {
+    // Hide the scores section if no players
+    modalScores.closest(".modal-scores").style.display = "none"
+  }
+
+  // Show modal with animation
+  setTimeout(() => {
+    modal.classList.add("visible")
+  }, 600)
+}
+
+function hideCompletionModal() {
+  const modal = document.getElementById("completion-modal")
+  modal.classList.remove("visible")
 }
 
 gameBoard.addEventListener("click", async function (event) {
@@ -506,71 +570,6 @@ pairsInput.addEventListener("change", (e) => {
 
   resetGame()
 })
-
-function showCompletionModal(tries) {
-  const modal = document.getElementById("completion-modal")
-  const finalScore = document.getElementById("final-score")
-  const modalScores = document.getElementById("modal-player-scores")
-  finalScore.textContent = tries
-
-  // Only show player scores if players array exists and has entries
-  if (players && players.length > 0) {
-    // Clear and update modal scores
-    modalScores.innerHTML = ""
-
-    // Sort players by score in descending order
-    const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
-
-    // Get the highest score
-    const highestScore = sortedPlayers[0].score
-
-    // Add each player's score to the modal
-    sortedPlayers.forEach((player) => {
-      const playerScore = document.createElement("div")
-      playerScore.className = "modal-player-score"
-
-      // Add winner-name class to all players with the highest score
-      if (player.score === highestScore) {
-        playerScore.classList.add("winner-name")
-
-        // Create trophy icon
-        const trophyIcon = document.createElement("span")
-        trophyIcon.className = "trophy-icon"
-        trophyIcon.innerHTML = "🏆" // Unicode trophy emoji
-
-        // Create a wrapper for the name and trophy
-        const playerNameWrapper = document.createElement("span")
-        playerNameWrapper.appendChild(trophyIcon)
-        playerNameWrapper.appendChild(
-          document.createTextNode(` ${player.name}`)
-        )
-
-        playerScore.textContent = "" // Clear previous text
-        playerScore.appendChild(playerNameWrapper)
-        playerScore.innerHTML += `: ${player.score}`
-      } else {
-        playerScore.textContent = `${player.name}: ${player.score}`
-      }
-
-      modalScores.appendChild(playerScore)
-    })
-    // Show the scores section
-    modalScores.closest(".modal-scores").style.display = "block"
-  } else {
-    // Hide the scores section if no players
-    modalScores.closest(".modal-scores").style.display = "none"
-  }
-
-  // Show modal with animation
-  setTimeout(() => {
-    modal.classList.add("visible")
-  }, 600)
-}
-
-function hideCompletionModal() {
-  const modal = document.getElementById("completion-modal")
-  modal.classList.remove("visible")
-}
 
 // Add event listener for the Play Again button
 document.getElementById("play-again-btn").addEventListener("click", () => {
