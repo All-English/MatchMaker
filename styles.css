@@ -240,6 +240,7 @@ body {
 
 .pairs-input {
   width: 3rem;
+  font-size: var(--fs-400);
   max-width: fit-content;
   border: none;
   background-color: transparent;
@@ -257,7 +258,7 @@ body {
   align-items: center;
   gap: var(--space-3xs);
 
-  font-size: var(--fs-300);
+  font-size: var(--fs-400);
   color: var(--text-secondary);
   max-width: fit-content;
 }
@@ -282,7 +283,7 @@ body {
   grid-column: 2;
   justify-self: end;
   align-self: center;
-  font-size: inherit;
+  font-size: var(--fs-400);
   color: var(--text-secondary);
   max-width: fit-content;
 }
@@ -294,7 +295,7 @@ body {
   gap: var(--space-l);
   flex-wrap: wrap;
   justify-content: center;
-  font-size: var(--fs-400);
+  font-size: var(--fs-500);
   color: var(--text-accent);
   margin-top: var(--space-s);
 }
