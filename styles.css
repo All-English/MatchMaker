@@ -422,7 +422,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  font-size: var(--fs-700);
+  font-size: var(--fs-600);
   color: var(--text-primary);
   backface-visibility: hidden;
   display: flex;
