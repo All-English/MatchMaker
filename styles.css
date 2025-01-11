@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Parkinsans:wght@300..800&display=swap");
+
 :root {
   color-scheme: light;
 
@@ -60,21 +61,30 @@
   --button-hover: var(--bg-blue-800);
   --card-revealed: var(--bg-sky-200);
   --color-accent: var(--raspberry);
-  --text-accent: var(--text-blue-100); /* h1/button/scores text */
+  --text-accent: var(--text-blue-100);
+  /* h1/button/scores text */
   --text-primary: var(--text-blue-700);
   --text-secondary: var(--text-blue-200);
 
   --border: 4px solid var(--border-color);
   --border2: 2px solid var(--border-color);
 
-  --match-color-1: hsl(42, 95%, 72%); /* Warm Yellow */
-  --match-color-2: hsl(20, 97%, 68%); /* Peach Orange */
-  --match-color-3: hsl(209, 26%, 76%); /* Light Steel Blue */
-  --match-color-4: hsl(347, 61%, 56%); /* Rose Pink */
-  --match-color-5: hsl(302, 22%, 44%); /* Purple */
-  --match-color-6: hsl(151, 47%, 72%); /* Pastel Mint Green */
-  --match-color-7: hsl(209, 22%, 55%); /* Steel Gray */
-  --match-color-8: hsl(240, 40%, 50%); /* Muted Cornflower Blue */
+  --match-color-1: hsl(42, 95%, 72%);
+  /* Warm Yellow */
+  --match-color-2: hsl(20, 97%, 68%);
+  /* Peach Orange */
+  --match-color-3: hsl(209, 26%, 76%);
+  /* Light Steel Blue */
+  --match-color-4: hsl(347, 61%, 56%);
+  /* Rose Pink */
+  --match-color-5: hsl(302, 22%, 44%);
+  /* Purple */
+  --match-color-6: hsl(151, 47%, 72%);
+  /* Pastel Mint Green */
+  --match-color-7: hsl(209, 22%, 55%);
+  /* Steel Gray */
+  --match-color-8: hsl(240, 40%, 50%);
+  /* Muted Cornflower Blue */
 }
 
 @media (prefers-color-scheme: dark) {
@@ -89,7 +99,8 @@
     --button-background: var(--bg-slate-600);
     --button-hover: var(--bg-slate-500);
     --card-revealed: var(--bg-slate-700);
-    --text-accent: var(--text-slate-200); /* h1,button,scores text */
+    --text-accent: var(--text-slate-200);
+    /* h1,button,scores text */
     --text-primary: var(--text-slate-100);
     --text-secondary: var(--text-slate-300);
   }
@@ -182,8 +193,7 @@ a:not([class]) {
   --outline-size: max(2px, 0.08em);
   --outline-color: var(--button-background);
 
-  outline: var(--outline-width, var(--outline-size)) var(--outline-style, solid)
-    var(--outline-color, currentColor);
+  outline: var(--outline-width, var(--outline-size)) var(--outline-style, solid) var(--outline-color, currentColor);
   outline-offset: var(--outline-offset, var(--outline-size));
 }
 
@@ -202,18 +212,16 @@ body {
   font-optical-sizing: auto;
   font-size: var(--fs-300);
   text-align: center;
-  background-image: linear-gradient(
-    to bottom,
-    var(--background-gradient-1),
-    var(--background-gradient-2)
-  );
+  background-image: linear-gradient(to bottom,
+      var(--background-gradient-1),
+      var(--background-gradient-2));
   background-size: cover;
   background-repeat: no-repeat;
   background-attachment: fixed;
 }
 
 .container {
-  --container-max: 70rem;
+  --container-max: 65rem;
   width: min(100% - 3rem, var(--container-max, 60ch));
   margin-inline: auto;
 }
@@ -265,7 +273,8 @@ body {
 
 .adjust-icon {
   vertical-align: middle;
-  fill: currentColor; /* Add this line to ensure the SVG takes the current text color */
+  fill: currentColor;
+  /* Add this line to ensure the SVG takes the current text color */
 }
 
 .header-title {
@@ -291,7 +300,8 @@ body {
 .player-scores {
   grid-row: 3;
   grid-column: 1 / -1;
-  display: none; /* Will change to "display: flex" when players are added */
+  display: none;
+  /* Will change to "display: flex" when players are added */
   gap: var(--space-l);
   flex-wrap: wrap;
   justify-content: center;
@@ -303,6 +313,61 @@ body {
 .current-player {
   font-weight: bold;
   color: hsl(47, 81%, 45%);
+}
+
+/* Sort Players Buttons */
+.draggable {
+  cursor: move;
+  user-select: none;
+  border: 2px dashed var(--text-accent);
+  border-radius: 4px;
+  padding: var(--space-3xs) var(--space-2xs);
+  transition: transform 0.2s ease;
+
+  &:active {
+    transform: scale(1.05);
+  }
+}
+
+.sort-players-wrapper {
+  grid-row: 3;
+  grid-column: 2;
+
+  display: flex;
+  gap: var(--space-2xs);
+  justify-content: center;
+}
+
+.shuffle-btn,
+.drag-btn {
+  display: none;
+  visibility: hidden;
+
+  /* margin-inline: auto; */
+  padding: var(--space-2xs) var(--space-s);
+  background-color: var(--button-background);
+  color: var(--text-accent);
+  border: var(--border2);
+  border-radius: 4px;
+  cursor: pointer;
+
+  &.visible {
+    display: inline-block;
+    visibility: visible;
+  }
+}
+
+.shuffle-btn {
+  justify-self: start;
+}
+
+.drag-btn {
+  justify-self: end;
+}
+
+.shuffle-btn:hover,
+.drag-btn:hover {
+  background-color: var(--background-item);
 }
 
 /* Game Board / Card Styles */
@@ -327,6 +392,7 @@ body {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -335,10 +401,7 @@ body {
 
 .card {
   aspect-ratio: 1;
-  flex-basis: calc(
-    (100% - (var(--gap) * (var(--number-of-columns) - 0.99))) /
-      var(--number-of-columns)
-  );
+  flex-basis: calc((100% - (var(--gap) * (var(--number-of-columns) - 0.99))) / var(--number-of-columns));
   background-color: var(--background-item);
   border: var(--border);
   border-radius: 6px;
@@ -372,30 +435,37 @@ body {
   --box-shadow: var(--match-color-1);
   border-color: var(--match-color-1);
 }
+
 .card.matched-2 {
   --box-shadow: var(--match-color-2);
   border-color: var(--match-color-2);
 }
+
 .card.matched-3 {
   --box-shadow: var(--match-color-3);
   border-color: var(--match-color-3);
 }
+
 .card.matched-4 {
   --box-shadow: var(--match-color-4);
   border-color: var(--match-color-4);
 }
+
 .card.matched-5 {
   --box-shadow: var(--match-color-5);
   border-color: var(--match-color-5);
 }
+
 .card.matched-6 {
   --box-shadow: var(--match-color-6);
   border-color: var(--match-color-6);
 }
+
 .card.matched-7 {
   --box-shadow: var(--match-color-7);
   border-color: var(--match-color-7);
 }
+
 .card.matched-8 {
   --box-shadow: var(--match-color-8);
   border-color: var(--match-color-8);
@@ -459,7 +529,8 @@ body {
   position: absolute;
   bottom: var(--space-3xs);
   left: 50%;
-  transform: translateX(-50%) rotateY(180deg); /* Add translateX for centering */
+  transform: translateX(-50%) rotateY(180deg);
+  /* Add translateX for centering */
   font-size: var(--fs-100);
   opacity: 0.7;
   color: var(--text-primary);
@@ -666,7 +737,7 @@ option {
   ////////////// */
 
 /* Larger mobile devices/small tablets - 600px and up*/
-@media (width >= 37.5rem) {
+@media (width >=37.5rem) {
   .pairs-input-container {
     grid-row: 1;
     grid-column: 1;
@@ -685,7 +756,7 @@ option {
 }
 
 /* Tablets - 768px and up */
-@media (width >= 48rem) {
+@media (width >=48rem) {
   .game-board {
     --number-of-columns: 3;
   }
@@ -695,7 +766,7 @@ option {
   }
 }
 
-@media (width >= 48rem) and (height <= 900px) {
+@media (width >=48rem) and (height <=900px) {
   .game-board {
     --number-of-columns: 4;
   }
@@ -706,14 +777,14 @@ option {
 }
 
 /* Laptops/small desktops - 992px and up */
-@media (width >= 62rem) {
+@media (width >=62rem) {
   .game-board:has(.card:nth-child(n + 17)) {
     --number-of-columns: 5;
   }
 }
 
 /* Large desktops - 1200px and up */
-@media (width >= 75rem) and (height <= 1080px) {
+@media (width >=75rem) and (height <=1080px) {
   /* .container {
     --container-max: 77rem;
   } */
@@ -732,5 +803,4 @@ option {
 }
 
 /* XL desktops - 1800px and up */
-@media (width >= 112.5rem) {
-}
+@media (width >=112.5rem) {}

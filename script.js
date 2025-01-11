@@ -11,6 +11,7 @@ let currentUnit = null
 let currentBook = null
 let currentSeries = null
 let currentPlayerIndex = 0
+let isDraggingEnabled = false
 let firstSelected = null
 let images = []
 let lockBoard = false
@@ -99,6 +100,100 @@ function getRandomMatchColor() {
   usedMatchColors.push(selectedColor)
 
   return selectedColor
+}
+
+// Player reordering functions
+function shufflePlayers() {
+  if (players.length < 2) return
+
+  const originalOrder = [...players]
+  let maxAttempts = 100
+  let validShuffle = false
+
+  while (!validShuffle && maxAttempts > 0) {
+    // Perform shuffle
+    for (let i = players.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1))
+      ;[players[i], players[j]] = [players[j], players[i]]
+    }
+
+    // Check if any player is in original position
+    validShuffle = players.every(
+      (player, index) => player !== originalOrder[index]
+    )
+    maxAttempts--
+  }
+
+  updatePlayerScores()
+}
+
+function enablePlayerDragging() {
+  isDraggingEnabled = true
+  const scoresDiv = document.getElementById("player-scores")
+
+  // Hide drag and shuffle buttons
+  const dragBtn = document.getElementById("drag-btn")
+  const shuffleBtn = document.getElementById("shuffle-btn")
+  if (shuffleBtn) shuffleBtn.classList.add("visible")
+  if (dragBtn) dragBtn.classList.add("visible")
+
+  scoresDiv.querySelectorAll("div").forEach((div) => {
+    div.draggable = true
+    div.classList.add("draggable")
+
+    div.addEventListener("dragstart", handleDragStart)
+    div.addEventListener("dragover", handleDragOver)
+    div.addEventListener("drop", handleDrop)
+  })
+}
+
+function disablePlayerDragging() {
+  isDraggingEnabled = false
+  const scoresDiv = document.getElementById("player-scores")
+
+  // Hide drag and shuffle buttons
+  const dragBtn = document.getElementById("drag-btn")
+  const shuffleBtn = document.getElementById("shuffle-btn")
+  if (shuffleBtn) shuffleBtn.classList.remove("visible")
+  if (dragBtn) dragBtn.classList.remove("visible")
+
+  scoresDiv.querySelectorAll("div").forEach((div) => {
+    div.draggable = false
+    div.classList.remove("draggable")
+
+    div.removeEventListener("dragstart", handleDragStart)
+    div.removeEventListener("dragover", handleDragOver)
+    div.removeEventListener("drop", handleDrop)
+  })
+}
+
+function handleDragStart(e) {
+  e.dataTransfer.setData("text/plain", e.target.dataset.playerName)
+}
+
+function handleDragOver(e) {
+  e.preventDefault()
+}
+
+function handleDrop(e) {
+  e.preventDefault()
+  const draggedName = e.dataTransfer.getData("text/plain")
+  const dropTarget = e.target.closest("div")
+
+  if (!dropTarget || !draggedName) return
+
+  const draggedIndex = players.findIndex((p) => p.name === draggedName)
+  const dropIndex = players.findIndex(
+    (p) => p.name === dropTarget.dataset.playerName
+  )
+
+  if (draggedIndex !== -1 && dropIndex !== -1) {
+    ;[players[draggedIndex], players[dropIndex]] = [
+      players[dropIndex],
+      players[draggedIndex],
+    ]
+    updatePlayerScores()
+  }
 }
 
 function isMatch(first, second) {
@@ -394,17 +489,48 @@ function updateScore() {
 }
 
 function updatePlayerScores() {
-  if (players.length > 0) {
-    const scoresDiv = document.getElementById("player-scores")
-    scoresDiv.innerHTML = ""
-    scoresDiv.style.display = "flex"
+  if (players.length === 0) return
 
+  const scoresDiv = document.getElementById("player-scores")
+  scoresDiv.style.display = "flex"
+
+  const currentElements = Array.from(scoresDiv.children)
+  const playersHaveChanged =
+    currentElements.length !== players.length ||
+    currentElements.some(
+      (element) => !players.find((p) => p.name === element.dataset.playerName)
+    )
+
+  if (playersHaveChanged) {
+    scoresDiv.innerHTML = ""
     players.forEach((player, index) => {
       const playerScore = document.createElement("div")
+      playerScore.dataset.playerName = player.name
+      playerScore.textContent = `${player.name}: ${player.score}`
       playerScore.className =
         index === currentPlayerIndex ? "current-player" : ""
-      playerScore.textContent = `${player.name}: ${player.score}`
       scoresDiv.appendChild(playerScore)
+    })
+
+    if (document.querySelector(".draggable")) {
+      enablePlayerDragging()
+    }
+  } else {
+    players.forEach((player, index) => {
+      const playerElement = scoresDiv.querySelector(
+        `[data-player-name="${player.name}"]`
+      )
+      if (playerElement) {
+        playerElement.textContent = `${player.name}: ${player.score}`
+        // Preserve draggable class if present
+        const wasDraggable = playerElement.classList.contains("draggable")
+        playerElement.className =
+          index === currentPlayerIndex ? "current-player" : ""
+        if (wasDraggable) {
+          playerElement.classList.add("draggable")
+        }
+        scoresDiv.appendChild(playerElement)
+      }
     })
   }
 }
@@ -480,6 +606,11 @@ gameBoard.addEventListener("click", async function (event) {
     const clicked = target.closest(".card")
     if (!clicked || clicked.classList.contains("revealed") || lockBoard) return
 
+    // Hide reordering buttons on first card click
+    if (isDraggingEnabled) {
+      disablePlayerDragging()
+    }
+
     clicked.classList.remove("hidden")
     clicked.classList.add("revealed")
 
@@ -501,9 +632,9 @@ gameBoard.addEventListener("click", async function (event) {
         currentSeries === "Smart Phonics" &&
         isImageCard
       ) {
-          // Play the image vocabulary sound
-          const imgSound = new Audio(soundItem.imageSound)
-          await playSound(imgSound)
+        // Play the image vocabulary sound
+        const imgSound = new Audio(soundItem.imageSound)
+        await playSound(imgSound)
       } else {
         // Play the regular sound
         await playSound(soundMap[soundItem.word])
@@ -600,8 +731,16 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("add-players-btn").addEventListener("click", () => {
     if (updatePlayerNames()) {
       resetGame()
+      enablePlayerDragging()
     }
   })
+
+  document
+    .getElementById("shuffle-btn")
+    .addEventListener("click", shufflePlayers)
+  document
+    .getElementById("drag-btn")
+    .addEventListener("click", disablePlayerDragging)
 
   loadSavedPlayerNames()
   createUnitSelector()
