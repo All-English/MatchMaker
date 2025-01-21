@@ -262,10 +262,12 @@ function shufflePlayers() {
 }
 
 function enablePlayerDragging() {
+  if (players.length < 2) return
+  
   isDraggingEnabled = true
   const scoresDiv = document.getElementById("player-scores")
 
-  // Hide drag and shuffle buttons
+  // Show drag and shuffle buttons
   const dragBtn = document.getElementById("drag-btn")
   const shuffleBtn = document.getElementById("shuffle-btn")
   if (shuffleBtn) shuffleBtn.classList.add("visible")
