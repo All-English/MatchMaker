@@ -263,7 +263,7 @@ function shufflePlayers() {
 
 function enablePlayerDragging() {
   if (players.length < 2) return
-  
+
   isDraggingEnabled = true
   const scoresDiv = document.getElementById("player-scores")
 
@@ -621,6 +621,7 @@ function resetTurn() {
 
 function updatePlayerNames() {
   const playerNameInput = document.getElementById("player-names-input")
+  const addPlayersButton = document.getElementById("add-players-btn")
   const input = playerNameInput.value
 
   // Save the raw input to localStorage
@@ -638,6 +639,8 @@ function updatePlayerNames() {
   initializePlayerStats()
   updatePlayerScores()
   enablePlayerDragging()
+  addPlayersButton.textContent = "Update Players"
+
   return true
 }
 
