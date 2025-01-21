@@ -508,25 +508,52 @@ function createCards() {
           wordContainer.textContent = item
         }
       } else {
-        // Split target letters
+        // Split target letters into array (e.g., ["bl", "cl", "fl"] or ["a", "e"])
         const targetLetterArray = targetLetters.split(", ")
+        // Store original word to process
+        let remainingWord = item
+        // Initialize empty result string to build highlighted word
+        let result = ""
 
-        // Create a new element with target letters wrapped in spans
-        const wordWithTargetSounds = targetLetterArray.reduce(
-          (modifiedWord, targetLetter) => {
-            // Use case-insensitive regex to find and wrap target letters
-            const regex = new RegExp(targetLetter, "gi")
-            return modifiedWord.replace(
-              regex,
-              (match) => `<span class="target-sounds">${match}</span>`
-            )
-          },
-          item
-        )
+        // Process word character by character
+        let i = 0
+        while (i < remainingWord.length) {
+          // Track if we found a target sound at current position
+          let foundTarget = false
 
-        // Set the innerHTML to preserve the spans
-        wordContainer.innerHTML = wordWithTargetSounds
+          // Check each target sound (e.g., "bl" or "a")
+          for (const target of targetLetterArray) {
+            // Look ahead in word for target sound match
+            // e.g., in "blade", check if "bl" matches at position 0
+            if (
+              remainingWord.slice(i, i + target.length).toLowerCase() ===
+              target.toLowerCase()
+            ) {
+              // Found target sound - wrap in span for highlighting
+              // e.g., <span class="target-sounds">bl</span>ade
+              result += `<span class="target-sounds">${remainingWord.slice(
+                i,
+                i + target.length
+              )}</span>`
+              // Skip past entire target sound
+              i += target.length
+              foundTarget = true
+              break // Exit target sound loop
+            }
+          }
+
+          // If no target sound found at current position
+          // add single character and move to next position
+          // e.g., add "a" in "blade" after processing "bl"
+          if (!foundTarget) {
+            result += remainingWord[i]
+            i++
+          }
+        }
+
+        wordContainer.innerHTML = result
       }
+
       card.appendChild(wordContainer)
     }
 
@@ -566,6 +593,7 @@ function loadUnit(series, book, unit) {
 
   // Reset the game with new words and images
   resetGame()
+  enablePlayerDragging()
 }
 
 function resetGame() {
@@ -607,6 +635,7 @@ function updatePlayerNames() {
   currentPlayerIndex = 0
   initializePlayerStats()
   updatePlayerScores()
+  enablePlayerDragging()
   return true
 }
 
