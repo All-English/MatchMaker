@@ -221,7 +221,7 @@ body {
 }
 
 .container {
-  --container-max: 65rem;
+  --container-max: 60rem;
   width: min(100% - 3rem, var(--container-max, 60ch));
   margin-inline: auto;
 }
@@ -281,7 +281,7 @@ body {
   grid-row: 1;
   grid-column: 2;
   color: var(--text-accent);
-  font-size: var(--fs-800);
+  font-size: var(--fs-700);
   font-weight: 700;
   text-shadow: 2px 2px 4px hsla(0, 0%, 2%, 0.1);
   letter-spacing: 1px;
