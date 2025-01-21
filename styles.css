@@ -627,6 +627,7 @@ option {
   height: 100%;
   background-color: hsla(0, 0%, 0%, 0.5);
   display: flex;
+  overflow: auto;
   justify-content: center;
   align-items: center;
   z-index: 1000;
@@ -696,6 +697,55 @@ option {
 
 .winner-name {
   color: hsl(42deg 100% 40%);
+}
+
+.table-wrapper {
+  margin-bottom: 20px;
+}
+
+.table-wrapper h3 {
+  color: hsl(42deg 100% 40%);
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.stats-container {
+  margin-top: 20px;
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+  font-size: var(--fs-300);
+}
+
+.stats-table {
+  /* width: 100%; */
+  /* border-collapse: collapse; */
+  margin-bottom: 20px;
+margin-inline: auto;}
+
+.stats-table th:not(:first-child) {
+  /* background: rgba(0, 0, 0, 0.2); */
+  color: black;
+  padding: 12px;
+  text-align: center;
+  border-bottom: 1px solid #030507;
+}
+
+.stats-table td {
+  color: black;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stats-table tr:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.player-name-cell {
+  font-weight: bold;
+  color: black;
 }
 
 .ThemeSwitch {

@@ -5,7 +5,10 @@ const pairsInput = document.getElementById("pairs-input")
 const resetButton = document.getElementById("reset-button")
 const triesDisplay = document.getElementById("tries-display")
 
-resetButton.addEventListener("click", resetGame)
+resetButton.addEventListener("click", () => {
+  resetGame()
+  enablePlayerDragging()
+})
 
 let currentUnit = null
 let currentBook = null
@@ -18,6 +21,13 @@ let lockBoard = false
 let matchedPairs = 0
 let maxPairs = 6
 let players = []
+let playerStats = {
+  sessionData: {
+    lastUpdated: null,
+    players: [],
+  },
+  players: {},
+}
 let selectedWords = []
 let soundMap = {}
 let targetLetters = null
@@ -100,6 +110,130 @@ function getRandomMatchColor() {
   usedMatchColors.push(selectedColor)
 
   return selectedColor
+}
+
+function initializePlayerStats() {
+  const saved = localStorage.getItem("matchingGamePlayerStats")
+  if (saved) {
+    playerStats = JSON.parse(saved)
+  }
+
+  playerStats.sessionData = {
+    lastUpdated: Date.now(),
+    players: players.map((p) => p.name),
+  }
+
+  players.forEach((player) => {
+    if (!playerStats.players[player.name]) {
+      playerStats.players[player.name] = {
+        allTime: {
+          gamesPlayed: 0,
+          gamesWon: 0,
+          totalMatchesFound: 0,
+        },
+        session: {
+          sessionGamesWon: 0,
+          sessionMatchesFound: 0,
+        },
+        headToHead: {},
+      }
+    }
+
+    players.forEach((opponent) => {
+      if (player.name !== opponent.name) {
+        playerStats.players[player.name].headToHead[opponent.name] =
+          playerStats.players[player.name].headToHead[opponent.name] || 0
+      }
+    })
+  })
+
+  checkSessionExpiry()
+  savePlayerStats()
+}
+
+function checkSessionExpiry() {
+  const thirtyMinutes = 30 * 60 * 1000
+  const now = Date.now()
+
+  let shouldResetSession = false
+
+  // Check if session is expired
+  if (now - playerStats.sessionData.lastUpdated > thirtyMinutes) {
+    shouldResetSession = true
+  }
+
+  // Check if player list changed
+  const currentPlayers = players.map((p) => p.name)
+  if (
+    JSON.stringify(currentPlayers) !==
+    JSON.stringify(playerStats.sessionData.players)
+  ) {
+    shouldResetSession = true
+  }
+
+  if (shouldResetSession) {
+    resetSessionStats()
+  }
+}
+
+function resetSessionStats() {
+  playerStats.sessionData = {
+    lastUpdated: Date.now(),
+    players: players.map((p) => p.name),
+  }
+
+  Object.keys(playerStats.players).forEach((playerName) => {
+    playerStats.players[playerName].session = {
+      sessionGamesWon: 0,
+      sessionMatchesFound: 0,
+    }
+  })
+
+  savePlayerStats()
+}
+
+function savePlayerStats() {
+  playerStats.sessionData.lastUpdated = Date.now()
+  localStorage.setItem("matchingGamePlayerStats", JSON.stringify(playerStats))
+}
+
+function updateStatsForMatch(playerName) {
+  const player = playerStats.players[playerName]
+  if (player) {
+    player.allTime.totalMatchesFound++
+    player.session.sessionMatchesFound++
+  }
+}
+
+function updateStatsAfterWin(highestScore) {
+  // Get all winners in an array
+  const winners = players.filter((player) => player.score === highestScore)
+
+  // Update games played for all players
+  players.forEach((player) => {
+    if (playerStats.players[player.name]) {
+      playerStats.players[player.name].allTime.gamesPlayed++
+    }
+  })
+
+  // Update winner stats
+  winners.forEach((winner) => {
+    if (playerStats.players[winner.name]) {
+      const winnerStats = playerStats.players[winner.name]
+      winnerStats.allTime.gamesWon++
+      winnerStats.session.sessionGamesWon++
+
+      // Update head-to-head records
+      players.forEach((player) => {
+        if (player.name !== winner.name) {
+          winnerStats.headToHead[player.name] =
+            (winnerStats.headToHead[player.name] || 0) + 1
+        }
+      })
+    }
+  })
+
+  savePlayerStats()
 }
 
 // Player reordering functions
@@ -471,6 +605,7 @@ function updatePlayerNames() {
   // Update players array
   players = names.map((name) => ({ name, score: 0 }))
   currentPlayerIndex = 0
+  initializePlayerStats()
   updatePlayerScores()
   return true
 }
@@ -537,9 +672,62 @@ function updatePlayerScores() {
 
 function showCompletionModal(tries) {
   const modal = document.getElementById("completion-modal")
-  const finalScore = document.getElementById("final-score")
   const modalScores = document.getElementById("modal-player-scores")
+  const finalScore = document.getElementById("final-score")
   finalScore.textContent = tries
+  const statsDiv = document.createElement("div")
+  statsDiv.className = "stats-container"
+
+  // Helper function to create table
+  function createStatsTable(title, players, statsType) {
+    const tableWrapper = document.createElement("div")
+    tableWrapper.className = "table-wrapper"
+
+    const tableTitle = document.createElement("h3")
+    tableTitle.textContent = title
+    tableWrapper.appendChild(tableTitle)
+
+    const table = document.createElement("table")
+    table.className = "stats-table"
+
+    const headerRow = document.createElement("tr")
+    headerRow.innerHTML = `
+        <th></th>
+        <th>Wins</th>
+        <th>Matches Found</th>
+        ${statsType === "allTime" ? "<th>Games Played</th>" : ""}
+    `
+    table.appendChild(headerRow)
+
+    players.forEach((player) => {
+      const stats = playerStats.players[player.name]
+      if (stats) {
+        const row = document.createElement("tr")
+        row.innerHTML = `
+                <td class="player-name-cell">${player.name}</td>
+                <td>${
+                  statsType === "allTime"
+                    ? stats.allTime.gamesWon
+                    : stats.session.sessionGamesWon
+                }</td>
+                <td>${
+                  statsType === "allTime"
+                    ? stats.allTime.totalMatchesFound
+                    : stats.session.sessionMatchesFound
+                }</td>
+                ${
+                  statsType === "allTime"
+                    ? `<td>${stats.allTime.gamesPlayed}</td>`
+                    : ""
+                }
+            `
+        table.appendChild(row)
+      }
+    })
+
+    tableWrapper.appendChild(table)
+    return tableWrapper
+  }
 
   // Only show player scores if players array exists and has entries
   if (players && players.length > 0) {
@@ -547,10 +735,12 @@ function showCompletionModal(tries) {
     modalScores.innerHTML = ""
 
     // Sort players by score in descending order
-    const sortedPlayers = [...players].sort((a, b) => b.score - a.score)
+    let sortedPlayers = [...players].sort((a, b) => b.score - a.score)
 
     // Get the highest score
     const highestScore = sortedPlayers[0].score
+
+    updateStatsAfterWin(highestScore)
 
     // Add each player's score to the modal
     sortedPlayers.forEach((player) => {
@@ -582,6 +772,47 @@ function showCompletionModal(tries) {
 
       modalScores.appendChild(playerScore)
     })
+
+    // Sort players by session score, then session matches found in descending order
+    sortedPlayers = [...players].sort((a, b) => {
+      const statsA = playerStats.players[a.name].session
+      const statsB = playerStats.players[b.name].session
+
+      // First compare session wins
+      if (statsB.sessionGamesWon !== statsA.sessionGamesWon) {
+        return statsB.sessionGamesWon - statsA.sessionGamesWon
+      }
+
+      // If wins are tied, compare matches found
+      return statsB.sessionMatchesFound - statsA.sessionMatchesFound
+    })
+
+    // Create and append session stats table
+    statsDiv.appendChild(
+      createStatsTable("Session Stats", sortedPlayers, "session")
+    )
+
+    // Sort players by all time score, then all time matches found in descending order
+    sortedPlayers = [...players].sort((a, b) => {
+      const statsA = playerStats.players[a.name].allTime
+      const statsB = playerStats.players[b.name].allTime
+
+      // First compare session wins
+      if (statsB.gamesWon !== statsA.gamesWon) {
+        return statsB.gamesWon - statsA.gamesWon
+      }
+
+      // If wins are tied, compare matches found
+      return statsB.totalMatchesFound - statsA.totalMatchesFound
+    })
+
+    // Create and append all-time stats table
+    statsDiv.appendChild(
+      createStatsTable("All-Time Stats", sortedPlayers, "allTime")
+    )
+
+    modalScores.appendChild(statsDiv)
+
     // Show the scores section
     modalScores.closest(".modal-scores").style.display = "block"
   } else {
@@ -655,6 +886,7 @@ gameBoard.addEventListener("click", async function (event) {
         firstSelected = null
         lockBoard = false
         matchedPairs += 1 // Increment the matched pair count
+        updateStatsForMatch(players[currentPlayerIndex].name)
 
         // Check if the game is complete
         if (matchedPairs === selectedWords.length) {
@@ -706,6 +938,7 @@ pairsInput.addEventListener("change", (e) => {
 document.getElementById("play-again-btn").addEventListener("click", () => {
   hideCompletionModal()
   resetGame()
+  enablePlayerDragging()
 })
 
 // Add escape key support
@@ -731,7 +964,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("add-players-btn").addEventListener("click", () => {
     if (updatePlayerNames()) {
       resetGame()
-      enablePlayerDragging()
     }
   })
 
