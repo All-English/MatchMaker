@@ -19,7 +19,8 @@ let firstSelected = null
 let images = []
 let lockBoard = false
 let matchedPairs = 0
-let maxPairs = 6
+let maxPairs = 10
+let minPairs = 2
 let players = []
 let playerStats = {
   sessionData: {
@@ -591,6 +592,9 @@ function loadUnit(series, book, unit) {
     currentUnit.filter((item) => item.word).length
   )
   pairsInput.max = availablePairs
+  pairsInput.min = minPairs
+
+  // const defaultNumberOfPairs = 5
   pairsInput.value = Math.min(maxPairs, availablePairs)
 
   // Reset the game with new words and images
@@ -953,18 +957,7 @@ gameBoard.addEventListener("click", async function (event) {
 // Add event listener for the max Matches input
 pairsInput.addEventListener("change", (e) => {
   const value = parseInt(e.target.value)
-
-  // Ensure value is within bounds
-  if (value < 2) {
-    e.target.value = 2
-    maxPairs = 2
-  } else if (value > parseInt(e.target.max)) {
-    e.target.value = e.target.max
-    maxPairs = parseInt(e.target.max)
-  } else {
-    maxPairs = value
-  }
-
+  maxPairs = value
   resetGame()
 })
 
