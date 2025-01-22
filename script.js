@@ -449,7 +449,7 @@ function createUnitSelector() {
 
 function createCards() {
   // console.log("Creating cards...")
-  // console.log("Words:", words)
+  console.log("Words:", words)
 
   const numPairs = Math.min(maxPairs, words.length)
 
@@ -573,28 +573,42 @@ function loadUnit(series, book, unit) {
   words = currentUnit.filter((item) => item.word).map((item) => item.word)
   images = currentUnit.filter((item) => item.image).map((item) => item.image)
 
-  // If less than 6 pairs, duplicate existing pairs to make 6 pairs
-  while (words.length < 6) {
-    // Select a random index from the existing words
-    const randomIndex = Math.floor(Math.random() * words.length)
+  const originalWordLength = words.length
+  const minWordLength = 7
+
+  // Array to track how many times each word is duplicated
+  const duplicateCounts = new Array(originalWordLength).fill(0)
+
+  // If less than minWordLength, duplicate existing pairs to reach that number
+  while (words.length < minWordLength) {
+    // Find lowest duplicate count in tracking array
+    const minDuplicates = Math.min(...duplicateCounts)
+
+    // Create list of indices that have this minimum count
+    const availableIndices = duplicateCounts
+      .map((count, index) => (count === minDuplicates ? index : -1))
+      .filter((index) => index !== -1)
+
+    // Randomly select from these indices only
+    const randomIndex =
+      availableIndices[Math.floor(Math.random() * availableIndices.length)]
 
     // Add the randomly selected word and its corresponding image
     words.push(words[randomIndex])
     images.push(images[randomIndex])
+    duplicateCounts[randomIndex]++
   }
 
   soundMap = preloadSoundsArray(currentUnit)
   targetLetters = currentUnit[0].targetLetters
 
   // Update pairs input max attribute based on available pairs
-  const availablePairs = Math.max(
-    6,
-    currentUnit.filter((item) => item.word).length
-  )
+  const availablePairs = Math.max(minWordLength, originalWordLength)
+
   pairsInput.max = availablePairs
   pairsInput.min = minPairs
 
-  // const defaultNumberOfPairs = 5
+  // const pairsInputDefaultValue = 5
   pairsInput.value = Math.min(maxPairs, availablePairs)
 
   // Reset the game with new words and images
