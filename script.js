@@ -515,7 +515,7 @@ function createCards() {
       // targetLetters will be highlighted. The list comes from the cardLibrary
       if (!targetLetters) {
         // If no targetLetters specified, wrap the second letter in a span
-        if (currentBook === "1" && currentSeries === "Smart Phonics") {
+        if (currentBook === "1" && currentSeries === "SmartPhonics") {
           const modifiedWord =
             item.slice(0, 1) +
             `<span class="target-sounds">${item.slice(1, 2)}</span>` +
@@ -925,7 +925,7 @@ gameBoard.addEventListener("click", async function (event) {
       // For Smart Phonics 1, images and words have different sounds
       if (
         currentBook === "1" &&
-        currentSeries === "Smart Phonics" &&
+        currentSeries === "SmartPhonics" &&
         isImageCard
       ) {
         // Play the image vocabulary sound

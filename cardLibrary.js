@@ -1,5 +1,5 @@
 export const cardLibrary = {
-  "Smart Phonics": {
+  "SmartPhonics": {
     1: {
       "Unit 1: abc": [
         {
@@ -1983,7 +1983,7 @@ export const cardLibrary = {
       ],
     },
   },
-  "Let's Smile": {
+  "LetsSmile": {
     1: {
       "Unit 1": [
         {
