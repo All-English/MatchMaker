@@ -19,7 +19,7 @@ let firstSelected = null
 let images = []
 let lockBoard = false
 let matchedPairs = 0
-let maxPairs = 10
+let maxPairs = 7
 let minPairs = 2
 let players = []
 let playerStats = {
@@ -462,15 +462,20 @@ function createCards() {
     }
   }
 
-  // Create arrays of selected words and images
-  selectedWords = selectedIndices.map((index) => words[index])
-  const selectedImages = selectedIndices.map((index) => images[index])
+  // Create pairs first
+  const pairs = selectedIndices.map((index) => ({
+    word: words[index],
+    image: images[index],
+  }))
 
-  let items = [...selectedWords, ...selectedImages]
-  // console.log("Random words chosen:", selectedWords)
+  // Create array of all items
+  let items = pairs.flatMap((pair) => [pair.word, pair.image])
 
-  // Randomly shuffle the array using a simple randomization sort method
-  items = items.sort(() => 0.5 - Math.random())
+  // Fisher-Yates shuffle
+  for (let i = items.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[items[i], items[j]] = [items[j], items[i]]
+  }
 
   items.forEach((item, index) => {
     const card = document.createElement("div")
@@ -608,7 +613,6 @@ function loadUnit(series, book, unit) {
   pairsInput.max = availablePairs
   pairsInput.min = minPairs
 
-  // const pairsInputDefaultValue = 5
   pairsInput.value = Math.min(maxPairs, availablePairs)
 
   // Reset the game with new words and images
@@ -938,7 +942,9 @@ gameBoard.addEventListener("click", async function (event) {
         firstSelected = null
         lockBoard = false
         matchedPairs += 1 // Increment the matched pair count
-        updateStatsForMatch(players[currentPlayerIndex].name)
+        if (players[currentPlayerIndex]) {
+          updateStatsForMatch(players[currentPlayerIndex].name)
+        }
 
         // Check if the game is complete
         if (matchedPairs === selectedWords.length) {
