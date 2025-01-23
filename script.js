@@ -407,14 +407,16 @@ function createUnitSelector() {
 
       Object.keys(cardLibrary[series][book]).forEach((unit) => {
         const option = document.createElement("option")
-        option.value = `${series}|${book}|${unit}`
+        // Extract unit number from string (e.g., "Unit 1: ee, ea" -> "1")
+        const unitNumber = unit.match(/Unit (\d+)/)[1]
+        option.value = `${series}|${book}|${unitNumber}`
         option.textContent = `${book}: ${unit}`
 
         // Check if this option matches URL parameters
         if (
           series === seriesParam &&
           book === bookParam &&
-          unit === unitParam
+          unitNumber === unitParam
         ) {
           preselectedOption = option
           option.selected = true
@@ -428,28 +430,35 @@ function createUnitSelector() {
   })
 
   selector.addEventListener("change", (e) => {
-    const [series, book, unit] = e.target.value.split("|")
+    const [series, book, unitNumber] = e.target.value.split("|")
 
     // Update URL with new parameters
     const url = new URL(window.location)
     url.searchParams.set("series", series)
     url.searchParams.set("book", book)
-    url.searchParams.set("unit", unit)
+    url.searchParams.set("unit", unitNumber)
     window.history.pushState({}, "", url)
 
-    loadUnit(series, book, unit)
+    // Find full unit name for loadUnit
+    const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
+      unit.startsWith(`Unit ${unitNumber}:`)
+    )
+    loadUnit(series, book, unitName)
   })
 
   // If an option was preselected, load that unit
   if (preselectedOption) {
-    const [series, book, unit] = preselectedOption.value.split("|")
-    loadUnit(series, book, unit)
+    const [series, book, unitNumber] = preselectedOption.value.split("|")
+    const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
+      unit.startsWith(`Unit ${unitNumber}:`)
+    )
+    loadUnit(series, book, unitName)
   }
 }
 
 function createCards() {
   // console.log("Creating cards...")
-  console.log("Words:", words)
+  // console.log("Words:", words)
 
   const numPairs = Math.min(maxPairs, words.length)
 
