@@ -389,9 +389,6 @@ function createUnitSelector() {
   defaultOption.textContent = "Choose cards"
   selector.appendChild(defaultOption)
 
-  // const seperator = document.createElement("hr")
-  // selector.appendChild(seperator)
-
   let preselectedOption = null
 
   Object.keys(cardLibrary).forEach((series) => {
@@ -429,7 +426,7 @@ function createUnitSelector() {
     })
     const seperator = document.createElement("hr")
     selector.appendChild(seperator)
-    
+
     selector.appendChild(seriesGroup)
   })
 
@@ -445,7 +442,7 @@ function createUnitSelector() {
 
     // Find full unit name for loadUnit
     const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
-      unit.startsWith(`Unit ${unitNumber}:`)
+      unit.startsWith(`Unit ${unitNumber}`)
     )
     loadUnit(series, book, unitName)
   })
@@ -454,7 +451,7 @@ function createUnitSelector() {
   if (preselectedOption) {
     const [series, book, unitNumber] = preselectedOption.value.split("|")
     const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
-      unit.startsWith(`Unit ${unitNumber}:`)
+      unit.startsWith(`Unit ${unitNumber}`)
     )
     loadUnit(series, book, unitName)
   }
@@ -583,6 +580,17 @@ function createCards() {
 }
 
 function loadUnit(series, book, unit) {
+  if (
+    !cardLibrary[series] ||
+    !cardLibrary[series][book] ||
+    !cardLibrary[series][book][unit]
+  ) {
+    console.error("Invalid unit path:", { series, book, unit })
+    return
+  }
+
+  console.log("Valid unit path:", { series, book, unit })
+
   currentSeries = series
   currentBook = book
   currentUnit = cardLibrary[series][book][unit]
