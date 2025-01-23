@@ -389,8 +389,8 @@ function createUnitSelector() {
   defaultOption.textContent = "Choose cards"
   selector.appendChild(defaultOption)
 
-  const seperator = document.createElement("hr")
-  selector.appendChild(seperator)
+  // const seperator = document.createElement("hr")
+  // selector.appendChild(seperator)
 
   let preselectedOption = null
 
@@ -398,12 +398,14 @@ function createUnitSelector() {
     const seriesGroup = document.createElement("optgroup")
     seriesGroup.label = series
 
-    Object.keys(cardLibrary[series]).forEach((book) => {
-      // Create a separator between books
-      const separator = document.createElement("option")
-      separator.textContent = `---`
-      separator.disabled = true
-      seriesGroup.appendChild(separator)
+    Object.keys(cardLibrary[series]).forEach((book, bookIndex) => {
+      // Only add separator after first book
+      if (bookIndex > 0) {
+        const separator = document.createElement("option")
+        separator.textContent = `---`
+        separator.disabled = true
+        seriesGroup.appendChild(separator)
+      }
 
       Object.keys(cardLibrary[series][book]).forEach((unit) => {
         const option = document.createElement("option")
@@ -425,7 +427,9 @@ function createUnitSelector() {
         seriesGroup.appendChild(option)
       })
     })
-
+    const seperator = document.createElement("hr")
+    selector.appendChild(seperator)
+    
     selector.appendChild(seriesGroup)
   })
 
