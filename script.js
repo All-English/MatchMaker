@@ -878,9 +878,9 @@ function showCompletionModal(tries) {
     })
 
     // Create and append all-time stats table
-    statsDiv.appendChild(
-      createStatsTable("All-Time Stats", sortedPlayers, "allTime")
-    )
+    // statsDiv.appendChild(
+    //   createStatsTable("All-Time Stats", sortedPlayers, "allTime")
+    // )
 
     modalScores.appendChild(statsDiv)
 
