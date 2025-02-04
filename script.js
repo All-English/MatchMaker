@@ -118,6 +118,7 @@ function initializePlayerStats() {
   const saved = localStorage.getItem("matchingGamePlayerStats")
   if (saved) {
     playerStats = JSON.parse(saved)
+    checkSessionExpiry()
   }
 
   playerStats.sessionData = {
@@ -149,7 +150,6 @@ function initializePlayerStats() {
     })
   })
 
-  checkSessionExpiry()
   savePlayerStats()
 }
 
@@ -159,17 +159,21 @@ function checkSessionExpiry() {
 
   let shouldResetSession = false
 
+  // console.log("Last updated:", playerStats.sessionData.lastUpdated)
+  // console.log("Current time:", now)
+  // console.log("Difference:", now - playerStats.sessionData.lastUpdated)
+
   // Check if session is expired
   if (now - playerStats.sessionData.lastUpdated > thirtyMinutes) {
+    console.log("Session expired due to time")
     shouldResetSession = true
   }
 
   // Check if player list changed
-  const currentPlayers = players.map((p) => p.name)
-  if (
-    JSON.stringify(currentPlayers) !==
-    JSON.stringify(playerStats.sessionData.players)
-  ) {
+  const currentPlayers = players.map((p) => p.name).sort()
+  const storedPlayers = playerStats.sessionData.players.sort()
+
+  if (JSON.stringify(currentPlayers) !== JSON.stringify(storedPlayers)) {
     shouldResetSession = true
   }
 
