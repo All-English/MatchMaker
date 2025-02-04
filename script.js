@@ -21,6 +21,7 @@ let lockBoard = false
 let matchedPairs = 0
 let maxPairs = 7
 let minPairs = 2
+let numPairs = 0
 let players = []
 let playerStats = {
   sessionData: {
@@ -461,7 +462,7 @@ function createCards() {
   // console.log("Creating cards...")
   // console.log("Words:", words)
 
-  const numPairs = Math.min(maxPairs, words.length)
+  numPairs = Math.min(maxPairs, words.length)
 
   // Randomly select words and their corresponding images
   const selectedIndices = []
@@ -580,17 +581,6 @@ function createCards() {
 }
 
 function loadUnit(series, book, unit) {
-  if (
-    !cardLibrary[series] ||
-    !cardLibrary[series][book] ||
-    !cardLibrary[series][book][unit]
-  ) {
-    console.error("Invalid unit path:", { series, book, unit })
-    return
-  }
-
-  console.log("Valid unit path:", { series, book, unit })
-
   currentSeries = series
   currentBook = book
   currentUnit = cardLibrary[series][book][unit]
@@ -968,7 +958,7 @@ gameBoard.addEventListener("click", async function (event) {
         }
 
         // Check if the game is complete
-        if (matchedPairs === selectedWords.length) {
+        if (matchedPairs === numPairs) {
           // Play completion sound
           playSound(completeSound)
           showCompletionModal(tries)
