@@ -723,7 +723,8 @@ option {
   /* width: 100%; */
   /* border-collapse: collapse; */
   margin-bottom: 20px;
-margin-inline: auto;}
+  margin-inline: auto;
+}
 
 .stats-table th:not(:first-child) {
   /* background: rgba(0, 0, 0, 0.2); */
@@ -828,6 +829,10 @@ margin-inline: auto;}
 
 /* Laptops/small desktops - 992px and up */
 @media (width >=62rem) {
+  .container {
+    --container-max: 80rem;
+  }
+
   .game-board:has(.card:nth-child(n + 17)) {
     --number-of-columns: 5;
   }
@@ -835,10 +840,6 @@ margin-inline: auto;}
 
 /* Large desktops - 1200px and up */
 @media (width >=75rem) and (height <=1080px) {
-  /* .container {
-    --container-max: 77rem;
-  } */
-
   .game-board {
     --number-of-columns: 4;
   }
