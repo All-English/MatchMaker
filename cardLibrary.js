@@ -1679,6 +1679,26 @@ export const cardLibrary = {
           image: "data/SmartPhonics/5/Unit1/pics/meat.jpg",
           sound: "data/SmartPhonics/5/Unit1/sounds/meat.mp3",
         },
+        {
+          word: "peanut",
+          image: "data/SmartPhonics/5/Unit1/pics/peanut.jpg",
+          sound: "data/SmartPhonics/5/Unit1/sounds/peanut.mp3",
+        },
+        {
+          word: "sea",
+          image: "data/SmartPhonics/5/Unit1/pics/sea.jpg",
+          sound: "data/SmartPhonics/5/Unit1/sounds/sea.mp3",
+        },
+        {
+          word: "seal",
+          image: "data/SmartPhonics/5/Unit1/pics/seal.jpg",
+          sound: "data/SmartPhonics/5/Unit1/sounds/seal.mp3",
+        },
+        {
+          word: "tea",
+          image: "data/SmartPhonics/5/Unit1/pics/tea.jpg",
+          sound: "data/SmartPhonics/5/Unit1/sounds/tea.mp3",
+        },
       ],
       "Unit 2: oa, ow": [
         { targetLetters: "oa, ow" },
@@ -1721,6 +1741,26 @@ export const cardLibrary = {
           word: "bowl",
           image: "data/SmartPhonics/5/Unit2/pics/bowl.jpg",
           sound: "data/SmartPhonics/5/Unit2/sounds/bowl.mp3",
+        },
+        {
+          word: "pillow",
+          image: "data/SmartPhonics/5/Unit2/pics/pillow.jpg",
+          sound: "data/SmartPhonics/5/Unit2/sounds/pillow.mp3",
+        },
+        {
+          word: "snow",
+          image: "data/SmartPhonics/5/Unit2/pics/snow.jpg",
+          sound: "data/SmartPhonics/5/Unit2/sounds/snow.mp3",
+        },
+        {
+          word: "window",
+          image: "data/SmartPhonics/5/Unit2/pics/window.jpg",
+          sound: "data/SmartPhonics/5/Unit2/sounds/window.mp3",
+        },
+        {
+          word: "yellow",
+          image: "data/SmartPhonics/5/Unit2/pics/yellow.jpg",
+          sound: "data/SmartPhonics/5/Unit2/sounds/yellow.mp3",
         },
       ],
       "Unit 3: ai, ay": [
@@ -1765,6 +1805,26 @@ export const cardLibrary = {
           image: "data/SmartPhonics/5/Unit3/pics/gray.jpg",
           sound: "data/SmartPhonics/5/Unit3/sounds/gray.mp3",
         },
+        {
+          word: "hay",
+          image: "data/SmartPhonics/5/Unit3/pics/hay.jpg",
+          sound: "data/SmartPhonics/5/Unit3/sounds/hay.mp3",
+        },
+        {
+          word: "play",
+          image: "data/SmartPhonics/5/Unit3/pics/play.jpg",
+          sound: "data/SmartPhonics/5/Unit3/sounds/play.mp3",
+        },
+        {
+          word: "pray",
+          image: "data/SmartPhonics/5/Unit3/pics/pray.jpg",
+          sound: "data/SmartPhonics/5/Unit3/sounds/pray.mp3",
+        },
+        {
+          word: "tray",
+          image: "data/SmartPhonics/5/Unit3/pics/tray.jpg",
+          sound: "data/SmartPhonics/5/Unit3/sounds/tray.mp3",
+        },
       ],
       "Unit 4: oi, oy": [
         { targetLetters: "oi, oy" },
@@ -1807,6 +1867,26 @@ export const cardLibrary = {
           word: "toilet",
           image: "data/SmartPhonics/5/Unit4/pics/toilet.jpg",
           sound: "data/SmartPhonics/5/Unit4/sounds/toilet.mp3",
+        },
+        {
+          word: "boy",
+          image: "data/SmartPhonics/5/Unit4/pics/boy.jpg",
+          sound: "data/SmartPhonics/5/Unit4/sounds/boy.mp3",
+        },
+        {
+          word: "joy",
+          image: "data/SmartPhonics/5/Unit4/pics/joy.jpg",
+          sound: "data/SmartPhonics/5/Unit4/sounds/joy.mp3",
+        },
+        {
+          word: "soybean",
+          image: "data/SmartPhonics/5/Unit4/pics/soybean.jpg",
+          sound: "data/SmartPhonics/5/Unit4/sounds/soybean.mp3",
+        },
+        {
+          word: "toy",
+          image: "data/SmartPhonics/5/Unit4/pics/toy.jpg",
+          sound: "data/SmartPhonics/5/Unit4/sounds/toy.mp3",
         },
       ],
       "Unit 5: ow, ou": [
@@ -1851,6 +1931,26 @@ export const cardLibrary = {
           image: "data/SmartPhonics/5/Unit5/pics/cloud.jpg",
           sound: "data/SmartPhonics/5/Unit5/sounds/cloud.mp3",
         },
+        {
+          word: "count",
+          image: "data/SmartPhonics/5/Unit5/pics/count.jpg",
+          sound: "data/SmartPhonics/5/Unit5/sounds/count.mp3",
+        },
+        {
+          word: "house",
+          image: "data/SmartPhonics/5/Unit5/pics/house.jpg",
+          sound: "data/SmartPhonics/5/Unit5/sounds/house.mp3",
+        },
+        {
+          word: "mouse",
+          image: "data/SmartPhonics/5/Unit5/pics/mouse.jpg",
+          sound: "data/SmartPhonics/5/Unit5/sounds/mouse.mp3",
+        },
+        {
+          word: "mouth",
+          image: "data/SmartPhonics/5/Unit5/pics/mouth.jpg",
+          sound: "data/SmartPhonics/5/Unit5/sounds/mouth.mp3",
+        },
       ],
       "Unit 6: ir, er, ur": [
         { targetLetters: "ir, er, ur" },
@@ -1893,6 +1993,26 @@ export const cardLibrary = {
           word: "teacher",
           image: "data/SmartPhonics/5/Unit6/pics/teacher.jpg",
           sound: "data/SmartPhonics/5/Unit6/sounds/teacher.mp3",
+        },
+        {
+          word: "nurse",
+          image: "data/SmartPhonics/5/Unit6/pics/nurse.jpg",
+          sound: "data/SmartPhonics/5/Unit6/sounds/nurse.mp3",
+        },
+        {
+          word: "purple",
+          image: "data/SmartPhonics/5/Unit6/pics/purple.jpg",
+          sound: "data/SmartPhonics/5/Unit6/sounds/purple.mp3",
+        },
+        {
+          word: "purse",
+          image: "data/SmartPhonics/5/Unit6/pics/purse.jpg",
+          sound: "data/SmartPhonics/5/Unit6/sounds/purse.mp3",
+        },
+        {
+          word: "turtle",
+          image: "data/SmartPhonics/5/Unit6/pics/turtle.jpg",
+          sound: "data/SmartPhonics/5/Unit6/sounds/turtle.mp3",
         },
       ],
       "Unit 7: ar, or": [
@@ -1937,6 +2057,26 @@ export const cardLibrary = {
           image: "data/SmartPhonics/5/Unit7/pics/corn.jpg",
           sound: "data/SmartPhonics/5/Unit7/sounds/corn.mp3",
         },
+        {
+          word: "fork",
+          image: "data/SmartPhonics/5/Unit7/pics/fork.jpg",
+          sound: "data/SmartPhonics/5/Unit7/sounds/fork.mp3",
+        },
+        {
+          word: "horse",
+          image: "data/SmartPhonics/5/Unit7/pics/horse.jpg",
+          sound: "data/SmartPhonics/5/Unit7/sounds/horse.mp3",
+        },
+        {
+          word: "north",
+          image: "data/SmartPhonics/5/Unit7/pics/north.jpg",
+          sound: "data/SmartPhonics/5/Unit7/sounds/north.mp3",
+        },
+        {
+          word: "store",
+          image: "data/SmartPhonics/5/Unit7/pics/store.jpg",
+          sound: "data/SmartPhonics/5/Unit7/sounds/store.mp3",
+        },
       ],
       "Unit 8: oo": [
         { targetLetters: "oo" },
@@ -1979,6 +2119,152 @@ export const cardLibrary = {
           word: "goose",
           image: "data/SmartPhonics/5/Unit8/pics/goose.jpg",
           sound: "data/SmartPhonics/5/Unit8/sounds/goose.mp3",
+        },
+        {
+          word: "moon",
+          image: "data/SmartPhonics/5/Unit8/pics/moon.jpg",
+          sound: "data/SmartPhonics/5/Unit8/sounds/moon.mp3",
+        },
+        {
+          word: "pool",
+          image: "data/SmartPhonics/5/Unit8/pics/pool.jpg",
+          sound: "data/SmartPhonics/5/Unit8/sounds/pool.mp3",
+        },
+        {
+          word: "spoon",
+          image: "data/SmartPhonics/5/Unit8/pics/spoon.jpg",
+          sound: "data/SmartPhonics/5/Unit8/sounds/spoon.mp3",
+        },
+        {
+          word: "zoo",
+          image: "data/SmartPhonics/5/Unit8/pics/zoo.jpg",
+          sound: "data/SmartPhonics/5/Unit8/sounds/zoo.mp3",
+        },
+      ],
+      "Unit 9: au, aw, all": [
+        { targetLetters: "au, aw, all" },
+        {
+          word: "August",
+          image: "data/SmartPhonics/5/Unit9/pics/August.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/August.mp3",
+        },
+        {
+          word: "ball",
+          image: "data/SmartPhonics/5/Unit9/pics/ball.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/ball.mp3",
+        },
+        {
+          word: "crawl",
+          image: "data/SmartPhonics/5/Unit9/pics/crawl.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/crawl.mp3",
+        },
+        {
+          word: "draw",
+          image: "data/SmartPhonics/5/Unit9/pics/draw.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/draw.mp3",
+        },
+        {
+          word: "launch",
+          image: "data/SmartPhonics/5/Unit9/pics/launch.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/launch.mp3",
+        },
+        {
+          word: "mall",
+          image: "data/SmartPhonics/5/Unit9/pics/mall.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/mall.mp3",
+        },
+        {
+          word: "pause",
+          image: "data/SmartPhonics/5/Unit9/pics/pause.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/pause.mp3",
+        },
+        {
+          word: "prawn",
+          image: "data/SmartPhonics/5/Unit9/pics/prawn.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/prawn.mp3",
+        },
+        {
+          word: "sauce",
+          image: "data/SmartPhonics/5/Unit9/pics/sauce.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/sauce.mp3",
+        },
+        {
+          word: "small",
+          image: "data/SmartPhonics/5/Unit9/pics/small.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/small.mp3",
+        },
+        {
+          word: "tall",
+          image: "data/SmartPhonics/5/Unit9/pics/tall.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/tall.mp3",
+        },
+        {
+          word: "yawn",
+          image: "data/SmartPhonics/5/Unit9/pics/yawn.png",
+          sound: "data/SmartPhonics/5/Unit9/sounds/yawn.mp3",
+        },
+      ],
+      "Unit 10: kn, wr, mb": [
+        { targetLetters: "kn, wr, mb" },
+        {
+          word: "climb",
+          image: "data/SmartPhonics/5/Unit10/pics/climb.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/climb.mp3",
+        },
+        {
+          word: "comb",
+          image: "data/SmartPhonics/5/Unit10/pics/comb.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/comb.mp3",
+        },
+        {
+          word: "knee",
+          image: "data/SmartPhonics/5/Unit10/pics/knee.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/knee.mp3",
+        },
+        {
+          word: "knife",
+          image: "data/SmartPhonics/5/Unit10/pics/knife.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/knife.mp3",
+        },
+        {
+          word: "knit",
+          image: "data/SmartPhonics/5/Unit10/pics/knit.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/knit.mp3",
+        },
+        {
+          word: "knock",
+          image: "data/SmartPhonics/5/Unit10/pics/knock.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/knock.mp3",
+        },
+        {
+          word: "lamb",
+          image: "data/SmartPhonics/5/Unit10/pics/lamb.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/lamb.mp3",
+        },
+        {
+          word: "thumb",
+          image: "data/SmartPhonics/5/Unit10/pics/thumb.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/thumb.mp3",
+        },
+        {
+          word: "wrap",
+          image: "data/SmartPhonics/5/Unit10/pics/wrap.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/wrap.mp3",
+        },
+        {
+          word: "wrist",
+          image: "data/SmartPhonics/5/Unit10/pics/wrist.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/wrist.mp3",
+        },
+        {
+          word: "write",
+          image: "data/SmartPhonics/5/Unit10/pics/write.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/write.mp3",
+        },
+        {
+          word: "wrong",
+          image: "data/SmartPhonics/5/Unit10/pics/wrong.png",
+          sound: "data/SmartPhonics/5/Unit10/sounds/wrong.mp3",
         },
       ],
     },

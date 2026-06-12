@@ -86,7 +86,7 @@ function getRandomMatchColor() {
   const matchColors = [
     "matched-1",
     "matched-2",
-    "matched-2",
+    "matched-3",
     "matched-4",
     "matched-5",
     "matched-6",
@@ -171,7 +171,7 @@ function checkSessionExpiry() {
 
   // Check if player list changed
   const currentPlayers = players.map((p) => p.name).sort()
-  const storedPlayers = playerStats.sessionData.players.sort()
+  const storedPlayers = [...playerStats.sessionData.players].sort()
 
   if (JSON.stringify(currentPlayers) !== JSON.stringify(storedPlayers)) {
     shouldResetSession = true
@@ -650,9 +650,11 @@ function resetGame() {
 }
 
 function resetTurn() {
-  firstSelected.classList.remove("revealed")
-  firstSelected.classList.add("hidden")
-  firstSelected = null
+  if (firstSelected) {
+    firstSelected.classList.remove("revealed")
+    firstSelected.classList.add("hidden")
+    firstSelected = null
+  }
   lockBoard = false
 }
 
@@ -926,7 +928,11 @@ gameBoard.addEventListener("click", async function (event) {
 
     if (soundItem) {
       lockBoard = true
-      const isImageCard = clickedContent.includes(".jpg")
+      const isImageCard =
+        clickedContent.includes(".jpg") ||
+        clickedContent.includes(".png") ||
+        clickedContent.includes(".jpeg") ||
+        clickedContent.includes(".webp")
 
       // For Smart Phonics 1, images and words have different sounds
       if (
@@ -981,9 +987,12 @@ gameBoard.addEventListener("click", async function (event) {
         firstSelected = null
         lockBoard = false
         // }, 1000)
+
+        // change to next player only on miss
+        if (players.length > 0) {
+          currentPlayerIndex = (currentPlayerIndex + 1) % players.length
+        }
       }
-      // change to next player
-      currentPlayerIndex = (currentPlayerIndex + 1) % players.length
       updatePlayerScores()
     }
   }
