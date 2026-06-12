@@ -15,6 +15,7 @@ let currentBook = null
 let currentSeries = null
 let currentPlayerIndex = 0
 let isDraggingEnabled = false
+let keepTurnOnMatch = true
 let firstSelected = null
 let images = []
 let lockBoard = false
@@ -692,6 +693,19 @@ function loadSavedPlayerNames() {
   }
 }
 
+// Load saved rules preference
+function loadSavedRulesPreference() {
+  const savedPreference = localStorage.getItem("matchingGameKeepTurn")
+  const rulesSelector = document.getElementById("rules-selector")
+  if (savedPreference !== null) {
+    keepTurnOnMatch = savedPreference === "true"
+    rulesSelector.value = keepTurnOnMatch ? "keep" : "change"
+  } else {
+    keepTurnOnMatch = true
+    rulesSelector.value = "keep"
+  }
+}
+
 function updateScore() {
   triesDisplay.textContent = `Tries: ${tries}`
 }
@@ -957,6 +971,7 @@ gameBoard.addEventListener("click", async function (event) {
       lockBoard = true // Prevent more clicks until this check is done
       tries++
       updateScore()
+      let nextPlayer = false
       if (isMatch(firstSelected, clicked)) {
         // Play match sound
         playSound(matchSound)
@@ -973,6 +988,10 @@ gameBoard.addEventListener("click", async function (event) {
           playSound(completeSound)
           showCompletionModal(tries)
         }
+
+        if (!keepTurnOnMatch) {
+          nextPlayer = true
+        }
       } else {
         // Reset the sound to the beginning, so it plays if a match is tried quickly
         wrongSound.currentTime = 0
@@ -988,10 +1007,11 @@ gameBoard.addEventListener("click", async function (event) {
         lockBoard = false
         // }, 1000)
 
-        // change to next player only on miss
-        if (players.length > 0) {
-          currentPlayerIndex = (currentPlayerIndex + 1) % players.length
-        }
+        nextPlayer = true
+      }
+      // change to next player
+      if (nextPlayer && players.length > 0) {
+        currentPlayerIndex = (currentPlayerIndex + 1) % players.length
       }
       updatePlayerScores()
     }
@@ -1045,6 +1065,13 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("drag-btn")
     .addEventListener("click", disablePlayerDragging)
 
+  const rulesSelector = document.getElementById("rules-selector")
+  rulesSelector.addEventListener("change", (e) => {
+    keepTurnOnMatch = e.target.value === "keep"
+    localStorage.setItem("matchingGameKeepTurn", keepTurnOnMatch.toString())
+  })
+
   loadSavedPlayerNames()
+  loadSavedRulesPreference()
   createUnitSelector()
 })
