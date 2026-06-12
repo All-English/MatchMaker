@@ -258,8 +258,8 @@ function shufflePlayers() {
       ;[players[i], players[j]] = [players[j], players[i]]
     }
 
-    // Check if any player is in original position
-    validShuffle = players.every(
+    // Check that the entire order is not identical to the original
+    validShuffle = players.some(
       (player, index) => player !== originalOrder[index]
     )
     maxAttempts--
@@ -280,9 +280,12 @@ function enablePlayerDragging() {
   if (shuffleBtn) shuffleBtn.classList.add("visible")
   if (dragBtn) dragBtn.classList.add("visible")
 
-  scoresDiv.querySelectorAll("div").forEach((div) => {
+  scoresDiv.querySelectorAll(".player-card").forEach((div) => {
     div.draggable = true
     div.classList.add("draggable")
+
+    const handle = div.querySelector(".drag-handle")
+    if (handle) handle.style.display = "inline-block"
 
     div.addEventListener("dragstart", handleDragStart)
     div.addEventListener("dragover", handleDragOver)
@@ -300,9 +303,12 @@ function disablePlayerDragging() {
   if (shuffleBtn) shuffleBtn.classList.remove("visible")
   if (dragBtn) dragBtn.classList.remove("visible")
 
-  scoresDiv.querySelectorAll("div").forEach((div) => {
+  scoresDiv.querySelectorAll(".player-card").forEach((div) => {
     div.draggable = false
     div.classList.remove("draggable")
+
+    const handle = div.querySelector(".drag-handle")
+    if (handle) handle.style.display = "none"
 
     div.removeEventListener("dragstart", handleDragStart)
     div.removeEventListener("dragover", handleDragOver)
@@ -311,7 +317,10 @@ function disablePlayerDragging() {
 }
 
 function handleDragStart(e) {
-  e.dataTransfer.setData("text/plain", e.target.dataset.playerName)
+  const card = e.target.closest(".player-card")
+  if (card) {
+    e.dataTransfer.setData("text/plain", card.dataset.playerName)
+  }
 }
 
 function handleDragOver(e) {
@@ -321,7 +330,7 @@ function handleDragOver(e) {
 function handleDrop(e) {
   e.preventDefault()
   const draggedName = e.dataTransfer.getData("text/plain")
-  const dropTarget = e.target.closest("div")
+  const dropTarget = e.target.closest(".player-card")
 
   if (!dropTarget || !draggedName) return
 
@@ -473,7 +482,12 @@ function createCards() {
   const selectedIndices = []
   while (selectedIndices.length < numPairs) {
     const randomIndex = Math.floor(Math.random() * words.length)
-    if (!selectedIndices.includes(randomIndex)) {
+    const alreadyUsed =
+      selectedIndices.includes(randomIndex) ||
+      selectedIndices.some(
+        (i) => words[i] === words[randomIndex] && images[i] === images[randomIndex]
+      )
+    if (!alreadyUsed) {
       selectedIndices.push(randomIndex)
     }
   }
@@ -704,6 +718,7 @@ function loadSavedRulesPreference() {
   }
   if (rulesButton) {
     rulesButton.classList.toggle("off", !keepTurnOnMatch)
+    rulesButton.textContent = `Bonus Turns: ${keepTurnOnMatch ? "On" : "Off"}`
   }
 }
 
@@ -729,13 +744,39 @@ function updatePlayerScores() {
     players.forEach((player, index) => {
       const playerScore = document.createElement("div")
       playerScore.dataset.playerName = player.name
-      playerScore.textContent = `${player.name}: ${player.score}`
-      playerScore.className =
-        index === currentPlayerIndex ? "current-player" : ""
+      playerScore.className = "player-card"
+      if (index === currentPlayerIndex) {
+        playerScore.classList.add("current-player")
+      }
+
+
+      // Create info wrapper
+      const info = document.createElement("div")
+      info.className = "player-info"
+
+      const nameSpan = document.createElement("span")
+      nameSpan.className = "player-name"
+      nameSpan.textContent = player.name
+      info.appendChild(nameSpan)
+
+      const scoreSpan = document.createElement("span")
+      scoreSpan.className = "player-score"
+      scoreSpan.textContent = player.score
+      info.appendChild(scoreSpan)
+
+      playerScore.appendChild(info)
+
+      // Create drag handle
+      const dragHandle = document.createElement("span")
+      dragHandle.className = "drag-handle"
+      dragHandle.innerHTML = "⋮⋮"
+      dragHandle.style.display = isDraggingEnabled ? "inline-block" : "none"
+      playerScore.appendChild(dragHandle)
+
       scoresDiv.appendChild(playerScore)
     })
 
-    if (document.querySelector(".draggable")) {
+    if (isDraggingEnabled) {
       enablePlayerDragging()
     }
   } else {
@@ -744,18 +785,125 @@ function updatePlayerScores() {
         `[data-player-name="${player.name}"]`
       )
       if (playerElement) {
-        playerElement.textContent = `${player.name}: ${player.score}`
-        // Preserve draggable class if present
-        const wasDraggable = playerElement.classList.contains("draggable")
-        playerElement.className =
-          index === currentPlayerIndex ? "current-player" : ""
-        if (wasDraggable) {
-          playerElement.classList.add("draggable")
+        // Update score
+        const scoreSpan = playerElement.querySelector(".player-score")
+        if (scoreSpan && scoreSpan.textContent !== player.score.toString()) {
+          scoreSpan.textContent = player.score
+          // Add quick pop/scale micro-animation
+          scoreSpan.animate([
+            { transform: "scale(1)" },
+            { transform: "scale(1.3)", color: "var(--button-background)" },
+            { transform: "scale(1)" }
+          ], { duration: 300, easing: "ease-out" })
         }
+
+        // Update active class
+        const wasCurrent = playerElement.classList.contains("current-player")
+        const isCurrent = index === currentPlayerIndex
+        
+        if (isCurrent && !wasCurrent) {
+          playerElement.classList.add("current-player")
+          // Animation when becoming active
+          playerElement.animate([
+            { transform: "scale(1)" },
+            { transform: "scale(1.08)" },
+            { transform: "scale(1.05)" }
+          ], { duration: 250, easing: "ease-out" })
+        } else if (!isCurrent && wasCurrent) {
+          playerElement.classList.remove("current-player")
+        }
+
+        // Update drag handle visibility
+        const dragHandle = playerElement.querySelector(".drag-handle")
+        if (dragHandle) {
+          dragHandle.style.display = isDraggingEnabled ? "inline-block" : "none"
+        }
+
+        // Restore drag/draggable state
+        const wasDraggable = playerElement.classList.contains("draggable")
+        if (isDraggingEnabled && !wasDraggable) {
+          playerElement.classList.add("draggable")
+          playerElement.draggable = true
+        } else if (!isDraggingEnabled && wasDraggable) {
+          playerElement.classList.remove("draggable")
+          playerElement.draggable = false
+        }
+
         scoresDiv.appendChild(playerElement)
       }
     })
   }
+}
+
+function triggerConfetti() {
+  const canvas = document.createElement("canvas")
+  canvas.style.position = "fixed"
+  canvas.style.top = "0"
+  canvas.style.left = "0"
+  canvas.style.width = "100%"
+  canvas.style.height = "100%"
+  canvas.style.pointerEvents = "none"
+  canvas.style.zIndex = "9999"
+  document.body.appendChild(canvas)
+
+  const ctx = canvas.getContext("2d")
+  let width = (canvas.width = window.innerWidth)
+  let height = (canvas.height = window.innerHeight)
+
+  const handleResize = () => {
+    width = canvas.width = window.innerWidth
+    height = canvas.height = window.innerHeight
+  }
+  window.addEventListener("resize", handleResize)
+
+  const colors = ["#ff5964", "#35a7ff", "#ffe74c", "#38b000", "#ff9f1c", "#e0aaff"]
+  const particles = []
+
+  for (let i = 0; i < 150; i++) {
+    particles.push({
+      x: Math.random() * width,
+      y: Math.random() * -height - 20,
+      r: Math.random() * 6 + 4,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      tilt: Math.random() * 10 - 5,
+      tiltAngleIncremental: Math.random() * 0.07 + 0.02,
+      tiltAngle: 0,
+      speed: Math.random() * 3 + 2
+    })
+  }
+
+  let animationFrameId
+  const startTime = Date.now()
+
+  function draw() {
+    ctx.clearRect(0, 0, width, height)
+
+    if (Date.now() - startTime > 5000) {
+      window.removeEventListener("resize", handleResize)
+      if (canvas.parentNode) {
+        document.body.removeChild(canvas)
+      }
+      cancelAnimationFrame(animationFrameId)
+      return
+    }
+
+    particles.forEach((p) => {
+      p.tiltAngle += p.tiltAngleIncremental
+      p.y += p.speed
+      p.x += Math.sin(p.tiltAngle) * 0.5
+
+      ctx.beginPath()
+      ctx.lineWidth = p.r
+      ctx.strokeStyle = p.color
+      ctx.moveTo(p.x + p.tilt + p.r / 2, p.y)
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r / 2)
+      ctx.stroke()
+    })
+
+    animationFrameId = requestAnimationFrame(draw)
+  }
+
+  draw()
 }
 
 function showCompletionModal(tries) {
@@ -987,6 +1135,7 @@ gameBoard.addEventListener("click", async function (event) {
         if (matchedPairs === numPairs) {
           // Play completion sound
           playSound(completeSound)
+          triggerConfetti()
           showCompletionModal(tries)
         }
 
@@ -1071,6 +1220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     rulesButton.addEventListener("click", () => {
       keepTurnOnMatch = !keepTurnOnMatch
       rulesButton.classList.toggle("off", !keepTurnOnMatch)
+      rulesButton.textContent = `Bonus Turns: ${keepTurnOnMatch ? "On" : "Off"}`
       localStorage.setItem("matchingGameKeepTurn", keepTurnOnMatch.toString())
     })
   }
@@ -1079,3 +1229,27 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSavedRulesPreference()
   createUnitSelector()
 })
+
+// Expose debug variables to window
+Object.defineProperty(window, "players", { get: () => players })
+Object.defineProperty(window, "currentPlayerIndex", { get: () => currentPlayerIndex })
+Object.defineProperty(window, "isDraggingEnabled", { get: () => isDraggingEnabled })
+Object.defineProperty(window, "words", { get: () => words })
+Object.defineProperty(window, "images", { get: () => images })
+Object.defineProperty(window, "firstSelected", { get: () => firstSelected })
+Object.defineProperty(window, "lockBoard", { get: () => lockBoard })
+Object.defineProperty(window, "matchedPairs", { get: () => matchedPairs })
+Object.defineProperty(window, "numPairs", { get: () => numPairs })
+Object.defineProperty(window, "tries", { get: () => tries })
+Object.defineProperty(window, "keepTurnOnMatch", { get: () => keepTurnOnMatch })
+Object.defineProperty(window, "currentUnit", { get: () => currentUnit })
+
+window.resetGame = resetGame
+window.updatePlayerScores = updatePlayerScores
+window.updatePlayerNames = updatePlayerNames
+window.enablePlayerDragging = enablePlayerDragging
+window.disablePlayerDragging = disablePlayerDragging
+window.shufflePlayers = shufflePlayers
+window.loadUnit = loadUnit
+window.createCards = createCards
+
