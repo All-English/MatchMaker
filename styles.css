@@ -571,6 +571,18 @@ select:hover {
   box-shadow: 0 2px 5px hsla(0, 0%, 2%, 0.1);
 }
 
+#rules-button.off {
+  background-color: var(--background-item);
+  color: var(--text-secondary);
+  border-color: var(--border-color);
+  opacity: 0.6;
+}
+
+#rules-button.off:hover {
+  background-color: var(--background-item);
+  opacity: 0.8;
+}
+
 /* Unit Selector Styles */
 select {
   appearance: none;

@@ -696,13 +696,14 @@ function loadSavedPlayerNames() {
 // Load saved rules preference
 function loadSavedRulesPreference() {
   const savedPreference = localStorage.getItem("matchingGameKeepTurn")
-  const rulesSelector = document.getElementById("rules-selector")
+  const rulesButton = document.getElementById("rules-button")
   if (savedPreference !== null) {
     keepTurnOnMatch = savedPreference === "true"
-    rulesSelector.value = keepTurnOnMatch ? "keep" : "change"
   } else {
     keepTurnOnMatch = true
-    rulesSelector.value = "keep"
+  }
+  if (rulesButton) {
+    rulesButton.classList.toggle("off", !keepTurnOnMatch)
   }
 }
 
@@ -1065,11 +1066,14 @@ document.addEventListener("DOMContentLoaded", () => {
     .getElementById("drag-btn")
     .addEventListener("click", disablePlayerDragging)
 
-  const rulesSelector = document.getElementById("rules-selector")
-  rulesSelector.addEventListener("change", (e) => {
-    keepTurnOnMatch = e.target.value === "keep"
-    localStorage.setItem("matchingGameKeepTurn", keepTurnOnMatch.toString())
-  })
+  const rulesButton = document.getElementById("rules-button")
+  if (rulesButton) {
+    rulesButton.addEventListener("click", () => {
+      keepTurnOnMatch = !keepTurnOnMatch
+      rulesButton.classList.toggle("off", !keepTurnOnMatch)
+      localStorage.setItem("matchingGameKeepTurn", keepTurnOnMatch.toString())
+    })
+  }
 
   loadSavedPlayerNames()
   loadSavedRulesPreference()
