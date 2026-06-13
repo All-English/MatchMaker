@@ -619,15 +619,12 @@ body {
 /* Game Board / Card Styles */
 .game-board {
   --gap: var(--space-3xs);
-  --number-of-columns: 2;
-  --rows: var(--number-of-rows, 2);
-  --max-card-size: calc((var(--available-height, 60vh) - (var(--gap) * (var(--rows) - 1))) / var(--rows));
 
-  display: grid;
-  grid-template-columns: repeat(var(--number-of-columns), minmax(0, var(--max-card-size, 1fr)));
-  gap: var(--gap);
+  display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-content: center;
+  gap: var(--gap);
   flex: 1;
 }
 
@@ -660,12 +657,10 @@ body {
 
 .card-container {
   aspect-ratio: 1;
-  width: 100%;
-  max-width: var(--max-card-size);
+  width: var(--card-size, 120px);
+  flex-shrink: 0;
   min-width: 60px;
   container-type: inline-size;
-  justify-self: center;
-  align-self: center;
   perspective: 1000px;
 
   animation: slideIn 0.5s ease-out;

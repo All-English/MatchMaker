@@ -1794,10 +1794,7 @@ function adjustGridSizing() {
       }
     }
 
-    const bestRows = Math.ceil(totalCards / bestCols)
-
-    gameBoard.style.setProperty("--number-of-columns", bestCols)
-    gameBoard.style.setProperty("--number-of-rows", bestRows)
+    gameBoard.style.setProperty("--card-size", `${maxCardSize}px`)
   }
 }
 
