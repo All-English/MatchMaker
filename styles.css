@@ -414,16 +414,38 @@ body {
 
 .player-card.current-player {
   border-color: var(--button-background);
-  box-shadow: 0 0 16px rgba(34, 100, 248, 0.2);
+  box-shadow: 0 0 0 1px var(--button-background), 0 0 20px rgba(34, 100, 248, 0.4);
   color: var(--text-primary);
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.7), rgba(255, 255, 255, 0.45));
-  transform: scale(1.05);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.55));
+  transform: scale(1.08);
 }
 
 @media (prefers-color-scheme: dark) {
   .player-card.current-player {
-    background: linear-gradient(135deg, rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.45));
-    box-shadow: 0 0 16px rgba(34, 100, 248, 0.4);
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.55));
+    box-shadow: 0 0 0 1px var(--button-background), 0 0 20px rgba(34, 100, 248, 0.6);
+  }
+}
+
+.player-card.current-player .player-info::before {
+  content: "";
+  display: block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 50%;
+  background-color: var(--button-background);
+  box-shadow: 0 0 8px var(--button-background);
+  animation: pulseDot 1.2s infinite alternate;
+}
+
+@keyframes pulseDot {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
   }
 }
 
@@ -500,10 +522,27 @@ body {
   border-style: dashed;
 }
 
+.player-card.draggable * {
+  pointer-events: none;
+}
+
 .player-card.draggable:active {
   cursor: grabbing;
   transform: scale(1.08);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.15);
+}
+
+.player-card.drag-over {
+  border-color: var(--button-background) !important;
+  border-style: dashed !important;
+  background-color: rgba(34, 100, 248, 0.1) !important;
+  transform: scale(1.05);
+}
+
+@media (prefers-color-scheme: dark) {
+  .player-card.drag-over {
+    background-color: rgba(34, 100, 248, 0.2) !important;
+  }
 }
 
 .drag-handle {

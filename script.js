@@ -21,7 +21,7 @@ let firstSelected = null
 let images = []
 let lockBoard = false
 let matchedPairs = 0
-let maxPairs = 7
+let maxPairs = 8
 let minPairs = 2
 let numPairs = 0
 let players = []
@@ -288,6 +288,9 @@ function enablePlayerDragging() {
 
     div.addEventListener("dragstart", handleDragStart)
     div.addEventListener("dragover", handleDragOver)
+    div.addEventListener("dragenter", handleDragEnter)
+    div.addEventListener("dragleave", handleDragLeave)
+    div.addEventListener("dragend", handleDragEnd)
     div.addEventListener("drop", handleDrop)
   })
 }
@@ -309,6 +312,9 @@ function disablePlayerDragging() {
 
     div.removeEventListener("dragstart", handleDragStart)
     div.removeEventListener("dragover", handleDragOver)
+    div.removeEventListener("dragenter", handleDragEnter)
+    div.removeEventListener("dragleave", handleDragLeave)
+    div.removeEventListener("dragend", handleDragEnd)
     div.removeEventListener("drop", handleDrop)
   })
 }
@@ -324,10 +330,34 @@ function handleDragOver(e) {
   e.preventDefault()
 }
 
+function handleDragEnter(e) {
+  e.preventDefault()
+  const card = e.target.closest(".player-card")
+  if (card) {
+    card.classList.add("drag-over")
+  }
+}
+
+function handleDragLeave(e) {
+  const card = e.target.closest(".player-card")
+  if (card) {
+    card.classList.remove("drag-over")
+  }
+}
+
+function handleDragEnd(e) {
+  document.querySelectorAll(".player-card").forEach((card) => {
+    card.classList.remove("drag-over")
+  })
+}
+
 function handleDrop(e) {
   e.preventDefault()
-  const draggedName = e.dataTransfer.getData("text/plain")
   const dropTarget = e.target.closest(".player-card")
+  if (dropTarget) {
+    dropTarget.classList.remove("drag-over")
+  }
+  const draggedName = e.dataTransfer.getData("text/plain")
 
   if (!dropTarget || !draggedName) return
 
@@ -447,7 +477,7 @@ function createUnitSelector() {
         const option = document.createElement("option")
         const unitNumber = unit.match(/Unit (\d+)/)[1]
         option.value = `${series}|${book}|${unitNumber}`
-        option.textContent = `${book}: ${unit}`
+        option.textContent = `L${book}: ${unit}`
         seriesGroup.appendChild(option)
       })
     })
@@ -718,8 +748,8 @@ function renderSelectedUnitsList() {
     pill.className = "unit-pill"
 
     const label = document.createElement("span")
-    const unitDisplay = u.unitName.split(":")[0]
-    label.textContent = `${u.series} B${u.book} - ${unitDisplay}`
+    const seriesPrefix = u.series === "SmartPhonics" ? "SP" : (u.series === "LetsSmile" ? "LS" : u.series)
+    label.textContent = `${seriesPrefix}: L${u.book}: ${u.unitName}`
     pill.appendChild(label)
 
     const removeBtn = document.createElement("button")
