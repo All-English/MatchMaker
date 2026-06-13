@@ -1382,3 +1382,120 @@ option {
     --container-max: 80rem;
   }
 }
+
+/* ElevenLabs Config Sidebar Styles */
+.voice-settings-details {
+  background-color: rgba(255, 255, 255, 0.1);
+  border: var(--border);
+  border-radius: 0.75rem;
+  padding: var(--space-xs);
+  transition: background-color 0.2s;
+  width: 100%;
+}
+
+.voice-settings-details[open] {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (prefers-color-scheme: dark) {
+  .voice-settings-details {
+    background-color: rgba(0, 0, 0, 0.15);
+  }
+  .voice-settings-details[open] {
+    background-color: rgba(0, 0, 0, 0.25);
+  }
+}
+
+.voice-settings-details summary {
+  font-family: var(--font-primary);
+  font-weight: 500;
+  font-size: var(--fs-300);
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+  outline: none;
+}
+
+.voice-settings-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  margin-top: var(--space-xs);
+}
+
+.api-key-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+  text-align: left;
+}
+
+.api-key-container label {
+  font-size: var(--fs-200);
+  color: var(--text-secondary);
+}
+
+.sidebar-input {
+  width: 100%;
+  padding: var(--space-xs);
+  border: 1px solid rgba(11, 30, 81, 0.25);
+  border-radius: 0.5rem;
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  font-size: var(--fs-300);
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sidebar-input {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-color: rgba(255, 255, 255, 0.25);
+  }
+}
+
+.sidebar-input:focus {
+  border-color: var(--button-background);
+  box-shadow: 0 0 0 3px rgba(34, 100, 248, 0.2);
+  background-color: rgba(255, 255, 255, 0.4);
+  outline: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  .sidebar-input:focus {
+    background-color: rgba(0, 0, 0, 0.3);
+  }
+}
+
+.api-key-status {
+  font-family: var(--font-primary);
+  font-size: var(--fs-200);
+  margin-top: var(--space-3xs);
+}
+
+.api-key-status.success {
+  color: #10b981;
+}
+
+.api-key-status.error {
+  color: #ef4444;
+}
+
+.sidebar-btn.secondary-btn {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-primary);
+  border: var(--border);
+}
+
+.sidebar-btn.secondary-btn:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+@media (prefers-color-scheme: dark) {
+  .sidebar-btn.secondary-btn {
+    background-color: rgba(0, 0, 0, 0.2);
+  }
+  .sidebar-btn.secondary-btn:hover {
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+}

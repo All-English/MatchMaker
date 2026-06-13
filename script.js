@@ -1,4 +1,19 @@
 import { cardLibrary } from "./cardLibrary.js"
+const voiceList = [
+  "cgSgspJ2msm6clMCkdW9", // Jessica
+  "FGY2WhTYpPnrIDTdsKH5", // Laura
+  "EXAVITQu4vr4xnSDxMaL", // Sarah
+  "hpp4J3VqNfWAUOO0d1Us", // Bella
+  "XrExE9yKIg1WjnnlVkGX", // Matilda
+  "SAz9YHcvj6GT2YYXdXww", // River
+  "iP95p4xoKVk53GoZ742B", // Chris
+  "TX3LPaxmHKxFdv7VOQHJ", // Liam
+  "nPczCjzI2devNBz1zQrb", // Brian
+  "pqHfZKP75CvOlQylNhV4", // Bill
+  "bIHbv24MWmeRgasZH58o", // Will
+  "pNInz6obpgDQGcFmaJgB", // Adam
+  "CwhRBWXzGAHq8TQ4Fs17"  // Roger
+]
 
 const gameBoard = document.getElementById("game-board")
 const pairsInput = document.getElementById("pairs-input")
@@ -317,6 +332,7 @@ function disablePlayerDragging() {
     div.removeEventListener("dragend", handleDragEnd)
     div.removeEventListener("drop", handleDrop)
   })
+  announceCurrentPlayerTurn()
 }
 
 function handleDragStart(e) {
@@ -444,13 +460,7 @@ function createUnitSelector() {
     }
   }
 
-  if (activeUnits.length === 0) {
-    activeUnits.push({
-      series: "SmartPhonics",
-      book: "1",
-      unitName: "Unit 1: abc"
-    })
-  }
+
 
   const selector = document.getElementById("unit-selector")
   selector.innerHTML = "" // Clear existing options
@@ -878,6 +888,80 @@ function resetTurn() {
   lockBoard = false
 }
 
+const verifyApiKey = async (apiKey) => {
+  try {
+    const response = await fetch("https://api.elevenlabs.io/v1/voices", {
+      method: "GET",
+      headers: {
+        "xi-api-key": apiKey
+      }
+    })
+    return response.ok
+  } catch (e) {
+    return false
+  }
+}
+
+const announceCurrentPlayerTurn = async () => {
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (!apiKey || players.length === 0) return
+
+  const activePlayer = players[currentPlayerIndex]
+  if (!activePlayer) return
+
+  if (activePlayer.turnAudio) {
+    activePlayer.turnAudio.currentTime = 0
+    activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
+    return
+  }
+
+  const voiceId = activePlayer.voiceId
+  const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`
+  const payload = {
+    text: `${activePlayer.name}'s turn`,
+    model_id: "eleven_flash_v2",
+    voice_settings: {
+      stability: 0.5,
+      similarity_boost: 0.75,
+      speed: 0.85
+    }
+  }
+
+  try {
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "xi-api-key": apiKey
+      },
+      body: JSON.stringify(payload)
+    })
+
+    if (!response.ok) {
+      console.error("ElevenLabs turn audio generation failed:", response.statusText)
+      return
+    }
+
+    const blob = await response.blob()
+    const blobUrl = URL.createObjectURL(blob)
+    activePlayer.turnAudio = new Audio(blobUrl)
+    activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
+  } catch (e) {
+    console.error("Error generating turn audio:", e)
+  }
+}
+
+function resetCachedVoices() {
+  players.forEach((player) => {
+    if (player.turnAudio) {
+      try {
+        URL.revokeObjectURL(player.turnAudio.src)
+      } catch (e) {}
+      player.turnAudio = null
+    }
+  })
+}
+
 function updatePlayerNames() {
   const playerNameInput = document.getElementById("player-names-input")
   const addPlayersButton = document.getElementById("add-players-btn")
@@ -893,7 +977,12 @@ function updatePlayerNames() {
     .filter((name) => name.length > 0)
 
   // Update players array
-  players = names.map((name) => ({ name, score: 0 }))
+  players = names.map((name, index) => ({
+    name,
+    score: 0,
+    voiceId: voiceList[index % voiceList.length],
+    turnAudio: null
+  }))
   currentPlayerIndex = 0
   initializePlayerStats()
   updatePlayerScores()
@@ -923,7 +1012,12 @@ function loadSavedPlayerNames() {
       .split(/[,\n]/)
       .map((name) => name.trim())
       .filter((name) => name.length > 0)
-    players = names.map((name) => ({ name, score: 0 }))
+    players = names.map((name, index) => ({
+      name,
+      score: 0,
+      voiceId: voiceList[index % voiceList.length],
+      turnAudio: null
+    }))
     currentPlayerIndex = 0
     initializePlayerStats()
     updatePlayerScores()
@@ -1389,7 +1483,11 @@ gameBoard.addEventListener("click", async function (event) {
       }
       // change to next player
       if (nextPlayer && players.length > 0) {
+        const prevIndex = currentPlayerIndex
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length
+        if (currentPlayerIndex !== prevIndex) {
+          announceCurrentPlayerTurn()
+        }
       }
       updatePlayerScores()
     }
@@ -1485,6 +1583,79 @@ document.addEventListener("DOMContentLoaded", () => {
       activeUnits = []
       loadActiveUnits()
       renderSelectedUnitsList()
+    })
+  }
+
+  // ElevenLabs configuration initialization
+  const apiKeyInput = document.getElementById("api-key-input")
+  const saveApiKeyBtn = document.getElementById("save-api-key-btn")
+  const apiKeyStatus = document.getElementById("api-key-status")
+  const resetVoicesBtn = document.getElementById("reset-voices-btn")
+  const voiceDetails = document.getElementById("voice-settings-details")
+  const voiceSummary = document.getElementById("voice-settings-summary")
+
+  if (apiKeyInput && saveApiKeyBtn && apiKeyStatus && resetVoicesBtn && voiceDetails && voiceSummary) {
+    const savedKey = localStorage.getItem("elevenlabs_api_key")
+    if (savedKey) {
+      apiKeyInput.value = savedKey
+      apiKeyStatus.textContent = "Verifying saved key..."
+      apiKeyStatus.className = "api-key-status"
+      
+      verifyApiKey(savedKey).then((isValid) => {
+        if (isValid) {
+          apiKeyStatus.textContent = "API Key verified"
+          apiKeyStatus.className = "api-key-status success"
+          voiceSummary.textContent = "ElevenLabs Config (Connected)"
+          voiceDetails.open = false
+        } else {
+          apiKeyStatus.textContent = "Saved API Key is invalid"
+          apiKeyStatus.className = "api-key-status error"
+          voiceSummary.textContent = "ElevenLabs Config (Error)"
+        }
+      })
+    }
+
+    saveApiKeyBtn.addEventListener("click", async () => {
+      const key = apiKeyInput.value.trim()
+      if (!key) {
+        apiKeyStatus.textContent = "Please enter an API Key"
+        apiKeyStatus.className = "api-key-status error"
+        return
+      }
+
+      apiKeyStatus.textContent = "Verifying key..."
+      apiKeyStatus.className = "api-key-status"
+      saveApiKeyBtn.disabled = true
+
+      const isValid = await verifyApiKey(key)
+      saveApiKeyBtn.disabled = false
+
+      if (isValid) {
+        localStorage.setItem("elevenlabs_api_key", key)
+        apiKeyStatus.textContent = "API Key verified and saved!"
+        apiKeyStatus.className = "api-key-status success"
+        voiceSummary.textContent = "ElevenLabs Config (Connected)"
+        setTimeout(() => {
+          voiceDetails.open = false
+        }, 1000)
+      } else {
+        localStorage.removeItem("elevenlabs_api_key")
+        apiKeyStatus.textContent = "Verification failed. Invalid API Key."
+        apiKeyStatus.className = "api-key-status error"
+        voiceSummary.textContent = "ElevenLabs Config (Error)"
+      }
+    })
+
+    resetVoicesBtn.addEventListener("click", () => {
+      resetCachedVoices()
+      const originalText = apiKeyStatus.textContent
+      const originalClass = apiKeyStatus.className
+      apiKeyStatus.textContent = "Voice cache reset!"
+      apiKeyStatus.className = "api-key-status success"
+      setTimeout(() => {
+        apiKeyStatus.textContent = originalText
+        apiKeyStatus.className = originalClass
+      }, 2000)
     })
   }
 
@@ -1597,4 +1768,5 @@ window.removeActiveUnit = removeActiveUnit
 window.renderSelectedUnitsList = renderSelectedUnitsList
 window.createCards = createCards
 window.adjustGridSizing = adjustGridSizing
+window.announceCurrentPlayerTurn = announceCurrentPlayerTurn
 

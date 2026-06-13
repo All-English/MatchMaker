@@ -88,6 +88,22 @@
       </div>
 
       <div class="sidebar-section">
+        <h3 class="sidebar-section-title">Voice Settings</h3>
+        <details id="voice-settings-details" class="voice-settings-details">
+          <summary id="voice-settings-summary">ElevenLabs Config</summary>
+          <div class="voice-settings-content">
+            <div class="api-key-container">
+              <label for="api-key-input">ElevenLabs API Key</label>
+              <input type="password" id="api-key-input" class="sidebar-input" placeholder="Enter API Key">
+              <button id="save-api-key-btn" class="sidebar-btn">Verify & Save</button>
+            </div>
+            <div id="api-key-status" class="api-key-status"></div>
+            <button id="reset-voices-btn" class="sidebar-btn secondary-btn" style="margin-top: var(--space-xs);">Reset Cached Voices</button>
+          </div>
+        </details>
+      </div>
+
+      <div class="sidebar-section">
         <h3 class="sidebar-section-title">Rules</h3>
         <button id="rules-button" class="sidebar-btn">Bonus Turns</button>
       </div>
