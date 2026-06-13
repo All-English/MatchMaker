@@ -500,26 +500,113 @@ function createCards() {
   // console.log("Creating cards...")
   // console.log("Words:", words)
 
-  numPairs = Math.min(maxPairs, words.length)
-
-  // Randomly select words and their corresponding images
-  const selectedIndices = []
-  while (selectedIndices.length < numPairs) {
-    const randomIndex = Math.floor(Math.random() * words.length)
-    const alreadyUsed =
-      selectedIndices.includes(randomIndex) ||
-      selectedIndices.some(
-        (i) => words[i] === words[randomIndex] && images[i] === images[randomIndex]
+  // Group available unique items by active unit
+  const unitsData = activeUnits.map((u) => {
+    const unitItems = cardLibrary[u.series][u.book][u.unitName] || []
+    const validItems = unitItems.filter((item) => item.word && item.image)
+    const uniqueValidItems = []
+    validItems.forEach((item) => {
+      const exists = uniqueValidItems.some(
+        (ui) => ui.word === item.word && ui.image === item.image
       )
-    if (!alreadyUsed) {
-      selectedIndices.push(randomIndex)
+      if (!exists) {
+        uniqueValidItems.push(item)
+      }
+    })
+    return {
+      series: u.series,
+      book: u.book,
+      unitName: u.unitName,
+      items: uniqueValidItems,
+      selected: []
+    }
+  })
+
+  // Calculate total unique pairs across all active units
+  const allUniquePairs = []
+  unitsData.forEach((ud) => {
+    ud.items.forEach((item) => {
+      const exists = allUniquePairs.some(
+        (p) => p.word === item.word && p.image === item.image
+      )
+      if (!exists) {
+        allUniquePairs.push(item)
+      }
+    })
+  })
+
+  const totalUniqueCount = allUniquePairs.length
+
+  // Target number of pairs
+  const minWordLength = 7
+  let targetPairs = Math.min(maxPairs, totalUniqueCount)
+  if (totalUniqueCount < minWordLength) {
+    targetPairs = Math.max(totalUniqueCount, Math.min(maxPairs, minWordLength))
+  }
+  numPairs = targetPairs
+
+  // 1. Select unique pairs using round-robin among units
+  const selectedPairs = []
+  let progress = true
+  while (selectedPairs.length < numPairs && progress) {
+    progress = false
+    for (let i = 0; i < unitsData.length; i++) {
+      if (selectedPairs.length >= numPairs) break
+
+      const ud = unitsData[i]
+      const availableItems = ud.items.filter((item) => {
+        return !selectedPairs.some(
+          (sp) => sp.word === item.word && sp.image === item.image
+        )
+      })
+
+      if (availableItems.length > 0) {
+        const idx = Math.floor(Math.random() * availableItems.length)
+        const chosen = availableItems[idx]
+        selectedPairs.push(chosen)
+        ud.selected.push(chosen)
+        progress = true
+      }
+    }
+  }
+
+  // 2. If we still need more pairs (due to duplication to reach minWordLength),
+  // duplicate selected pairs using round-robin among units
+  if (selectedPairs.length < numPairs) {
+    const eligibleUnits = unitsData.filter((ud) => ud.selected.length > 0)
+    if (eligibleUnits.length > 0) {
+      eligibleUnits.forEach((ud) => {
+        ud.dupCounts = new Array(ud.selected.length).fill(0)
+      })
+
+      let dupProgress = true
+      while (selectedPairs.length < numPairs && dupProgress) {
+        dupProgress = false
+        for (let i = 0; i < eligibleUnits.length; i++) {
+          if (selectedPairs.length >= numPairs) break
+
+          const ud = eligibleUnits[i]
+          const minDups = Math.min(...ud.dupCounts)
+          const candidates = ud.dupCounts
+            .map((count, idx) => (count === minDups ? idx : -1))
+            .filter((idx) => idx !== -1)
+
+          if (candidates.length > 0) {
+            const randCandidateIdx = candidates[Math.floor(Math.random() * candidates.length)]
+            const chosen = ud.selected[randCandidateIdx]
+            selectedPairs.push(chosen)
+            ud.dupCounts[randCandidateIdx]++
+            dupProgress = true
+          }
+        }
+      }
     }
   }
 
   // Create pairs first
-  const pairs = selectedIndices.map((index) => ({
-    word: words[index],
-    image: images[index],
+  const pairs = selectedPairs.map((item) => ({
+    word: item.word,
+    image: item.image,
   }))
 
   // Create array of all items
@@ -650,12 +737,19 @@ function loadActiveUnits() {
     return
   }
 
-  // Combine words, images, and create sound map
+  // Combine unique valid items across all active units
   let combinedItems = []
   activeUnits.forEach((u) => {
     const unitItems = cardLibrary[u.series][u.book][u.unitName]
     const validItems = unitItems.filter((item) => item.word && item.image)
-    combinedItems = combinedItems.concat(validItems)
+    validItems.forEach((item) => {
+      const exists = combinedItems.some(
+        (ci) => ci.word === item.word && ci.image === item.image
+      )
+      if (!exists) {
+        combinedItems.push(item)
+      }
+    })
   })
 
   combinedUnitItems = combinedItems
@@ -664,24 +758,6 @@ function loadActiveUnits() {
 
   const originalWordLength = words.length
   const minWordLength = 7
-
-  // Array to track how many times each word is duplicated
-  const duplicateCounts = new Array(originalWordLength).fill(0)
-
-  // If less than minWordLength, duplicate existing pairs to reach that number
-  while (words.length < minWordLength) {
-    const minDuplicates = Math.min(...duplicateCounts)
-    const availableIndices = duplicateCounts
-      .map((count, index) => (count === minDuplicates ? index : -1))
-      .filter((index) => index !== -1)
-
-    const randomIndex =
-      availableIndices[Math.floor(Math.random() * availableIndices.length)]
-
-    words.push(words[randomIndex])
-    images.push(images[randomIndex])
-    duplicateCounts[randomIndex]++
-  }
 
   soundMap = preloadSoundsArray(combinedUnitItems)
 
