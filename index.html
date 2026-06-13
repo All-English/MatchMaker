@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" translate="no">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="content-language" content="en">
+  <meta name="google" content="notranslate">
   <title>Matching Game</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,22 +58,26 @@
     </div>
   </header>
 
-  <div class="container">
+  <main class="container main-container">
     <div id="game-board" class="game-board">
       <!-- Cards will be added here dynamically -->
     </div>
-    <select id="unit-selector"></select>
-    <button id="rules-button">Bonus Turns</button>
-    <button id="reset-button" class="button">Reset Game</button>
-
-    <div class="player-input-wrapper">
-      <h3 class="player-input-title">Players Setup</h3>
-      <textarea id="player-names-input" class="player-names-input"
-        placeholder="Sepearate names with a comma or a new line"></textarea>
-      <button id="add-players-btn">Add Players</button>
+    <div class="game-controls">
+      <select id="unit-selector"></select>
+      <button id="rules-button">Bonus Turns</button>
+      <button id="reset-button" class="button">Reset Game</button>
     </div>
 
-  </div>
+    <details class="player-input-wrapper" open>
+      <summary class="player-input-title">Players Setup</summary>
+      <div class="player-input-content">
+        <textarea id="player-names-input" class="player-names-input"
+          placeholder="Sepearate names with a comma or a new line"></textarea>
+        <button id="add-players-btn">Add Players</button>
+      </div>
+    </details>
+
+  </main>
 
   <div id="completion-modal" class="modal hidden">
     <div class="modal-content">

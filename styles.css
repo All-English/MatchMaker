@@ -662,6 +662,8 @@ body {
   justify-content: center;
   align-items: center;
   transform: rotateY(180deg);
+  border-radius: 0.75rem;
+  overflow: hidden;
 }
 
 .card .image img {
@@ -781,6 +783,7 @@ option {
   padding: var(--space-m);
   max-width: 24rem;
   margin-inline: auto;
+  margin-top: var(--space-s);
   margin-bottom: var(--space-l);
   box-shadow: var(--glass-shadow);
   backdrop-filter: blur(16px);
