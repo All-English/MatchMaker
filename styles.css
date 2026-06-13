@@ -626,6 +626,7 @@ body {
   align-content: center;
   gap: var(--gap);
   flex: 1;
+  margin-inline: auto;
 }
 
 @keyframes slideIn {
@@ -1374,7 +1375,7 @@ option {
 /* Laptops/small desktops - 992px and up */
 @media (width >=62rem) {
   .container {
-    --container-max: 80rem;
+    --container-max: 85rem;
   }
 }
 

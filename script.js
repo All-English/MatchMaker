@@ -561,7 +561,7 @@ function createCards() {
   if (totalUniqueCount === 0) return
 
   // Target number of pairs
-  const minWordLength = 7
+  const minWordLength = 8
   numPairs = Math.min(maxPairs, Math.max(minWordLength, totalUniqueCount))
 
   // 1. Select unique pairs using round-robin among units
@@ -776,7 +776,7 @@ function loadActiveUnits() {
   images = combinedItems.map((item) => item.image)
 
   const originalWordLength = words.length
-  const minWordLength = 7
+  const minWordLength = 8
 
   soundMap = preloadSoundsArray(combinedUnitItems)
 
@@ -794,13 +794,11 @@ function loadActiveUnits() {
   currentSeries = activeUnits[0].series
   currentBook = activeUnits[0].book
 
-  // Update pairs input max attribute based on available pairs
-  const availablePairs = Math.max(minWordLength, originalWordLength)
-
-  pairsInput.max = availablePairs
+  // Allow up to 50 matches regardless of unique pair count (extras are duplicated)
+  pairsInput.max = 50
   pairsInput.min = minPairs
 
-  pairsInput.value = Math.min(maxPairs, availablePairs)
+  pairsInput.value = Math.min(maxPairs, 50)
 
   // Reset the game with new words and images
   resetGame()
@@ -1769,11 +1767,11 @@ function adjustGridSizing() {
     let maxCardSize = 0
 
     let minCols = 2
-    let maxCols = Math.min(totalCards, 8)
+    let maxCols = Math.min(totalCards, 12)
     if (availableWidth < 480) {
       maxCols = Math.min(totalCards, 3)
     } else if (availableWidth < 768) {
-      maxCols = Math.min(totalCards, 5)
+      maxCols = Math.min(totalCards, 7)
     }
 
     if (totalCards > 4) {
@@ -1794,7 +1792,32 @@ function adjustGridSizing() {
       }
     }
 
+    // Prefer a "clean" layout where every row is full, as long as the
+    // cards are at least 90% as large as the absolute maximum.
+    let cleanBestCols = bestCols
+    let cleanBestSize = 0
+    for (let c = minCols; c <= maxCols; c++) {
+      if (totalCards % c !== 0) continue
+      const r = totalCards / c
+      const sizeW = (availableWidth - gap * (c - 1)) / c
+      const sizeH = (availableHeight - gap * (r - 1)) / r
+      const size = Math.min(sizeW, sizeH)
+      if (size > cleanBestSize) {
+        cleanBestSize = size
+        cleanBestCols = c
+      }
+    }
+    if (cleanBestSize > 0 && cleanBestSize >= maxCardSize * 0.90) {
+      bestCols = cleanBestCols
+      maxCardSize = cleanBestSize
+    }
+
     gameBoard.style.setProperty("--card-size", `${maxCardSize}px`)
+    // Lock the board width so flexbox wraps at exactly bestCols per row.
+    // Without this, flex would let the browser fit more cards if the
+    // container is wide enough, breaking the column count the JS computed.
+    const boardWidth = bestCols * maxCardSize + (bestCols - 1) * gap
+    gameBoard.style.maxWidth = `${boardWidth}px`
   }
 }
 
