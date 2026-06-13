@@ -557,12 +557,13 @@ function createCards() {
     })
   })
 
+  // Target number of pairs: the user's maxPairs, with a minimum of minWordLength.
+  // totalUniqueCount is NOT a cap — the duplication logic fills any shortfall.
   const totalUniqueCount = allUniquePairs.length
   if (totalUniqueCount === 0) return
 
-  // Target number of pairs
-  const minWordLength = 8
-  numPairs = Math.min(maxPairs, Math.max(minWordLength, totalUniqueCount))
+  // numPairs = whatever the user chose (bounded by input min/max attributes)
+  numPairs = maxPairs
 
   // 1. Select unique pairs using round-robin among units
   const selectedPairs = []
@@ -774,9 +775,6 @@ function loadActiveUnits() {
   combinedUnitItems = combinedItems
   words = combinedItems.map((item) => item.word)
   images = combinedItems.map((item) => item.image)
-
-  const originalWordLength = words.length
-  const minWordLength = 8
 
   soundMap = preloadSoundsArray(combinedUnitItems)
 
