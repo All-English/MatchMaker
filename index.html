@@ -15,46 +15,39 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 
-<body>
   <header class="header">
     <div class="container header-content">
+      <div class="header-left">
+        <div class="pairs-input-container">
+          <label class="pairs-input-lable" for="pairs-input">
+            Matches
+            <svg class="adjust-icon" width="16" height="16" viewBox="0 0 24 24">
+              <path
+                d="m12 19.24-4.95-4.95-1.41 1.42L12 22.07l6.36-6.36-1.41-1.42L12 19.24zM5.64 8.29l1.41 1.42L12 4.76l4.95 4.95 1.41-1.42L12 1.93 5.64 8.29z" />
+            </svg>
+          </label>
+          <input type="number" id="pairs-input" value="6" class="pairs-input">
+        </div>
+      </div>
       <h1 class="header-title">Match Maker</h1>
-      <div class="pairs-input-container">
-        <label class="pairs-input-lable" for="pairs-input">
-          Matches
-          <svg class="adjust-icon" width="16" height="16" viewBox="0 0 24 24">
-            <path
-              d="m12 19.24-4.95-4.95-1.41 1.42L12 22.07l6.36-6.36-1.41-1.42L12 19.24zM5.64 8.29l1.41 1.42L12 4.76l4.95 4.95 1.41-1.42L12 1.93 5.64 8.29z" />
+      <div class="header-right">
+        <div id="tries-display" class="tries-display">Tries: 0</div>
+        <button id="reset-button" class="reset-btn">Reset</button>
+        <button id="menu-toggle" class="icon-button settings-toggle-btn" aria-label="Open Settings" title="Open Settings">
+          <svg viewBox="0 0 24 24" width="24" height="24">
+            <path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
           </svg>
-        </label>
-        <input type="number" id="pairs-input" value="6" class="pairs-input">
+        </button>
       </div>
-      <div id="tries-display" class="tries-display">Tries: 0</div>
-      <div id="player-scores" class="player-scores">
-        <!-- Player scores will be added here dynamically -->
+      <div id="player-scores-container" class="player-scores-container">
+        <div id="player-scores" class="player-scores">
+          <!-- Player scores will be added here dynamically -->
+        </div>
+        <div class="player-controls">
+          <button id="shuffle-btn" class="shuffle-btn">Shuffle Players</button>
+          <button id="drag-btn" class="drag-btn">Start</button>
+        </div>
       </div>
-      <div class="sort-players-wrapper">
-        <button id="shuffle-btn" class="shuffle-btn">Shuffle Players</button>
-        <button id="drag-btn" class="drag-btn">Start</button>
-      </div>
-      <!-- <button class="ThemeSwitch icon-button" id="theme-toggle" title="Toggles light &amp; dark" aria-label="light"
-        aria-live="polite"><svg class="sun-and-moon" aria-hidden="true" width="24" height="24" viewBox="0 0 24 24">
-          <mask class="moon" id="moon-mask">
-            <rect x="0" y="0" width="100%" height="100%" fill="white"></rect>
-            <circle cx="24" cy="10" r="6" fill="black"></circle>
-          </mask>
-          <circle class="sun" cx="12" cy="12" r="6" mask="url(#moon-mask)" fill="currentColor"></circle>
-          <g class="sun-beams" stroke="currentColor">
-            <line x1="12" y1="1" x2="12" y2="3"></line>
-            <line x1="12" y1="21" x2="12" y2="23"></line>
-            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-            <line x1="1" y1="12" x2="3" y2="12"></line>
-            <line x1="21" y1="12" x2="23" y2="12"></line>
-            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-          </g>
-        </svg></button> -->
     </div>
   </header>
 
@@ -62,22 +55,44 @@
     <div id="game-board" class="game-board">
       <!-- Cards will be added here dynamically -->
     </div>
-    <div class="game-controls">
-      <select id="unit-selector"></select>
-      <button id="rules-button">Bonus Turns</button>
-      <button id="reset-button" class="button">Reset Game</button>
-    </div>
-
-    <details class="player-input-wrapper" open>
-      <summary class="player-input-title">Players Setup</summary>
-      <div class="player-input-content">
-        <textarea id="player-names-input" class="player-names-input"
-          placeholder="Sepearate names with a comma or a new line"></textarea>
-        <button id="add-players-btn">Add Players</button>
-      </div>
-    </details>
-
   </main>
+
+  <div id="sidebar-overlay" class="sidebar-overlay"></div>
+  <div id="settings-sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2 class="sidebar-title">Game Settings</h2>
+      <button id="sidebar-close" class="close-btn" aria-label="Close Settings">&times;</button>
+    </div>
+    <div class="sidebar-content">
+      <div class="sidebar-section">
+        <div class="sidebar-section-header">
+          <h3 class="sidebar-section-title">Select Cards</h3>
+          <button id="reset-units-btn" class="reset-units-btn" title="Remove all units">
+            <svg viewBox="0 0 24 24" width="16" height="16">
+              <path fill="currentColor" d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/>
+            </svg>
+          </button>
+        </div>
+        <select id="unit-selector" class="sidebar-select"></select>
+        <div id="selected-units-list" class="selected-units-list"></div>
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-section-title">Players Setup</h3>
+        <div class="player-input-content">
+          <textarea id="player-names-input" class="player-names-input"
+            placeholder="Separate names with a comma or a new line"></textarea>
+          <button id="add-players-btn" class="sidebar-btn">Add Players</button>
+        </div>
+
+      </div>
+
+      <div class="sidebar-section">
+        <h3 class="sidebar-section-title">Rules</h3>
+        <button id="rules-button" class="sidebar-btn">Bonus Turns</button>
+      </div>
+    </div>
+  </div>
 
   <div id="completion-modal" class="modal hidden">
     <div class="modal-content">

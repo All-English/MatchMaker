@@ -10,7 +10,8 @@ resetButton.addEventListener("click", () => {
   enablePlayerDragging()
 })
 
-let currentUnit = null
+let activeUnits = []
+let combinedUnitItems = []
 let currentBook = null
 let currentSeries = null
 let currentPlayerIndex = 0
@@ -273,12 +274,10 @@ function enablePlayerDragging() {
 
   isDraggingEnabled = true
   const scoresDiv = document.getElementById("player-scores")
-
-  // Show drag and shuffle buttons
-  const dragBtn = document.getElementById("drag-btn")
   const shuffleBtn = document.getElementById("shuffle-btn")
-  if (shuffleBtn) shuffleBtn.classList.add("visible")
-  if (dragBtn) dragBtn.classList.add("visible")
+  if (shuffleBtn) shuffleBtn.style.display = "inline-block"
+  const dragBtn = document.getElementById("drag-btn")
+  if (dragBtn) dragBtn.style.display = "inline-block"
 
   scoresDiv.querySelectorAll(".player-card").forEach((div) => {
     div.draggable = true
@@ -296,12 +295,10 @@ function enablePlayerDragging() {
 function disablePlayerDragging() {
   isDraggingEnabled = false
   const scoresDiv = document.getElementById("player-scores")
-
-  // Hide drag and shuffle buttons
-  const dragBtn = document.getElementById("drag-btn")
   const shuffleBtn = document.getElementById("shuffle-btn")
-  if (shuffleBtn) shuffleBtn.classList.remove("visible")
-  if (dragBtn) dragBtn.classList.remove("visible")
+  if (shuffleBtn) shuffleBtn.style.display = "none"
+  const dragBtn = document.getElementById("drag-btn")
+  if (dragBtn) dragBtn.style.display = "none"
 
   scoresDiv.querySelectorAll(".player-card").forEach((div) => {
     div.draggable = false
@@ -371,7 +368,7 @@ function isMatch(first, second) {
   const firstContent = first.dataset.content
   const secondContent = second.dataset.content
 
-  const matchedItem = currentUnit.find(
+  const matchedItem = combinedUnitItems.find(
     (item) =>
       (item.word === firstContent && item.image === secondContent) ||
       (item.image === firstContent && item.word === secondContent)
@@ -389,11 +386,41 @@ function isMatch(first, second) {
 
 // Add a dropdown to select units
 function createUnitSelector() {
-  // Parse URL parameters
   const urlParams = new URLSearchParams(window.location.search)
+  const unitsParam = urlParams.get("units")
   const seriesParam = urlParams.get("series")
   const bookParam = urlParams.get("book")
   const unitParam = urlParams.get("unit")
+
+  activeUnits = []
+
+  if (unitsParam) {
+    const unitSpecs = unitsParam.split(",")
+    unitSpecs.forEach((spec) => {
+      const [series, book, unitNumber] = spec.split("|")
+      const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
+        unit.startsWith(`Unit ${unitNumber}`)
+      )
+      if (unitName) {
+        activeUnits.push({ series, book, unitName })
+      }
+    })
+  } else if (seriesParam && bookParam && unitParam) {
+    const unitName = Object.keys(cardLibrary[seriesParam][bookParam]).find((unit) =>
+      unit.startsWith(`Unit ${unitParam}`)
+    )
+    if (unitName) {
+      activeUnits.push({ series: seriesParam, book: bookParam, unitName })
+    }
+  }
+
+  if (activeUnits.length === 0) {
+    activeUnits.push({
+      series: "SmartPhonics",
+      book: "1",
+      unitName: "Unit 1: abc"
+    })
+  }
 
   const selector = document.getElementById("unit-selector")
   selector.innerHTML = "" // Clear existing options
@@ -401,17 +428,14 @@ function createUnitSelector() {
   const defaultOption = document.createElement("option")
   defaultOption.value = ""
   defaultOption.selected = true
-  defaultOption.textContent = "Choose cards"
+  defaultOption.textContent = "Add unit..."
   selector.appendChild(defaultOption)
-
-  let preselectedOption = null
 
   Object.keys(cardLibrary).forEach((series) => {
     const seriesGroup = document.createElement("optgroup")
     seriesGroup.label = series
 
     Object.keys(cardLibrary[series]).forEach((book, bookIndex) => {
-      // Only add separator after first book
       if (bookIndex > 0) {
         const separator = document.createElement("option")
         separator.textContent = `---`
@@ -421,55 +445,25 @@ function createUnitSelector() {
 
       Object.keys(cardLibrary[series][book]).forEach((unit) => {
         const option = document.createElement("option")
-        // Extract unit number from string (e.g., "Unit 1: ee, ea" -> "1")
         const unitNumber = unit.match(/Unit (\d+)/)[1]
         option.value = `${series}|${book}|${unitNumber}`
         option.textContent = `${book}: ${unit}`
-
-        // Check if this option matches URL parameters
-        if (
-          series === seriesParam &&
-          book === bookParam &&
-          unitNumber === unitParam
-        ) {
-          preselectedOption = option
-          option.selected = true
-        }
-
         seriesGroup.appendChild(option)
       })
     })
-    const seperator = document.createElement("hr")
-    selector.appendChild(seperator)
-
+    const separator = document.createElement("hr")
+    selector.appendChild(separator)
     selector.appendChild(seriesGroup)
   })
 
   selector.addEventListener("change", (e) => {
+    if (!e.target.value) return
     const [series, book, unitNumber] = e.target.value.split("|")
-
-    // Update URL with new parameters
-    const url = new URL(window.location)
-    url.searchParams.set("series", series)
-    url.searchParams.set("book", book)
-    url.searchParams.set("unit", unitNumber)
-    window.history.pushState({}, "", url)
-
-    // Find full unit name for loadUnit
-    const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
-      unit.startsWith(`Unit ${unitNumber}`)
-    )
-    loadUnit(series, book, unitName)
+    addActiveUnit(series, book, unitNumber)
   })
 
-  // If an option was preselected, load that unit
-  if (preselectedOption) {
-    const [series, book, unitNumber] = preselectedOption.value.split("|")
-    const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
-      unit.startsWith(`Unit ${unitNumber}`)
-    )
-    loadUnit(series, book, unitName)
-  }
+  loadActiveUnits()
+  renderSelectedUnitsList()
 }
 
 function createCards() {
@@ -605,14 +599,38 @@ function createCards() {
   adjustGridSizing()
 }
 
-function loadUnit(series, book, unit) {
-  currentSeries = series
-  currentBook = book
-  currentUnit = cardLibrary[series][book][unit]
+function loadActiveUnits() {
+  if (activeUnits.length === 0) {
+    combinedUnitItems = []
+    words = []
+    images = []
+    soundMap = {}
+    targetLetters = ""
 
-  // Separate words, images, and create sound map
-  words = currentUnit.filter((item) => item.word).map((item) => item.word)
-  images = currentUnit.filter((item) => item.image).map((item) => item.image)
+    if (gameBoard) {
+      gameBoard.innerHTML = '<div class="no-units-message">Please select a card unit in settings to start playing!</div>'
+    }
+
+    disablePlayerDragging()
+
+    const scoresContainer = document.getElementById("player-scores-container")
+    if (scoresContainer) scoresContainer.style.display = "none"
+
+    updateUnitsURL()
+    return
+  }
+
+  // Combine words, images, and create sound map
+  let combinedItems = []
+  activeUnits.forEach((u) => {
+    const unitItems = cardLibrary[u.series][u.book][u.unitName]
+    const validItems = unitItems.filter((item) => item.word && item.image)
+    combinedItems = combinedItems.concat(validItems)
+  })
+
+  combinedUnitItems = combinedItems
+  words = combinedItems.map((item) => item.word)
+  images = combinedItems.map((item) => item.image)
 
   const originalWordLength = words.length
   const minWordLength = 7
@@ -622,26 +640,34 @@ function loadUnit(series, book, unit) {
 
   // If less than minWordLength, duplicate existing pairs to reach that number
   while (words.length < minWordLength) {
-    // Find lowest duplicate count in tracking array
     const minDuplicates = Math.min(...duplicateCounts)
-
-    // Create list of indices that have this minimum count
     const availableIndices = duplicateCounts
       .map((count, index) => (count === minDuplicates ? index : -1))
       .filter((index) => index !== -1)
 
-    // Randomly select from these indices only
     const randomIndex =
       availableIndices[Math.floor(Math.random() * availableIndices.length)]
 
-    // Add the randomly selected word and its corresponding image
     words.push(words[randomIndex])
     images.push(images[randomIndex])
     duplicateCounts[randomIndex]++
   }
 
-  soundMap = preloadSoundsArray(currentUnit)
-  targetLetters = currentUnit[0].targetLetters
+  soundMap = preloadSoundsArray(combinedUnitItems)
+
+  // Combine target letters from all active units
+  let combinedTargetLetters = []
+  activeUnits.forEach((u) => {
+    const unitItems = cardLibrary[u.series][u.book][u.unitName]
+    const metaItem = unitItems.find((item) => item.targetLetters)
+    if (metaItem && metaItem.targetLetters) {
+      combinedTargetLetters.push(metaItem.targetLetters)
+    }
+  })
+  targetLetters = combinedTargetLetters.join(", ")
+
+  currentSeries = activeUnits[0].series
+  currentBook = activeUnits[0].book
 
   // Update pairs input max attribute based on available pairs
   const availablePairs = Math.max(minWordLength, originalWordLength)
@@ -654,6 +680,76 @@ function loadUnit(series, book, unit) {
   // Reset the game with new words and images
   resetGame()
   enablePlayerDragging()
+}
+
+function addActiveUnit(series, book, unitNumber) {
+  const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
+    unit.startsWith(`Unit ${unitNumber}`)
+  )
+  if (!unitName) return
+
+  const alreadyExists = activeUnits.some(
+    (u) => u.series === series && u.book === book && u.unitName === unitName
+  )
+  if (alreadyExists) return
+
+  activeUnits.push({ series, book, unitName })
+  loadActiveUnits()
+  renderSelectedUnitsList()
+
+  const selector = document.getElementById("unit-selector")
+  if (selector) selector.value = ""
+}
+
+function removeActiveUnit(index) {
+  activeUnits.splice(index, 1)
+  loadActiveUnits()
+  renderSelectedUnitsList()
+}
+
+function renderSelectedUnitsList() {
+  const container = document.getElementById("selected-units-list")
+  if (!container) return
+
+  container.innerHTML = ""
+
+  activeUnits.forEach((u, index) => {
+    const pill = document.createElement("div")
+    pill.className = "unit-pill"
+
+    const label = document.createElement("span")
+    const unitDisplay = u.unitName.split(":")[0]
+    label.textContent = `${u.series} B${u.book} - ${unitDisplay}`
+    pill.appendChild(label)
+
+    const removeBtn = document.createElement("button")
+    removeBtn.className = "remove-unit-btn"
+    removeBtn.innerHTML = "&times;"
+    removeBtn.title = "Remove unit"
+    removeBtn.addEventListener("click", () => removeActiveUnit(index))
+    pill.appendChild(removeBtn)
+
+    container.appendChild(pill)
+  })
+
+  updateUnitsURL()
+}
+
+function updateUnitsURL() {
+  const url = new URL(window.location)
+  const unitsParam = activeUnits
+    .map((u) => {
+      const unitNumber = u.unitName.match(/Unit (\d+)/)[1]
+      return `${u.series}|${u.book}|${unitNumber}`
+    })
+    .join(",")
+  url.searchParams.set("units", unitsParam)
+
+  url.searchParams.delete("series")
+  url.searchParams.delete("book")
+  url.searchParams.delete("unit")
+
+  window.history.pushState({}, "", url)
 }
 
 function resetGame() {
@@ -701,10 +797,12 @@ function updatePlayerNames() {
   enablePlayerDragging()
   addPlayersButton.textContent = "Update Players"
 
-  // Collapse details setup wrapper
-  const playerInputWrapper = document.querySelector(".player-input-wrapper")
-  if (playerInputWrapper && playerInputWrapper.tagName === "DETAILS") {
-    playerInputWrapper.removeAttribute("open")
+  // Close the settings sidebar
+  const sidebar = document.getElementById("settings-sidebar")
+  const overlay = document.getElementById("sidebar-overlay")
+  if (sidebar && overlay) {
+    sidebar.classList.remove("open")
+    overlay.classList.remove("open")
   }
 
   return true
@@ -716,6 +814,16 @@ function loadSavedPlayerNames() {
   if (savedInput) {
     const playerNameInput = document.getElementById("player-names-input")
     playerNameInput.value = savedInput
+
+    // Parse names and populate players array
+    const names = savedInput
+      .split(/[,\n]/)
+      .map((name) => name.trim())
+      .filter((name) => name.length > 0)
+    players = names.map((name) => ({ name, score: 0 }))
+    currentPlayerIndex = 0
+    initializePlayerStats()
+    updatePlayerScores()
   }
 }
 
@@ -739,8 +847,13 @@ function updateScore() {
 }
 
 function updatePlayerScores() {
-  if (players.length === 0) return
+  const scoresContainer = document.getElementById("player-scores-container")
+  if (players.length === 0) {
+    if (scoresContainer) scoresContainer.style.display = "none"
+    return
+  }
 
+  if (scoresContainer) scoresContainer.style.display = "flex"
   const scoresDiv = document.getElementById("player-scores")
   scoresDiv.style.display = "flex"
 
@@ -1096,8 +1209,8 @@ gameBoard.addEventListener("click", async function (event) {
     // Get the clicked content (word or image path)
     const clickedContent = clicked.dataset.content
 
-    // Find the corresponding item in currentUnit
-    const soundItem = currentUnit.find(
+    // Find the corresponding item in combinedUnitItems
+    const soundItem = combinedUnitItems.find(
       (item) => item.word === clickedContent || item.image === clickedContent
     )
 
@@ -1213,6 +1326,16 @@ document.getElementById("completion-modal").addEventListener("click", (e) => {
 })
 
 document.addEventListener("DOMContentLoaded", () => {
+  const settingsSidebar = document.getElementById("settings-sidebar")
+  const sidebarOverlay = document.getElementById("sidebar-overlay")
+
+  const closeSidebar = () => {
+    if (settingsSidebar && sidebarOverlay) {
+      settingsSidebar.classList.remove("open")
+      sidebarOverlay.classList.remove("open")
+    }
+  }
+
   // Add event listener for update players button
   document.getElementById("add-players-btn").addEventListener("click", () => {
     if (updatePlayerNames()) {
@@ -1223,9 +1346,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document
     .getElementById("shuffle-btn")
     .addEventListener("click", shufflePlayers)
-  document
-    .getElementById("drag-btn")
-    .addEventListener("click", disablePlayerDragging)
+
+  const dragBtn = document.getElementById("drag-btn")
+  if (dragBtn) {
+    dragBtn.addEventListener("click", disablePlayerDragging)
+  }
 
   const rulesButton = document.getElementById("rules-button")
   if (rulesButton) {
@@ -1241,11 +1366,34 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSavedRulesPreference()
   createUnitSelector()
 
+  const resetUnitsBtn = document.getElementById("reset-units-btn")
+  if (resetUnitsBtn) {
+    resetUnitsBtn.addEventListener("click", () => {
+      activeUnits = []
+      loadActiveUnits()
+      renderSelectedUnitsList()
+    })
+  }
+
   // Add event listeners for grid resizing
   window.addEventListener("resize", adjustGridSizing)
-  const playerInputWrapper = document.querySelector(".player-input-wrapper")
-  if (playerInputWrapper) {
-    playerInputWrapper.addEventListener("toggle", adjustGridSizing)
+
+  // Sidebar toggle event listeners
+  const menuToggle = document.getElementById("menu-toggle")
+  const sidebarClose = document.getElementById("sidebar-close")
+
+  if (menuToggle && settingsSidebar && sidebarOverlay) {
+    menuToggle.addEventListener("click", () => {
+      settingsSidebar.classList.add("open")
+      sidebarOverlay.classList.add("open")
+    })
+  }
+
+  if (sidebarClose) {
+    sidebarClose.addEventListener("click", closeSidebar)
+  }
+  if (sidebarOverlay) {
+    sidebarOverlay.addEventListener("click", closeSidebar)
   }
 
   // Initial call to set sizing
@@ -1254,22 +1402,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function adjustGridSizing() {
   const header = document.querySelector(".header")
-  const controls = document.querySelector(".game-controls")
-  const playerInputWrapper = document.querySelector(".player-input-wrapper")
   const gameBoard = document.getElementById("game-board")
 
   if (!gameBoard) return
 
   const headerHeight = header ? header.offsetHeight : 0
-  const controlsHeight = controls ? controls.offsetHeight : 0
-  
-  let setupHeight = 0
-  if (playerInputWrapper) {
-    setupHeight = playerInputWrapper.getBoundingClientRect().height
-  }
 
-  const verticalBuffer = 80
-  const totalUsedHeight = headerHeight + controlsHeight + setupHeight + verticalBuffer
+  const verticalBuffer = 40
+  const totalUsedHeight = headerHeight + verticalBuffer
   const availableHeight = Math.max(200, window.innerHeight - totalUsedHeight)
 
   gameBoard.style.setProperty("--available-height", `${availableHeight}px`)
@@ -1329,7 +1469,8 @@ Object.defineProperty(window, "matchedPairs", { get: () => matchedPairs })
 Object.defineProperty(window, "numPairs", { get: () => numPairs })
 Object.defineProperty(window, "tries", { get: () => tries })
 Object.defineProperty(window, "keepTurnOnMatch", { get: () => keepTurnOnMatch })
-Object.defineProperty(window, "currentUnit", { get: () => currentUnit })
+Object.defineProperty(window, "activeUnits", { get: () => activeUnits })
+Object.defineProperty(window, "combinedUnitItems", { get: () => combinedUnitItems })
 
 window.resetGame = resetGame
 window.updatePlayerScores = updatePlayerScores
@@ -1337,7 +1478,10 @@ window.updatePlayerNames = updatePlayerNames
 window.enablePlayerDragging = enablePlayerDragging
 window.disablePlayerDragging = disablePlayerDragging
 window.shufflePlayers = shufflePlayers
-window.loadUnit = loadUnit
+window.loadActiveUnits = loadActiveUnits
+window.addActiveUnit = addActiveUnit
+window.removeActiveUnit = removeActiveUnit
+window.renderSelectedUnitsList = renderSelectedUnitsList
 window.createCards = createCards
 window.adjustGridSizing = adjustGridSizing
 
