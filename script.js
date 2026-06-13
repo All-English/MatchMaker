@@ -25,6 +25,7 @@ resetButton.addEventListener("click", () => {
   enablePlayerDragging()
 })
 
+let activeCardAudio = null
 let activeUnits = []
 let combinedUnitItems = []
 let currentBook = null
@@ -91,9 +92,20 @@ function preloadSingleSound(src) {
 
 function playSound(sound) {
   return new Promise((resolve) => {
-    sound.addEventListener("ended", resolve, { once: true })
+    const onEnded = () => {
+      sound.removeEventListener("interrupted", onInterrupted)
+      resolve()
+    }
+    const onInterrupted = () => {
+      sound.removeEventListener("ended", onEnded)
+      resolve()
+    }
+    sound.addEventListener("ended", onEnded, { once: true })
+    sound.addEventListener("interrupted", onInterrupted, { once: true })
     sound.play().catch((error) => {
       console.error("Error playing sound:", error)
+      sound.removeEventListener("ended", onEnded)
+      sound.removeEventListener("interrupted", onInterrupted)
       resolve() // Resolve even on error to prevent hanging
     })
   })
@@ -879,12 +891,35 @@ function resetGame() {
   createCards()
 }
 
+function stopActiveCardAudio() {
+  if (activeCardAudio) {
+    try {
+      activeCardAudio.pause()
+      activeCardAudio.currentTime = 0
+      activeCardAudio.dispatchEvent(new Event("interrupted"))
+    } catch (e) {
+      console.error("Error stopping card audio:", e)
+    }
+    activeCardAudio = null
+  }
+}
+
 function resetTurn() {
+  stopActiveCardAudio()
+
   if (firstSelected) {
     firstSelected.classList.remove("revealed")
     firstSelected.classList.add("hidden")
     firstSelected = null
   }
+
+  // Also flip any card that is temporarily revealed but not matched
+  const revealedCards = gameBoard.querySelectorAll(".card.revealed:not(.matched)")
+  revealedCards.forEach((card) => {
+    card.classList.remove("revealed")
+    card.classList.add("hidden")
+  })
+
   lockBoard = false
 }
 
@@ -1426,15 +1461,21 @@ gameBoard.addEventListener("click", async function (event) {
         isImageCard
       ) {
         // Play the image vocabulary sound
-        const imgSound = new Audio(soundItem.imageSound)
-        await playSound(imgSound)
+        activeCardAudio = new Audio(soundItem.imageSound)
       } else {
         // Play the regular sound
-        await playSound(soundMap[soundItem.word])
+        activeCardAudio = soundMap[soundItem.word]
       }
 
+      if (activeCardAudio) {
+        await playSound(activeCardAudio)
+      }
+      activeCardAudio = null
       lockBoard = false
     }
+
+    // Check if the card was reset/flipped back down while the audio was playing
+    if (clicked.classList.contains("hidden")) return
 
     if (!firstSelected) {
       firstSelected = clicked
@@ -1526,6 +1567,25 @@ document.addEventListener("keydown", (e) => {
 
     // reset current turn
     resetTurn()
+  }
+
+  if (e.key === "Backspace") {
+    // Don't trigger if the user is typing in an input, textarea, or select element
+    const tag = e.target.tagName
+    if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
+      return
+    }
+
+    resetTurn()
+
+    if (players.length > 0) {
+      const prevIndex = currentPlayerIndex
+      currentPlayerIndex = (currentPlayerIndex - 1 + players.length) % players.length
+      if (currentPlayerIndex !== prevIndex) {
+        announceCurrentPlayerTurn()
+      }
+      updatePlayerScores()
+    }
   }
 })
 
