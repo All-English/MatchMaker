@@ -738,6 +738,7 @@ body {
   justify-content: center;
   align-items: center;
   transform: rotateY(180deg);
+  text-wrap: balance;
 }
 
 .card .target-sounds {
