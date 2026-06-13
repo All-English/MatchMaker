@@ -536,14 +536,11 @@ function createCards() {
   })
 
   const totalUniqueCount = allUniquePairs.length
+  if (totalUniqueCount === 0) return
 
   // Target number of pairs
   const minWordLength = 7
-  let targetPairs = Math.min(maxPairs, totalUniqueCount)
-  if (totalUniqueCount < minWordLength) {
-    targetPairs = Math.max(totalUniqueCount, Math.min(maxPairs, minWordLength))
-  }
-  numPairs = targetPairs
+  numPairs = Math.min(maxPairs, Math.max(minWordLength, totalUniqueCount))
 
   // 1. Select unique pairs using round-robin among units
   const selectedPairs = []
@@ -1401,7 +1398,17 @@ gameBoard.addEventListener("click", async function (event) {
 
 // Add event listener for the max Matches input
 pairsInput.addEventListener("change", (e) => {
-  const value = parseInt(e.target.value)
+  let value = parseInt(e.target.value)
+  const min = parseInt(pairsInput.min) || minPairs
+  const max = parseInt(pairsInput.max) || 8
+
+  if (isNaN(value)) {
+    value = max
+  }
+  if (value < min) value = min
+  if (value > max) value = max
+
+  pairsInput.value = value
   maxPairs = value
   resetGame()
 })
