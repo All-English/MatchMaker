@@ -508,9 +508,12 @@ function createCards() {
   }
 
   items.forEach((item, index) => {
+    const container = document.createElement("div")
+    container.className = "card-container"
+    container.style.setProperty("--index", index)
+
     const card = document.createElement("div")
     card.classList.add("card", "hidden")
-    card.style.setProperty("--index", index)
     card.dataset.content = item
 
     // Create front side with number
@@ -595,8 +598,11 @@ function createCards() {
       card.appendChild(wordContainer)
     }
 
-    gameBoard.appendChild(card)
+    container.appendChild(card)
+    gameBoard.appendChild(container)
   })
+
+  adjustGridSizing()
 }
 
 function loadUnit(series, book, unit) {
@@ -694,6 +700,12 @@ function updatePlayerNames() {
   updatePlayerScores()
   enablePlayerDragging()
   addPlayersButton.textContent = "Update Players"
+
+  // Collapse details setup wrapper
+  const playerInputWrapper = document.querySelector(".player-input-wrapper")
+  if (playerInputWrapper && playerInputWrapper.tagName === "DETAILS") {
+    playerInputWrapper.removeAttribute("open")
+  }
 
   return true
 }
@@ -1228,7 +1240,82 @@ document.addEventListener("DOMContentLoaded", () => {
   loadSavedPlayerNames()
   loadSavedRulesPreference()
   createUnitSelector()
+
+  // Add event listeners for grid resizing
+  window.addEventListener("resize", adjustGridSizing)
+  const playerInputWrapper = document.querySelector(".player-input-wrapper")
+  if (playerInputWrapper) {
+    playerInputWrapper.addEventListener("toggle", adjustGridSizing)
+  }
+
+  // Initial call to set sizing
+  adjustGridSizing()
 })
+
+function adjustGridSizing() {
+  const header = document.querySelector(".header")
+  const controls = document.querySelector(".game-controls")
+  const playerInputWrapper = document.querySelector(".player-input-wrapper")
+  const gameBoard = document.getElementById("game-board")
+
+  if (!gameBoard) return
+
+  const headerHeight = header ? header.offsetHeight : 0
+  const controlsHeight = controls ? controls.offsetHeight : 0
+  
+  let setupHeight = 0
+  if (playerInputWrapper) {
+    setupHeight = playerInputWrapper.getBoundingClientRect().height
+  }
+
+  const verticalBuffer = 80
+  const totalUsedHeight = headerHeight + controlsHeight + setupHeight + verticalBuffer
+  const availableHeight = Math.max(200, window.innerHeight - totalUsedHeight)
+
+  gameBoard.style.setProperty("--available-height", `${availableHeight}px`)
+
+  const cards = gameBoard.querySelectorAll(".card-container")
+  const totalCards = cards.length
+  if (totalCards > 0) {
+    const availableWidth = gameBoard.parentElement.clientWidth
+    const computedStyle = window.getComputedStyle(gameBoard)
+    const gap = parseFloat(computedStyle.gap) || 8
+
+    let bestCols = 2
+    let maxCardSize = 0
+
+    let minCols = 2
+    let maxCols = Math.min(totalCards, 8)
+    if (availableWidth < 480) {
+      maxCols = Math.min(totalCards, 3)
+    } else if (availableWidth < 768) {
+      maxCols = Math.min(totalCards, 5)
+    }
+
+    if (totalCards > 4) {
+      maxCols = Math.min(maxCols, Math.ceil(totalCards / 2))
+    }
+
+    minCols = Math.min(minCols, maxCols)
+
+    for (let c = minCols; c <= maxCols; c++) {
+      const r = Math.ceil(totalCards / c)
+      const sizeW = (availableWidth - gap * (c - 1)) / c
+      const sizeH = (availableHeight - gap * (r - 1)) / r
+      const size = Math.min(sizeW, sizeH)
+
+      if (size > maxCardSize) {
+        maxCardSize = size
+        bestCols = c
+      }
+    }
+
+    const bestRows = Math.ceil(totalCards / bestCols)
+
+    gameBoard.style.setProperty("--number-of-columns", bestCols)
+    gameBoard.style.setProperty("--number-of-rows", bestRows)
+  }
+}
 
 // Expose debug variables to window
 Object.defineProperty(window, "players", { get: () => players })
@@ -1252,4 +1339,5 @@ window.disablePlayerDragging = disablePlayerDragging
 window.shufflePlayers = shufflePlayers
 window.loadUnit = loadUnit
 window.createCards = createCards
+window.adjustGridSizing = adjustGridSizing
 
