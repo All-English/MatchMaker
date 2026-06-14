@@ -181,20 +181,55 @@ async function syncWithUpstashOnLoad() {
   }
 
   try {
-    // 1. Sync sets
+    // 1. Sync sets (Two-way merge)
+    const localSets = getPlayerSets()
     const dbSets = await fetchFromUpstash(SHARED_SETS_KEY)
     if (!localStorage.getItem(UPSTASH_URL_KEY)) return
+
+    let mergedSets = null
+    let needsSetsPush = false
+
     if (dbSets) {
-      localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(dbSets))
-      populatePlayerSetSelect()
+      mergedSets = { ...localSets, ...dbSets }
+      const localKeys = Object.keys(localSets)
+      const hasNewLocal = localKeys.some((key) => !dbSets[key] || JSON.stringify(localSets[key]) !== JSON.stringify(dbSets[key]))
+      if (hasNewLocal) {
+        needsSetsPush = true
+      }
+    } else {
+      if (Object.keys(localSets).length > 0) {
+        mergedSets = localSets
+        needsSetsPush = true
+      }
     }
 
-    // 2. Sync active session
+    if (mergedSets) {
+      localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(mergedSets))
+      populatePlayerSetSelect()
+      if (needsSetsPush) {
+        await syncToUpstash(SHARED_SETS_KEY, mergedSets)
+      }
+    }
+
+    // 2. Sync active session (Two-way sync)
     const dbActive = await fetchFromUpstash(SHARED_ACTIVE_PLAYERS_KEY)
     if (!localStorage.getItem(UPSTASH_URL_KEY)) return
+
     if (dbActive && Array.isArray(dbActive)) {
       localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(dbActive))
       loadSavedPlayerNames()
+    } else {
+      const localActiveJSON = localStorage.getItem(SHARED_ACTIVE_PLAYERS_KEY)
+      if (localActiveJSON) {
+        try {
+          const localActive = JSON.parse(localActiveJSON)
+          if (Array.isArray(localActive) && localActive.length > 0) {
+            await syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, localActive)
+          }
+        } catch (e) {
+          console.error(e)
+        }
+      }
     }
 
     if (statusEl) {
