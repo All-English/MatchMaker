@@ -55,6 +55,7 @@
     <div id="game-board" class="game-board">
       <!-- Cards will be added here dynamically -->
     </div>
+    <div id="active-units-label" class="active-units-label"></div>
   </main>
 
   <div id="sidebar-overlay" class="sidebar-overlay"></div>
@@ -80,11 +81,39 @@
       <div class="sidebar-section">
         <h3 class="sidebar-section-title">Players Setup</h3>
         <div class="player-input-content">
+          <div class="player-set-loader-container">
+            <select id="player-set-select" class="sidebar-select">
+              <option value="">-- Load Saved List --</option>
+            </select>
+            <button id="delete-set-btn" class="sidebar-btn secondary-btn" title="Delete selected list" style="display: none;">Delete</button>
+          </div>
           <textarea id="player-names-input" class="player-names-input"
             placeholder="Separate names with a comma or a new line"></textarea>
+          <div class="player-set-saver-container">
+            <input type="text" id="new-set-name" class="sidebar-input" placeholder="List name...">
+            <button id="save-set-btn" class="sidebar-btn secondary-btn">Save</button>
+          </div>
           <button id="add-players-btn" class="sidebar-btn">Add Players</button>
         </div>
+      </div>
 
+      <div class="sidebar-section">
+        <h3 class="sidebar-section-title">Sync Settings</h3>
+        <details id="sync-settings-details" class="voice-settings-details">
+          <summary id="sync-settings-summary">Upstash Redis Config</summary>
+          <div class="voice-settings-content">
+            <div class="api-key-container">
+              <label for="upstash-url-input">Upstash REST URL</label>
+              <input type="text" id="upstash-url-input" class="sidebar-input" placeholder="https://...upstash.io">
+            </div>
+            <div class="api-key-container">
+              <label for="upstash-token-input">Upstash REST Token</label>
+              <input type="password" id="upstash-token-input" class="sidebar-input" placeholder="Enter Token">
+            </div>
+            <button id="save-sync-btn" class="sidebar-btn">Save & Sync</button>
+            <div id="sync-status" class="api-key-status"></div>
+          </div>
+        </details>
       </div>
 
       <div class="sidebar-section">

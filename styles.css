@@ -239,7 +239,7 @@ body {
   flex-direction: column;
   min-height: 0;
   padding-block: var(--space-s);
-  gap: var(--space-s);
+  /* gap: var(--space-s); */
 }
 
 /* Header Styles */
@@ -353,7 +353,7 @@ body {
   align-items: center;
   gap: var(--space-3xs);
 
-  font-size: var(--fs-400);
+  font-size: var(--fs-300);
   color: var(--text-secondary);
   max-width: fit-content;
 }
@@ -376,7 +376,7 @@ body {
 }
 
 .tries-display {
-  font-size: var(--fs-400);
+  font-size: var(--fs-300);
   color: var(--text-secondary);
   max-width: fit-content;
   white-space: nowrap;
@@ -388,8 +388,7 @@ body {
   display: none;
   flex-direction: column;
   align-items: center;
-  gap: var(--space-xs);
-  margin-top: var(--space-s);
+  margin-top: var(--space-3xs);
   width: 96vw;
   margin-left: calc(50% - 48vw);
 }
@@ -1494,4 +1493,41 @@ option {
   .sidebar-btn.secondary-btn:hover {
     background-color: rgba(0, 0, 0, 0.4);
   }
+}
+.player-set-loader-container,
+.player-set-saver-container {
+  display: flex;
+  gap: var(--space-2xs);
+  width: 100%;
+  align-items: center;
+  margin-bottom: var(--space-2xs);
+}
+
+.player-set-loader-container .sidebar-select,
+.player-set-saver-container .sidebar-input {
+  flex: 1;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.player-set-loader-container button,
+.player-set-saver-container button {
+  width: auto;
+  margin-top: 0;
+  margin-bottom: 0;
+  white-space: nowrap;
+}
+
+.active-units-label {
+  font-family: var(--font-primary);
+  font-size: var(--fs-100);
+  color: var(--text-secondary);
+  opacity: 0.65;
+  text-align: center;
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-3xs);
+  user-select: none;
+  pointer-events: none;
+  font-weight: 400;
+  letter-spacing: 0.5px;
 }
