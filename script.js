@@ -89,6 +89,11 @@ function savePlayerSets(sets) {
 function saveActiveSessionPlayers(namesArray) {
   localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(namesArray))
   syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, namesArray)
+  
+  const playerNameInput = document.getElementById("player-names-input")
+  if (playerNameInput) {
+    playerNameInput.value = namesArray.join(", ")
+  }
 }
 
 function handleUpstashError(errorMessage) {
@@ -468,6 +473,7 @@ function shufflePlayers() {
   }
 
   updatePlayerScores()
+  saveActiveSessionPlayers(players.map((p) => p.name))
 }
 
 function enablePlayerDragging() {
@@ -574,6 +580,7 @@ function handleDrop(e) {
       players[draggedIndex],
     ]
     updatePlayerScores()
+    saveActiveSessionPlayers(players.map((p) => p.name))
   }
 }
 
