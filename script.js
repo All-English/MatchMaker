@@ -181,37 +181,22 @@ async function syncWithUpstashOnLoad() {
   }
 
   try {
-    // 1. Sync sets (Two-way merge)
-    const localSets = getPlayerSets()
+    // 1. Sync sets (Database is source of truth if it exists)
     const dbSets = await fetchFromUpstash(SHARED_SETS_KEY)
     if (!localStorage.getItem(UPSTASH_URL_KEY)) return
 
-    let mergedSets = null
-    let needsSetsPush = false
-
     if (dbSets) {
-      mergedSets = { ...localSets, ...dbSets }
-      const localKeys = Object.keys(localSets)
-      const hasNewLocal = localKeys.some((key) => !dbSets[key] || JSON.stringify(localSets[key]) !== JSON.stringify(dbSets[key]))
-      if (hasNewLocal) {
-        needsSetsPush = true
-      }
-    } else {
-      if (Object.keys(localSets).length > 0) {
-        mergedSets = localSets
-        needsSetsPush = true
-      }
-    }
-
-    if (mergedSets) {
-      localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(mergedSets))
+      localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(dbSets))
       populatePlayerSetSelect()
-      if (needsSetsPush) {
-        await syncToUpstash(SHARED_SETS_KEY, mergedSets)
+    } else {
+      // If cloud is empty but we have local sets, initialize the cloud
+      const localSets = getPlayerSets()
+      if (Object.keys(localSets).length > 0) {
+        await syncToUpstash(SHARED_SETS_KEY, localSets)
       }
     }
 
-    // 2. Sync active session (Two-way sync)
+    // 2. Sync active session (Database is source of truth if it exists)
     const dbActive = await fetchFromUpstash(SHARED_ACTIVE_PLAYERS_KEY)
     if (!localStorage.getItem(UPSTASH_URL_KEY)) return
 
@@ -219,6 +204,7 @@ async function syncWithUpstashOnLoad() {
       localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(dbActive))
       loadSavedPlayerNames()
     } else {
+      // If cloud is empty but we have local active players, initialize the cloud
       const localActiveJSON = localStorage.getItem(SHARED_ACTIVE_PLAYERS_KEY)
       if (localActiveJSON) {
         try {
