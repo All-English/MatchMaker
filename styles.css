@@ -778,7 +778,7 @@ body {
   position: absolute;
   width: 100%;
   height: 100%;
-  font-size: clamp(0.85rem, 15cqw, 1.8rem);
+  font-size: var(--dynamic-word-size, var(--fs-700));
   color: var(--text-primary);
   backface-visibility: hidden;
   display: flex;

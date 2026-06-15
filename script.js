@@ -2222,7 +2222,57 @@ function adjustGridSizing() {
     // container is wide enough, breaking the column count the JS computed.
     const boardWidth = bestCols * maxCardSize + (bestCols - 1) * gap
     gameBoard.style.maxWidth = `${boardWidth}px`
+
+    adjustCardWordFontSize(maxCardSize)
   }
+}
+
+function adjustCardWordFontSize(cardSize) {
+  const gameBoard = document.getElementById("game-board")
+  if (!gameBoard) return
+
+  const cards = Array.from(gameBoard.querySelectorAll(".card .word"))
+  if (cards.length === 0) return
+
+  // Set safety bounds based on cardSize
+  // - maxWidth leaves 24px (12px on left & right) to keep text away from borders
+  // - maxHeight leaves 72px (36px top & bottom clearance when centered) to avoid player tag overlap at the bottom
+  const maxWidth = Math.max(10, cardSize - 24)
+  const maxHeight = Math.max(10, cardSize - 72)
+
+  let minFontSize = 10
+  let maxFontSize = maxHeight
+  if (maxFontSize < minFontSize) maxFontSize = minFontSize
+
+  let optimalSize = minFontSize
+
+  const canvas = document.createElement("canvas")
+  const context = canvas.getContext("2d")
+
+  while (minFontSize <= maxFontSize) {
+    const midSize = Math.floor((minFontSize + maxFontSize) / 2)
+    context.font = `600 ${midSize}px "Outfit", sans-serif`
+
+    let allFit = true
+    for (const card of cards) {
+      const text = card.textContent.trim()
+      const metrics = context.measureText(text)
+      
+      if (metrics.width > maxWidth || midSize > maxHeight) {
+        allFit = false
+        break
+      }
+    }
+
+    if (allFit) {
+      optimalSize = midSize
+      minFontSize = midSize + 1
+    } else {
+      maxFontSize = midSize - 1
+    }
+  }
+
+  gameBoard.style.setProperty("--dynamic-word-size", `${optimalSize}px`)
 }
 
 // Expose debug variables to window
@@ -2252,5 +2302,6 @@ window.removeActiveUnit = removeActiveUnit
 window.renderSelectedUnitsList = renderSelectedUnitsList
 window.createCards = createCards
 window.adjustGridSizing = adjustGridSizing
+window.adjustCardWordFontSize = adjustCardWordFontSize
 window.announceCurrentPlayerTurn = announceCurrentPlayerTurn
 
