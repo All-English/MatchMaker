@@ -38,6 +38,11 @@ let firstSelected = null
 let currentTurnCardClicked = false
 let playingTurnAudio = null
 let playingKeepGoingAudio = null
+let isNarratorEnabled = true
+const savedNarratorEnabled = localStorage.getItem("elevenlabs_narrator_enabled")
+if (savedNarratorEnabled !== null) {
+  isNarratorEnabled = JSON.parse(savedNarratorEnabled)
+}
 let images = []
 let lockBoard = false
 let matchedPairs = 0
@@ -1211,6 +1216,7 @@ function stopAllTurnVoices() {
 }
 
 const announceCurrentPlayerTurn = async () => {
+  if (!isNarratorEnabled) return
   const apiKey = localStorage.getItem("elevenlabs_api_key")
   if (!apiKey || players.length === 0) return
 
@@ -1273,6 +1279,7 @@ async function precacheKeepGoingVoice(index) {
 }
 
 async function playKeepGoingAnnouncement() {
+  if (!isNarratorEnabled) return
   const apiKey = localStorage.getItem("elevenlabs_api_key")
   if (!apiKey) return
 
@@ -2258,6 +2265,18 @@ document.addEventListener("DOMContentLoaded", () => {
         apiKeyStatus.className = originalClass
       }, 2000)
     })
+
+    const narratorToggle = document.getElementById("narrator-toggle")
+    if (narratorToggle) {
+      narratorToggle.checked = isNarratorEnabled
+      narratorToggle.addEventListener("change", () => {
+        isNarratorEnabled = narratorToggle.checked
+        localStorage.setItem("elevenlabs_narrator_enabled", JSON.stringify(isNarratorEnabled))
+        if (!isNarratorEnabled) {
+          stopAllTurnVoices()
+        }
+      })
+    }
   }
 
   // Add event listeners for grid resizing
