@@ -57,10 +57,10 @@
 
   /* Light Theme Specifics */
   --bg-mesh-gradient: radial-gradient(at 0% 0%, hsl(204, 93%, 94%) 0px, transparent 50%),
-                      radial-gradient(at 100% 0%, hsl(272, 85%, 95%) 0px, transparent 50%),
-                      radial-gradient(at 100% 100%, hsl(150, 80%, 93%) 0px, transparent 50%),
-                      radial-gradient(at 0% 100%, hsl(340, 85%, 95%) 0px, transparent 50%),
-                      hsl(214, 100%, 97%);
+    radial-gradient(at 100% 0%, hsl(272, 85%, 95%) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, hsl(150, 80%, 93%) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, hsl(340, 85%, 95%) 0px, transparent 50%),
+    hsl(214, 100%, 97%);
   --glass-bg: rgba(255, 255, 255, 0.45);
   --glass-border: rgba(255, 255, 255, 0.6);
   --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.08);
@@ -94,10 +94,10 @@
   :root {
     /* Dark Theme Specifics */
     --bg-mesh-gradient: radial-gradient(at 0% 0%, hsla(244, 55%, 15%, 0.6) 0px, transparent 50%),
-                        radial-gradient(at 100% 0%, hsla(295, 40%, 12%, 0.6) 0px, transparent 50%),
-                        radial-gradient(at 100% 100%, hsla(160, 45%, 10%, 0.6) 0px, transparent 50%),
-                        radial-gradient(at 0% 100%, hsla(342, 50%, 15%, 0.6) 0px, transparent 50%),
-                        hsl(222, 47%, 8%);
+      radial-gradient(at 100% 0%, hsla(295, 40%, 12%, 0.6) 0px, transparent 50%),
+      radial-gradient(at 100% 100%, hsla(160, 45%, 10%, 0.6) 0px, transparent 50%),
+      radial-gradient(at 0% 100%, hsla(342, 50%, 15%, 0.6) 0px, transparent 50%),
+      hsl(222, 47%, 8%);
     --glass-bg: rgba(15, 23, 42, 0.45);
     --glass-border: rgba(255, 255, 255, 0.08);
     --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
@@ -408,7 +408,8 @@ body {
   gap: var(--space-2xs);
   background-color: var(--glass-bg);
   border: var(--border);
-  border-radius: 2rem; /* Rounded pill style */
+  border-radius: 2rem;
+  /* Rounded pill style */
   padding: var(--space-3xs) var(--space-s);
   transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease, border-color 0.25s ease, background-color 0.25s ease;
   box-shadow: var(--glass-shadow);
@@ -446,6 +447,7 @@ body {
     transform: scale(0.8);
     opacity: 0.5;
   }
+
   100% {
     transform: scale(1.2);
     opacity: 1;
@@ -473,8 +475,13 @@ body {
 }
 
 @keyframes pulseAvatar {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.08); }
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.08);
+  }
 }
 
 .player-info {
@@ -645,10 +652,12 @@ body {
     transform: rotateY(180deg) scale(1);
     box-shadow: 0 0 0 0 var(--box-shadow);
   }
+
   50% {
     transform: rotateY(180deg) scale(1.06);
     box-shadow: 0 0 24px var(--box-shadow);
   }
+
   100% {
     transform: rotateY(180deg) scale(1);
     box-shadow: 0 0 12px var(--box-shadow);
@@ -822,7 +831,7 @@ body {
 
 .matched .image,
 .matched .word {
-  opacity: 0.5;
+  opacity: 0.35;
   transition: opacity 2s ease-in;
 }
 
@@ -873,6 +882,7 @@ select:active {
     background-color: rgba(255, 255, 255, 0.05);
     border-color: rgba(255, 255, 255, 0.15);
   }
+
   #rules-button.off:hover {
     background-color: rgba(255, 255, 255, 0.1);
   }
@@ -1396,6 +1406,7 @@ option {
   .voice-settings-details {
     background-color: rgba(0, 0, 0, 0.15);
   }
+
   .voice-settings-details[open] {
     background-color: rgba(0, 0, 0, 0.25);
   }
@@ -1490,10 +1501,12 @@ option {
   .sidebar-btn.secondary-btn {
     background-color: rgba(0, 0, 0, 0.2);
   }
+
   .sidebar-btn.secondary-btn:hover {
     background-color: rgba(0, 0, 0, 0.4);
   }
 }
+
 .player-set-loader-container,
 .player-set-saver-container {
   display: flex;
