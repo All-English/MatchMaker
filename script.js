@@ -35,6 +35,9 @@ let currentPlayerIndex = 0
 let isDraggingEnabled = false
 let keepTurnOnMatch = true
 let firstSelected = null
+let currentTurnCardClicked = false
+let playingTurnAudio = null
+let playingKeepGoingAudio = null
 let images = []
 let lockBoard = false
 let matchedPairs = 0
@@ -523,7 +526,7 @@ function enablePlayerDragging() {
   })
 }
 
-function disablePlayerDragging() {
+function disablePlayerDragging(shouldAnnounce = true) {
   isDraggingEnabled = false
   const scoresDiv = document.getElementById("player-scores")
   const shuffleBtn = document.getElementById("shuffle-btn")
@@ -545,7 +548,9 @@ function disablePlayerDragging() {
     div.removeEventListener("dragend", handleDragEnd)
     div.removeEventListener("drop", handleDrop)
   })
-  announceCurrentPlayerTurn()
+  if (shouldAnnounce) {
+    announceCurrentPlayerTurn()
+  }
 }
 
 function handleDragStart(e) {
@@ -1097,9 +1102,11 @@ function resetGame() {
   usedMatchColors = []
   players.forEach((player) => (player.score = 0))
   currentPlayerIndex = 0
+  currentTurnCardClicked = false
   updatePlayerScores()
   updateScore()
   createCards()
+  precachePlayerTurnAudios()
 }
 
 function stopActiveCardAudio() {
@@ -1148,23 +1155,13 @@ const verifyApiKey = async (apiKey) => {
   }
 }
 
-const announceCurrentPlayerTurn = async () => {
+async function fetchElevenLabsAudio(text, voiceId) {
   const apiKey = localStorage.getItem("elevenlabs_api_key")
-  if (!apiKey || players.length === 0) return
+  if (!apiKey) return null
 
-  const activePlayer = players[currentPlayerIndex]
-  if (!activePlayer) return
-
-  if (activePlayer.turnAudio) {
-    activePlayer.turnAudio.currentTime = 0
-    activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
-    return
-  }
-
-  const voiceId = activePlayer.voiceId
   const url = `https://api.elevenlabs.io/v1/text-to-speech/${voiceId}`
   const payload = {
-    text: `${activePlayer.name}'s turn`,
+    text: text,
     model_id: "eleven_flash_v2",
     voice_settings: {
       stability: 0.5,
@@ -1183,18 +1180,129 @@ const announceCurrentPlayerTurn = async () => {
       body: JSON.stringify(payload)
     })
 
-    if (!response.ok) {
-      console.error("ElevenLabs turn audio generation failed:", response.statusText)
-      return
+    if (response.ok) {
+      const blob = await response.blob()
+      const blobUrl = URL.createObjectURL(blob)
+      return new Audio(blobUrl)
+    } else {
+      console.error(`ElevenLabs generation failed for "${text}":`, response.statusText)
     }
-
-    const blob = await response.blob()
-    const blobUrl = URL.createObjectURL(blob)
-    activePlayer.turnAudio = new Audio(blobUrl)
-    activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
   } catch (e) {
-    console.error("Error generating turn audio:", e)
+    console.error(`Error generating ElevenLabs audio for "${text}":`, e)
   }
+  return null
+}
+
+function stopAllTurnVoices() {
+  if (playingTurnAudio) {
+    try {
+      playingTurnAudio.pause()
+      playingTurnAudio.currentTime = 0
+    } catch (e) {}
+    playingTurnAudio = null
+  }
+  if (playingKeepGoingAudio) {
+    try {
+      playingKeepGoingAudio.pause()
+      playingKeepGoingAudio.currentTime = 0
+    } catch (e) {}
+    playingKeepGoingAudio = null
+  }
+}
+
+const announceCurrentPlayerTurn = async () => {
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (!apiKey || players.length === 0) return
+
+  const activePlayer = players[currentPlayerIndex]
+  if (!activePlayer) return
+
+  const targetPlayerIndex = currentPlayerIndex
+
+  // If player clicked a card before the announcement is made, skip it
+  if (currentTurnCardClicked) return
+
+  if (activePlayer.turnAudio) {
+    activePlayer.turnAudio.currentTime = 0
+    playingTurnAudio = activePlayer.turnAudio
+    // Final check before playing
+    if (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex) return
+    activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
+    return
+  }
+
+  const audio = await fetchElevenLabsAudio(`${activePlayer.name}'s turn`, activePlayer.voiceId)
+  if (audio) {
+    activePlayer.turnAudio = audio
+    // Final check before playing
+    if (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex) return
+    playingTurnAudio = audio
+    audio.play().catch((e) => console.error("Error playing turn audio:", e))
+  }
+}
+
+async function precachePlayerTurnAudios() {
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (!apiKey || players.length === 0) return
+
+  // Run caching sequentially in the background for each player
+  for (const player of players) {
+    if (player.turnAudio) continue
+
+    const audio = await fetchElevenLabsAudio(`${player.name}'s turn`, player.voiceId)
+    if (audio) {
+      player.turnAudio = audio
+    }
+  }
+}
+
+const keepGoingCache = {}
+let currentKeepGoingVoiceIndex = 0
+
+async function precacheKeepGoingVoice(index) {
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (!apiKey || voiceList.length === 0) return
+
+  const voiceId = voiceList[index % voiceList.length]
+  if (keepGoingCache[voiceId]) return // Already cached
+
+  const audio = await fetchElevenLabsAudio("Keep going!", voiceId)
+  if (audio) {
+    keepGoingCache[voiceId] = audio
+  }
+}
+
+async function playKeepGoingAnnouncement() {
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (!apiKey) return
+
+  // If a card was clicked before the announcement starts, skip it
+  if (currentTurnCardClicked) return
+
+  const voiceId = voiceList[currentKeepGoingVoiceIndex % voiceList.length]
+
+  if (keepGoingCache[voiceId]) {
+    const cachedAudio = keepGoingCache[voiceId]
+    cachedAudio.currentTime = 0
+    playingKeepGoingAudio = cachedAudio
+    // Final check before playing
+    if (currentTurnCardClicked) return
+    cachedAudio.play().catch((e) => console.error("Error playing cached 'Keep going!' audio:", e))
+  } else {
+    // Fallback if not cached yet
+    const audio = await fetchElevenLabsAudio("Keep going!", voiceId)
+    if (audio) {
+      keepGoingCache[voiceId] = audio
+      // Final check before playing
+      if (currentTurnCardClicked) return
+      playingKeepGoingAudio = audio
+      audio.play().catch((e) => console.error("Error playing 'Keep going!' audio:", e))
+    }
+  }
+
+  // Precache the next voice in the background
+  currentKeepGoingVoiceIndex++
+  precacheKeepGoingVoice(currentKeepGoingVoiceIndex)
 }
 
 function resetCachedVoices() {
@@ -1206,6 +1314,16 @@ function resetCachedVoices() {
       player.turnAudio = null
     }
   })
+  // Clear the "Keep going!" cache
+  Object.keys(keepGoingCache).forEach((key) => {
+    try {
+      URL.revokeObjectURL(keepGoingCache[key].src)
+    } catch (e) {}
+    delete keepGoingCache[key]
+  })
+  // Reset index and precache the first voice again
+  currentKeepGoingVoiceIndex = 0
+  precacheKeepGoingVoice(0)
 }
 
 function updatePlayerNames() {
@@ -1233,6 +1351,7 @@ function updatePlayerNames() {
   initializePlayerStats()
   updatePlayerScores()
   enablePlayerDragging()
+  precachePlayerTurnAudios()
   addPlayersButton.textContent = "Update Players"
 
   // Save to shared active session
@@ -1293,6 +1412,7 @@ function loadSavedPlayerNames() {
     currentPlayerIndex = 0
     initializePlayerStats()
     updatePlayerScores()
+    precachePlayerTurnAudios()
   }
 }
 
@@ -1667,9 +1787,13 @@ gameBoard.addEventListener("click", async function (event) {
     const clicked = target.closest(".card")
     if (!clicked || clicked.classList.contains("revealed") || lockBoard) return
 
+    // Immediately flag that a card was clicked this turn and stop any active turn announcement!
+    currentTurnCardClicked = true
+    stopAllTurnVoices()
+
     // Hide reordering buttons on first card click
     if (isDraggingEnabled) {
-      disablePlayerDragging()
+      disablePlayerDragging(false)
     }
 
     clicked.classList.remove("hidden")
@@ -1721,9 +1845,11 @@ gameBoard.addEventListener("click", async function (event) {
       tries++
       updateScore()
       let nextPlayer = false
+      let changePlayerPromise = Promise.resolve()
+
       if (isMatch(firstSelected, clicked)) {
         // Play match sound
-        playSound(matchSound)
+        const matchSoundPromise = playSound(matchSound)
         firstSelected = null
         lockBoard = false
         matchedPairs += 1 // Increment the matched pair count
@@ -1731,12 +1857,19 @@ gameBoard.addEventListener("click", async function (event) {
           updateStatsForMatch(players[currentPlayerIndex].name)
         }
 
+        currentTurnCardClicked = false
+
         // Check if the game is complete
         if (matchedPairs === numPairs) {
           // Play completion sound
           playSound(completeSound)
           triggerConfetti()
           showCompletionModal(tries)
+        } else {
+          // Play ElevenLabs "Keep going!" after match sound finishes
+          matchSoundPromise.then(() => {
+            playKeepGoingAnnouncement()
+          })
         }
 
         if (!keepTurnOnMatch) {
@@ -1745,7 +1878,7 @@ gameBoard.addEventListener("click", async function (event) {
       } else {
         // Reset the sound to the beginning, so it plays if a match is tried quickly
         wrongSound.currentTime = 0
-        playSound(wrongSound)
+        const wrongSoundPromise = playSound(wrongSound)
         // Delay to allow users to see the cards
         // setTimeout(() => {
         firstSelected.classList.remove("revealed")
@@ -1758,13 +1891,17 @@ gameBoard.addEventListener("click", async function (event) {
         // }, 1000)
 
         nextPlayer = true
+        changePlayerPromise = wrongSoundPromise
       }
       // change to next player
       if (nextPlayer && players.length > 0) {
         const prevIndex = currentPlayerIndex
         currentPlayerIndex = (currentPlayerIndex + 1) % players.length
         if (currentPlayerIndex !== prevIndex) {
-          announceCurrentPlayerTurn()
+          currentTurnCardClicked = false
+          changePlayerPromise.then(() => {
+            announceCurrentPlayerTurn()
+          })
         }
       }
       updatePlayerScores()
@@ -1819,6 +1956,7 @@ document.addEventListener("keydown", (e) => {
       const prevIndex = currentPlayerIndex
       currentPlayerIndex = (currentPlayerIndex - 1 + players.length) % players.length
       if (currentPlayerIndex !== prevIndex) {
+        currentTurnCardClicked = false
         announceCurrentPlayerTurn()
       }
       updatePlayerScores()
@@ -1871,6 +2009,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadSavedPlayerNames()
+  precacheKeepGoingVoice(0)
 
   // Initialize player sets dropdown
   populatePlayerSetSelect()
@@ -2064,6 +2203,8 @@ document.addEventListener("DOMContentLoaded", () => {
           apiKeyStatus.textContent = "API Key verified"
           apiKeyStatus.className = "api-key-status success"
           voiceSummary.textContent = "ElevenLabs Config (Connected)"
+          precachePlayerTurnAudios()
+          precacheKeepGoingVoice(0)
           voiceDetails.open = false
         } else {
           apiKeyStatus.textContent = "Saved API Key is invalid"
@@ -2093,6 +2234,8 @@ document.addEventListener("DOMContentLoaded", () => {
         apiKeyStatus.textContent = "API Key verified and saved!"
         apiKeyStatus.className = "api-key-status success"
         voiceSummary.textContent = "ElevenLabs Config (Connected)"
+        precachePlayerTurnAudios()
+        precacheKeepGoingVoice(0)
         setTimeout(() => {
           voiceDetails.open = false
         }, 1000)
