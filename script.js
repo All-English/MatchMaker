@@ -973,7 +973,7 @@ function loadActiveUnits() {
       gameBoard.innerHTML = '<div class="no-units-message">Please select a card unit in settings to start playing!</div>'
     }
 
-    disablePlayerDragging()
+    disablePlayerDragging(false)
 
     const scoresContainer = document.getElementById("player-scores-container")
     if (scoresContainer) scoresContainer.style.display = "none"
