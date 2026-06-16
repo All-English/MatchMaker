@@ -1335,7 +1335,6 @@ function resetCachedVoices() {
 
 function updatePlayerNames() {
   const playerNameInput = document.getElementById("player-names-input")
-  const addPlayersButton = document.getElementById("add-players-btn")
   const input = playerNameInput.value
 
   // Save the raw input to localStorage
@@ -1359,7 +1358,6 @@ function updatePlayerNames() {
   updatePlayerScores()
   enablePlayerDragging()
   precachePlayerTurnAudios()
-  addPlayersButton.textContent = "Update Players"
 
   // Save to shared active session
   saveActiveSessionPlayers(names)
@@ -2081,6 +2079,12 @@ document.addEventListener("DOMContentLoaded", () => {
       populatePlayerSetSelect()
       playerSetSelect.value = setName
       if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
+      
+      const saveSetDetails = document.getElementById("save-set-details")
+      if (saveSetDetails) {
+        saveSetDetails.open = false
+      }
+      
       alert(`Saved list "${setName}" successfully!`)
     })
   }
