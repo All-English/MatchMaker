@@ -109,13 +109,15 @@
 
     <div class="sidebar-section">
       <h3 class="sidebar-section-title">Rules</h3>
-      <button id="rules-button" class="sidebar-btn">Bonus Turns</button>
+      <button id="rules-button" class="sidebar-btn"
+        data-tooltip="When enabled, you keep your turn when you make a match. When disabled, the turn passes to the next player.">Bonus Turns</button>
     </div>
 
     <div class="sidebar-section">
       <h3 class="sidebar-section-title">Sync Settings</h3>
       <details id="sync-settings-details" class="voice-settings-details">
-        <summary id="sync-settings-summary">Upstash Redis Config</summary>
+        <summary id="sync-settings-summary"
+          data-tooltip="Sync player lists and active player sessions across devices.">Upstash Redis Config</summary>
         <div class="voice-settings-content">
           <div class="api-key-container">
             <label for="upstash-url-input">Upstash REST URL</label>
@@ -134,7 +136,8 @@
     <div class="sidebar-section">
       <h3 class="sidebar-section-title">Voice Settings</h3>
       <details id="voice-settings-details" class="voice-settings-details">
-        <summary id="voice-settings-summary">ElevenLabs Config</summary>
+        <summary id="voice-settings-summary"
+          data-tooltip="Configure ElevenLabs voice narration parameters.">ElevenLabs Config</summary>
         <div class="voice-settings-content">
           <div class="api-key-container">
             <label for="api-key-input">ElevenLabs API Key</label>
