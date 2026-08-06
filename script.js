@@ -1262,54 +1262,36 @@ async function precachePlayerTurnAudios() {
   }
 }
 
-const keepGoingCache = {}
-let currentKeepGoingVoiceIndex = 0
+const keepGoingAudioFiles = voiceList.flatMap((voiceId) => [
+  `audio/keep_going/${voiceId}_v1.mp3`,
+  `audio/keep_going/${voiceId}_v2.mp3`,
+  `audio/keep_going/${voiceId}_v3.mp3`
+])
 
-async function precacheKeepGoingVoice(index) {
-  const apiKey = localStorage.getItem("elevenlabs_api_key")
-  if (!apiKey || voiceList.length === 0) return
+let remainingKeepGoingPool = []
 
-  const voiceId = voiceList[index % voiceList.length]
-  if (keepGoingCache[voiceId]) return // Already cached
-
-  const audio = await fetchElevenLabsAudio("Keep going!", voiceId)
-  if (audio) {
-    keepGoingCache[voiceId] = audio
+function getNextKeepGoingAudioPath() {
+  if (remainingKeepGoingPool.length === 0) {
+    remainingKeepGoingPool = [...keepGoingAudioFiles]
   }
+  const randomIndex = Math.floor(Math.random() * remainingKeepGoingPool.length)
+  return remainingKeepGoingPool.splice(randomIndex, 1)[0]
 }
 
 async function playKeepGoingAnnouncement() {
   if (!isNarratorEnabled) return
-  const apiKey = localStorage.getItem("elevenlabs_api_key")
-  if (!apiKey) return
 
   // If a card was clicked before the announcement starts, skip it
   if (currentTurnCardClicked) return
 
-  const voiceId = voiceList[currentKeepGoingVoiceIndex % voiceList.length]
+  const audioPath = getNextKeepGoingAudioPath()
+  const audio = new Audio(audioPath)
 
-  if (keepGoingCache[voiceId]) {
-    const cachedAudio = keepGoingCache[voiceId]
-    cachedAudio.currentTime = 0
-    playingKeepGoingAudio = cachedAudio
-    // Final check before playing
-    if (currentTurnCardClicked) return
-    cachedAudio.play().catch((e) => console.error("Error playing cached 'Keep going!' audio:", e))
-  } else {
-    // Fallback if not cached yet
-    const audio = await fetchElevenLabsAudio("Keep going!", voiceId)
-    if (audio) {
-      keepGoingCache[voiceId] = audio
-      // Final check before playing
-      if (currentTurnCardClicked) return
-      playingKeepGoingAudio = audio
-      audio.play().catch((e) => console.error("Error playing 'Keep going!' audio:", e))
-    }
-  }
+  playingKeepGoingAudio = audio
 
-  // Precache the next voice in the background
-  currentKeepGoingVoiceIndex++
-  precacheKeepGoingVoice(currentKeepGoingVoiceIndex)
+  // Final check before playing
+  if (currentTurnCardClicked) return
+  audio.play().catch((e) => console.error("Error playing 'Keep going!' audio:", e))
 }
 
 function resetCachedVoices() {
@@ -1321,16 +1303,6 @@ function resetCachedVoices() {
       player.turnAudio = null
     }
   })
-  // Clear the "Keep going!" cache
-  Object.keys(keepGoingCache).forEach((key) => {
-    try {
-      URL.revokeObjectURL(keepGoingCache[key].src)
-    } catch (e) {}
-    delete keepGoingCache[key]
-  })
-  // Reset index and precache the first voice again
-  currentKeepGoingVoiceIndex = 0
-  precacheKeepGoingVoice(0)
 }
 
 function updatePlayerNames() {
@@ -2014,7 +1986,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadSavedPlayerNames()
-  precacheKeepGoingVoice(0)
 
   // Initialize player sets dropdown
   populatePlayerSetSelect()
@@ -2215,7 +2186,6 @@ document.addEventListener("DOMContentLoaded", () => {
           apiKeyStatus.className = "api-key-status success"
           voiceSummary.textContent = "ElevenLabs Config (Connected)"
           precachePlayerTurnAudios()
-          precacheKeepGoingVoice(0)
           voiceDetails.open = false
         } else {
           apiKeyStatus.textContent = "Saved API Key is invalid"
@@ -2246,7 +2216,6 @@ document.addEventListener("DOMContentLoaded", () => {
         apiKeyStatus.className = "api-key-status success"
         voiceSummary.textContent = "ElevenLabs Config (Connected)"
         precachePlayerTurnAudios()
-        precacheKeepGoingVoice(0)
         setTimeout(() => {
           voiceDetails.open = false
         }, 1000)
