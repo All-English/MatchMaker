@@ -1269,6 +1269,7 @@ const keepGoingAudioFiles = voiceList.flatMap((voiceId) => [
 ])
 
 let remainingKeepGoingPool = []
+let nextKeepGoingAudio = null
 
 function getNextKeepGoingAudioPath() {
   if (remainingKeepGoingPool.length === 0) {
@@ -1278,20 +1279,36 @@ function getNextKeepGoingAudioPath() {
   return remainingKeepGoingPool.splice(randomIndex, 1)[0]
 }
 
+function precacheNextKeepGoingAudio() {
+  if (nextKeepGoingAudio) return
+  const audioPath = getNextKeepGoingAudioPath()
+  const audio = new Audio(audioPath)
+  audio.load()
+  nextKeepGoingAudio = audio
+}
+
 async function playKeepGoingAnnouncement() {
   if (!isNarratorEnabled) return
 
   // If a card was clicked before the announcement starts, skip it
   if (currentTurnCardClicked) return
 
-  const audioPath = getNextKeepGoingAudioPath()
-  const audio = new Audio(audioPath)
+  if (!nextKeepGoingAudio) {
+    precacheNextKeepGoingAudio()
+  }
 
-  playingKeepGoingAudio = audio
+  const currentAudio = nextKeepGoingAudio
+  nextKeepGoingAudio = null
+
+  // Immediately pre-cache the next audio file for the upcoming match
+  precacheNextKeepGoingAudio()
+
+  playingKeepGoingAudio = currentAudio
+  currentAudio.currentTime = 0
 
   // Final check before playing
   if (currentTurnCardClicked) return
-  audio.play().catch((e) => console.error("Error playing 'Keep going!' audio:", e))
+  currentAudio.play().catch((e) => console.error("Error playing 'Keep going!' audio:", e))
 }
 
 function resetCachedVoices() {
@@ -1303,6 +1320,14 @@ function resetCachedVoices() {
       player.turnAudio = null
     }
   })
+  if (nextKeepGoingAudio) {
+    try {
+      nextKeepGoingAudio.pause()
+      nextKeepGoingAudio.currentTime = 0
+    } catch (e) {}
+    nextKeepGoingAudio = null
+  }
+  precacheNextKeepGoingAudio()
 }
 
 function updatePlayerNames() {
@@ -1986,6 +2011,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   loadSavedPlayerNames()
+  precacheNextKeepGoingAudio()
 
   // Initialize player sets dropdown
   populatePlayerSetSelect()
