@@ -96,12 +96,17 @@
         <button id="add-players-btn" class="sidebar-btn">Confirm</button>
         <details id="save-set-details" class="voice-settings-details"
           style="margin-top: var(--space-xs); margin-bottom: var(--space-xs);">
-          <summary id="save-set-summary">Save List...</summary>
-          <div class="voice-settings-content">
-            <div class="player-set-saver-container" style="margin-bottom: 0;">
-              <input type="text" id="new-set-name" class="sidebar-input" placeholder="List name...">
+          <summary id="save-set-summary">Save List &amp; Schedule...</summary>
+          <div class="voice-settings-content" style="padding: 0.5rem 0;">
+            <div class="player-set-saver-container" style="margin-bottom: 0.35rem;">
+              <input type="text" id="new-set-name" class="sidebar-input" placeholder="e.g. MWF 4:00">
               <button id="save-set-btn" class="sidebar-btn secondary-btn">Save</button>
             </div>
+            <div style="display: flex; gap: 0.35rem; margin-bottom: 0.35rem;">
+              <input type="time" id="new-set-start-time" class="sidebar-input" value="15:00" style="padding: 0.25rem 0.4rem; font-size: 0.8rem;">
+              <input type="time" id="new-set-end-time" class="sidebar-input" value="16:00" style="padding: 0.25rem 0.4rem; font-size: 0.8rem;">
+            </div>
+            <div id="new-set-days-container" style="display: flex; gap: 0.2rem; flex-wrap: wrap;"></div>
           </div>
         </details>
       </div>
@@ -172,6 +177,7 @@
   </div>
 </div>
 
+<script src="shared-class-sync.js"></script>
 <script type="module" src="script.js"></script>
 </body>
 

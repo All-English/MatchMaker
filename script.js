@@ -28,6 +28,34 @@ resetButton.addEventListener("click", () => {
 
 let activeCardAudio = null
 let activeUnits = []
+let currentLoadedClassName = null
+
+function applyUnitsToMatchMaker(canonicalUnits) {
+  if (!Array.isArray(canonicalUnits) || canonicalUnits.length === 0) return
+  activeUnits = []
+  canonicalUnits.forEach((u) => {
+    const parsed = window.SharedClassSync ? window.SharedClassSync.toCanonicalUnit(u) : null
+    if (parsed) {
+      activeUnits.push({
+        series: "SmartPhonics",
+        book: String(parsed.level),
+        unitName: `Unit ${parsed.unit}`
+      })
+    }
+  })
+  if (typeof loadActiveUnits === "function") loadActiveUnits()
+  if (typeof renderSelectedUnitsList === "function") renderSelectedUnitsList()
+}
+
+function autoSaveCurrentClassUnits() {
+  if (!currentLoadedClassName || typeof window.SharedClassSync === "undefined") return
+  const canonicals = activeUnits.map((u) => {
+    const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+    return `L${u.book}U${unitNum}`
+  })
+  window.SharedClassSync.saveClassUnits(currentLoadedClassName, canonicals)
+}
+
 let combinedUnitItems = []
 let currentBook = null
 let currentSeries = null
@@ -189,39 +217,69 @@ async function syncWithUpstashOnLoad() {
   }
 
   try {
-    // 1. Sync sets (Database is source of truth if it exists)
-    const dbSets = await fetchFromUpstash(SHARED_SETS_KEY)
-    if (!localStorage.getItem(UPSTASH_URL_KEY)) return
-
-    if (dbSets) {
-      localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(dbSets))
+    let activeClassMatch = null
+    if (typeof window.SharedClassSync !== "undefined") {
+      const { playerSets, classProfiles } = await window.SharedClassSync.loadAllClasses()
       populatePlayerSetSelect()
+      activeClassMatch = window.SharedClassSync.findActiveScheduledClass(classProfiles)
     } else {
-      // If cloud is empty but we have local sets, initialize the cloud
-      const localSets = getPlayerSets()
-      if (Object.keys(localSets).length > 0) {
-        await syncToUpstash(SHARED_SETS_KEY, localSets)
+      // 1. Sync sets (Database is source of truth if it exists)
+      const dbSets = await fetchFromUpstash(SHARED_SETS_KEY)
+      if (!localStorage.getItem(UPSTASH_URL_KEY)) return
+
+      if (dbSets) {
+        localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(dbSets))
+        populatePlayerSetSelect()
+      } else {
+        // If cloud is empty but we have local sets, initialize the cloud
+        const localSets = getPlayerSets()
+        if (Object.keys(localSets).length > 0) {
+          await syncToUpstash(SHARED_SETS_KEY, localSets)
+        }
       }
     }
 
-    // 2. Sync active session (Database is source of truth if it exists)
-    const dbActive = await fetchFromUpstash(SHARED_ACTIVE_PLAYERS_KEY)
-    if (!localStorage.getItem(UPSTASH_URL_KEY)) return
-
-    if (dbActive && Array.isArray(dbActive)) {
-      localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(dbActive))
-      loadSavedPlayerNames()
+    // Priority 1: Scheduled active class in session right now
+    if (activeClassMatch) {
+      currentLoadedClassName = activeClassMatch.className
+      const playerSetSelect = document.getElementById("player-set-select")
+      if (playerSetSelect) {
+        playerSetSelect.value = activeClassMatch.className
+      }
+      const sets = getPlayerSets()
+      const names = sets[activeClassMatch.className]
+      if (names && Array.isArray(names)) {
+        const playerNameInput = document.getElementById("player-names-input")
+        if (playerNameInput) {
+          playerNameInput.value = names.join(", ")
+        }
+        localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(names))
+      }
+      if (activeClassMatch.profile && Array.isArray(activeClassMatch.profile.units) && activeClassMatch.profile.units.length > 0) {
+        applyUnitsToMatchMaker(activeClassMatch.profile.units)
+      }
+      const deleteSetBtn = document.getElementById("delete-set-btn")
+      if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
     } else {
-      // If cloud is empty but we have local active players, initialize the cloud
-      const localActiveJSON = localStorage.getItem(SHARED_ACTIVE_PLAYERS_KEY)
-      if (localActiveJSON) {
-        try {
-          const localActive = JSON.parse(localActiveJSON)
-          if (Array.isArray(localActive) && localActive.length > 0) {
-            await syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, localActive)
+      // Priority 2: Outside class hours, fall back to active session
+      const dbActive = await fetchFromUpstash(SHARED_ACTIVE_PLAYERS_KEY)
+      if (!localStorage.getItem(UPSTASH_URL_KEY)) return
+
+      if (dbActive && Array.isArray(dbActive)) {
+        localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(dbActive))
+        loadSavedPlayerNames()
+      } else {
+        // If cloud is empty but we have local active players, initialize the cloud
+        const localActiveJSON = localStorage.getItem(SHARED_ACTIVE_PLAYERS_KEY)
+        if (localActiveJSON) {
+          try {
+            const localActive = JSON.parse(localActiveJSON)
+            if (Array.isArray(localActive) && localActive.length > 0) {
+              await syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, localActive)
+            }
+          } catch (e) {
+            console.error(e)
           }
-        } catch (e) {
-          console.error(e)
         }
       }
     }
@@ -1042,6 +1100,7 @@ function addActiveUnit(series, book, unitNumber) {
   activeUnits.push({ series, book, unitName })
   loadActiveUnits()
   renderSelectedUnitsList()
+  autoSaveCurrentClassUnits()
 
   const selector = document.getElementById("unit-selector")
   if (selector) selector.value = ""
@@ -1051,6 +1110,7 @@ function removeActiveUnit(index) {
   activeUnits.splice(index, 1)
   loadActiveUnits()
   renderSelectedUnitsList()
+  autoSaveCurrentClassUnits()
 }
 
 function renderSelectedUnitsList() {
@@ -2025,9 +2085,47 @@ document.addEventListener("DOMContentLoaded", () => {
   const newSetNameInput = document.getElementById("new-set-name")
   const saveSetBtn = document.getElementById("save-set-btn")
 
+  function initScheduleControlsMatchMaker() {
+    const container = document.getElementById("new-set-days-container")
+    const nameInput = document.getElementById("new-set-name")
+    const startTimeInput = document.getElementById("new-set-start-time")
+    const endTimeInput = document.getElementById("new-set-end-time")
+    if (!container || !nameInput) return
+
+    const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    container.innerHTML = ""
+    days.forEach((day) => {
+      const label = document.createElement("label")
+      label.style.cssText = "display: inline-flex; align-items: center; gap: 2px; font-size: 0.75rem; cursor: pointer;"
+      const chk = document.createElement("input")
+      chk.type = "checkbox"
+      chk.value = day
+      chk.className = "new-set-day-chk"
+      label.appendChild(chk)
+      label.appendChild(document.createTextNode(day))
+      container.appendChild(label)
+    })
+
+    nameInput.addEventListener("input", () => {
+      if (typeof window.SharedClassSync !== "undefined") {
+        const sched = window.SharedClassSync.parseScheduleFromName(nameInput.value)
+        if (sched) {
+          if (startTimeInput) startTimeInput.value = sched.startTime
+          if (endTimeInput) endTimeInput.value = sched.endTime
+          container.querySelectorAll(".new-set-day-chk").forEach((chk) => {
+            chk.checked = sched.days.includes(chk.value)
+          })
+        }
+      }
+    })
+  }
+
+  initScheduleControlsMatchMaker()
+
   if (playerSetSelect) {
     playerSetSelect.addEventListener("change", () => {
       const selectedSetName = playerSetSelect.value
+      currentLoadedClassName = selectedSetName || null
       if (selectedSetName) {
         const sets = getPlayerSets()
         const names = sets[selectedSetName]
@@ -2035,6 +2133,17 @@ document.addEventListener("DOMContentLoaded", () => {
           const playerNameInput = document.getElementById("player-names-input")
           if (playerNameInput) {
             playerNameInput.value = names.join(", ")
+          }
+        }
+        if (typeof window.SharedClassSync !== "undefined") {
+          try {
+            const rawProfiles = localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY)
+            const profiles = rawProfiles ? JSON.parse(rawProfiles) : {}
+            if (profiles[selectedSetName] && Array.isArray(profiles[selectedSetName].units) && profiles[selectedSetName].units.length > 0) {
+              applyUnitsToMatchMaker(profiles[selectedSetName].units)
+            }
+          } catch (e) {
+            console.warn("Error applying units in MatchMaker:", e)
           }
         }
         if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
@@ -2071,6 +2180,40 @@ document.addEventListener("DOMContentLoaded", () => {
       const sets = getPlayerSets()
       sets[setName] = names
       savePlayerSets(sets)
+
+      currentLoadedClassName = setName
+
+      // Save schedule & current units in SharedClassSync
+      if (typeof window.SharedClassSync !== "undefined") {
+        const startTimeInput = document.getElementById("new-set-start-time")
+        const endTimeInput = document.getElementById("new-set-end-time")
+        const dayChks = document.querySelectorAll(".new-set-day-chk:checked")
+        const selectedDays = Array.from(dayChks).map((c) => c.value)
+
+        const canonicals = activeUnits.map((u) => {
+          const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+          return `L${u.book}U${unitNum}`
+        })
+
+        const sched = {
+          days: selectedDays.length > 0 ? selectedDays : window.SharedClassSync.parseScheduleFromName(setName).days,
+          startTime: startTimeInput?.value || "15:00",
+          endTime: endTimeInput?.value || "16:00"
+        }
+
+        let profiles = {}
+        try {
+          profiles = JSON.parse(localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY) || "{}")
+        } catch {}
+
+        profiles[setName] = {
+          schedule: sched,
+          units: canonicals,
+          updatedAt: Date.now()
+        }
+        localStorage.setItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY, JSON.stringify(profiles))
+        window.SharedClassSync.syncUpstash(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY, profiles)
+      }
 
       newSetNameInput.value = ""
       populatePlayerSetSelect()
