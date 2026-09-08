@@ -147,7 +147,17 @@
    * - "level2:unit3" (Treasure Hunt)
    */
   function toCanonicalUnit(unitStr) {
-    if (!unitStr || typeof unitStr !== 'string') return null;
+    if (!unitStr) return null;
+    if (typeof unitStr === 'object') {
+      const level = parseInt(unitStr.level || unitStr.book, 10);
+      const unit = parseInt(unitStr.unit || (typeof unitStr.unitName === 'string' ? unitStr.unitName.match(/Unit\s+(\d+)/i)?.[1] : null), 10);
+      if (!isNaN(level) && !isNaN(unit)) {
+        const series = unitStr.series || 'SmartPhonics';
+        return { series, level, unit, id: `L${level}U${unit}` };
+      }
+      return null;
+    }
+    if (typeof unitStr !== 'string') return null;
     const str = unitStr.trim();
 
     // 1. Phonics Flash: L2U3
@@ -155,7 +165,7 @@
     if (m) {
       const level = parseInt(m[1], 10);
       const unit = parseInt(m[2], 10);
-      return { level, unit, id: `L${level}U${unit}` };
+      return { series: 'SmartPhonics', level, unit, id: `L${level}U${unit}` };
     }
 
     // 2. Word-Tac-Toe: Book2|Unit3
@@ -163,15 +173,17 @@
     if (m) {
       const level = parseInt(m[1], 10);
       const unit = parseInt(m[2], 10);
-      return { level, unit, id: `L${level}U${unit}` };
+      return { series: 'SmartPhonics', level, unit, id: `L${level}U${unit}` };
     }
 
-    // 3. MatchMaker: SmartPhonics|2|3
-    m = str.match(/(?:SmartPhonics|SP)\|(\d+)\|(\d+)/i);
+    // 3. MatchMaker: SmartPhonics|2|3 or LetsSmile|2|3 or LS|2|3
+    m = str.match(/(?:SmartPhonics|SP|LetsSmile|LS)\|(\d+)\|(\d+)/i);
     if (m) {
+      const isLS = /^(?:LetsSmile|LS)/i.test(str);
+      const series = isLS ? 'LetsSmile' : 'SmartPhonics';
       const level = parseInt(m[1], 10);
       const unit = parseInt(m[2], 10);
-      return { level, unit, id: `L${level}U${unit}` };
+      return { series, level, unit, id: `L${level}U${unit}` };
     }
 
     // 4. Treasure Hunt: level2:unit3
@@ -179,7 +191,7 @@
     if (m) {
       const level = parseInt(m[1], 10);
       const unit = parseInt(m[2], 10);
-      return { level, unit, id: `L${level}U${unit}` };
+      return { series: 'SmartPhonics', level, unit, id: `L${level}U${unit}` };
     }
 
     return null;

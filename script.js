@@ -30,17 +30,126 @@ let activeCardAudio = null
 let activeUnits = []
 let currentLoadedClassName = null
 
+function resolveUnitInfo(u) {
+  if (!u) return null
+  let series = "SmartPhonics"
+  let book = null
+  let unitNum = null
+  let unitNameCandidate = null
+
+  if (typeof u === "object") {
+    if (u.series) series = u.series
+    if (u.book) book = String(u.book)
+    else if (u.level) book = String(u.level)
+    if (u.unitName) unitNameCandidate = u.unitName
+    if (u.unit !== undefined && u.unit !== null) unitNum = u.unit
+  } else if (typeof u === "string") {
+    const trimmed = u.trim()
+    const parts = trimmed.split("|")
+    if (parts.length === 3) {
+      const sPrefix = parts[0].trim()
+      if (/^(?:LetsSmile|LS)$/i.test(sPrefix)) {
+        series = "LetsSmile"
+      } else {
+        series = "SmartPhonics"
+      }
+      book = String(parts[1].replace(/^(?:Book|L)/i, "").trim())
+      const unitPart = parts[2].trim()
+      const uMatch = unitPart.match(/Unit\s*(\d+)/i)
+      if (uMatch) {
+        unitNum = uMatch[1]
+        unitNameCandidate = unitPart
+      } else {
+        unitNum = unitPart.replace(/^(?:Unit|U)/i, "").trim()
+      }
+    } else {
+      const parsed = window.SharedClassSync ? window.SharedClassSync.toCanonicalUnit(trimmed) : null
+      if (parsed) {
+        if (parsed.series) series = parsed.series
+        book = String(parsed.level)
+        unitNum = parsed.unit
+      } else {
+        const mL = trimmed.match(/L(\d+)U(\d+)/i) || trimmed.match(/Book(\d+)\|Unit(\d+)/i) || trimmed.match(/level(\d+):unit(\d+)/i)
+        if (mL) {
+          book = String(mL[1])
+          unitNum = mL[2]
+        }
+      }
+    }
+  }
+
+  if (!unitNum && unitNameCandidate) {
+    const m = unitNameCandidate.match(/Unit\s*(\d+)/i)
+    if (m) unitNum = m[1]
+  }
+
+  // Normalize series name to match cardLibrary keys
+  if (/^(?:LetsSmile|LS)$/i.test(series)) {
+    series = "LetsSmile"
+  } else {
+    series = "SmartPhonics"
+  }
+
+  // Fall back to alternative series if book doesn't exist in current series
+  if (!cardLibrary[series]?.[book]) {
+    const altSeries = series === "SmartPhonics" ? "LetsSmile" : "SmartPhonics"
+    if (cardLibrary[altSeries]?.[book]) {
+      series = altSeries
+    }
+  }
+
+  if (!cardLibrary[series] || !cardLibrary[series][book]) {
+    return null
+  }
+
+  const bookUnits = cardLibrary[series][book]
+  const unitKeys = Object.keys(bookUnits)
+
+  // 1. Exact match if unitNameCandidate is already an exact key
+  if (unitNameCandidate && unitKeys.includes(unitNameCandidate)) {
+    return { series, book: String(book), unitName: unitNameCandidate }
+  }
+
+  // 2. Match by unit number (accurate word boundary: "Unit 1: ...", "Unit 1", etc.)
+  if (unitNum !== null && unitNum !== undefined && unitNum !== "") {
+    const num = parseInt(unitNum, 10)
+    const matchedKey = unitKeys.find((k) => {
+      if (k === `Unit ${num}`) return true
+      if (k.startsWith(`Unit ${num}:`)) return true
+      if (k.startsWith(`Unit ${num} `)) return true
+      return false
+    })
+    if (matchedKey) {
+      return { series, book: String(book), unitName: matchedKey }
+    }
+  }
+
+  // 3. Fallback prefix match
+  if (unitNameCandidate) {
+    const matchedKey = unitKeys.find((k) => k.startsWith(unitNameCandidate))
+    if (matchedKey) {
+      return { series, book: String(book), unitName: matchedKey }
+    }
+  }
+
+  return null
+}
+
 function applyUnitsToMatchMaker(canonicalUnits) {
   if (!Array.isArray(canonicalUnits) || canonicalUnits.length === 0) return
   activeUnits = []
   canonicalUnits.forEach((u) => {
-    const parsed = window.SharedClassSync ? window.SharedClassSync.toCanonicalUnit(u) : null
-    if (parsed) {
-      activeUnits.push({
-        series: "SmartPhonics",
-        book: String(parsed.level),
-        unitName: `Unit ${parsed.unit}`
-      })
+    const resolved = resolveUnitInfo(u)
+    if (resolved) {
+      const alreadyExists = activeUnits.some(
+        (existing) =>
+          existing.series === resolved.series &&
+          existing.book === resolved.book &&
+          existing.unitName === resolved.unitName
+      )
+      if (!alreadyExists) {
+        activeUnits.push(resolved)
+      }
     }
   })
   if (typeof loadActiveUnits === "function") loadActiveUnits()
@@ -51,6 +160,9 @@ function autoSaveCurrentClassUnits() {
   if (!currentLoadedClassName || typeof window.SharedClassSync === "undefined") return
   const canonicals = activeUnits.map((u) => {
     const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+    if (u.series === "LetsSmile") {
+      return `LS|${u.book}|${unitNum}`
+    }
     return `L${u.book}U${unitNum}`
   })
   window.SharedClassSync.saveClassUnits(currentLoadedClassName, canonicals)
@@ -725,20 +837,23 @@ function createUnitSelector() {
   if (unitsParam) {
     const unitSpecs = unitsParam.split(",")
     unitSpecs.forEach((spec) => {
-      const [series, book, unitNumber] = spec.split("|")
-      const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
-        unit.startsWith(`Unit ${unitNumber}`)
-      )
-      if (unitName) {
-        activeUnits.push({ series, book, unitName })
+      const resolved = resolveUnitInfo(spec)
+      if (resolved) {
+        const alreadyExists = activeUnits.some(
+          (u) =>
+            u.series === resolved.series &&
+            u.book === resolved.book &&
+            u.unitName === resolved.unitName
+        )
+        if (!alreadyExists) {
+          activeUnits.push(resolved)
+        }
       }
     })
   } else if (seriesParam && bookParam && unitParam) {
-    const unitName = Object.keys(cardLibrary[seriesParam][bookParam]).find((unit) =>
-      unit.startsWith(`Unit ${unitParam}`)
-    )
-    if (unitName) {
-      activeUnits.push({ series: seriesParam, book: bookParam, unitName })
+    const resolved = resolveUnitInfo({ series: seriesParam, book: bookParam, unit: unitParam })
+    if (resolved) {
+      activeUnits.push(resolved)
     }
   }
 
@@ -794,8 +909,10 @@ function createCards() {
 
   // Group available unique items by active unit
   const unitsData = activeUnits.map((u) => {
-    const unitItems = cardLibrary[u.series][u.book][u.unitName] || []
-    const validItems = unitItems.filter((item) => item.word && item.image)
+    const unitItems = cardLibrary[u.series]?.[u.book]?.[u.unitName] || []
+    const validItems = Array.isArray(unitItems)
+      ? unitItems.filter((item) => item.word && item.image)
+      : []
     const uniqueValidItems = []
     validItems.forEach((item) => {
       const exists = uniqueValidItems.some(
@@ -1043,7 +1160,18 @@ function loadActiveUnits() {
   // Combine unique valid items across all active units
   let combinedItems = []
   activeUnits.forEach((u) => {
-    const unitItems = cardLibrary[u.series][u.book][u.unitName]
+    let unitItems = cardLibrary[u.series]?.[u.book]?.[u.unitName]
+    if (!unitItems) {
+      const resolved = resolveUnitInfo(u)
+      if (resolved) {
+        u.series = resolved.series
+        u.book = resolved.book
+        u.unitName = resolved.unitName
+        unitItems = cardLibrary[u.series]?.[u.book]?.[u.unitName]
+      }
+    }
+    if (!Array.isArray(unitItems)) return
+
     const validItems = unitItems.filter((item) => item.word && item.image)
     validItems.forEach((item) => {
       const exists = combinedItems.some(
@@ -1064,7 +1192,8 @@ function loadActiveUnits() {
   // Combine target letters from all active units
   let combinedTargetLetters = []
   activeUnits.forEach((u) => {
-    const unitItems = cardLibrary[u.series][u.book][u.unitName]
+    const unitItems = cardLibrary[u.series]?.[u.book]?.[u.unitName]
+    if (!Array.isArray(unitItems)) return
     const metaItem = unitItems.find((item) => item.targetLetters)
     if (metaItem && metaItem.targetLetters) {
       combinedTargetLetters.push(metaItem.targetLetters)
@@ -1072,8 +1201,10 @@ function loadActiveUnits() {
   })
   targetLetters = combinedTargetLetters.join(", ")
 
-  currentSeries = activeUnits[0].series
-  currentBook = activeUnits[0].book
+  if (activeUnits.length > 0) {
+    currentSeries = activeUnits[0].series
+    currentBook = activeUnits[0].book
+  }
 
   // Allow up to 50 matches regardless of unique pair count (extras are duplicated)
   pairsInput.max = 50
@@ -1087,17 +1218,18 @@ function loadActiveUnits() {
 }
 
 function addActiveUnit(series, book, unitNumber) {
-  const unitName = Object.keys(cardLibrary[series][book]).find((unit) =>
-    unit.startsWith(`Unit ${unitNumber}`)
-  )
-  if (!unitName) return
+  const resolved = resolveUnitInfo({ series, book, unit: unitNumber })
+  if (!resolved) return
 
   const alreadyExists = activeUnits.some(
-    (u) => u.series === series && u.book === book && u.unitName === unitName
+    (u) =>
+      u.series === resolved.series &&
+      u.book === resolved.book &&
+      u.unitName === resolved.unitName
   )
   if (alreadyExists) return
 
-  activeUnits.push({ series, book, unitName })
+  activeUnits.push(resolved)
   loadActiveUnits()
   renderSelectedUnitsList()
   autoSaveCurrentClassUnits()
@@ -1145,7 +1277,7 @@ function updateUnitsURL() {
   const url = new URL(window.location)
   const unitsParam = activeUnits
     .map((u) => {
-      const unitNumber = u.unitName.match(/Unit (\d+)/)[1]
+      const unitNumber = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
       return `${u.series}|${u.book}|${unitNumber}`
     })
     .join(",")
@@ -2192,6 +2324,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const canonicals = activeUnits.map((u) => {
           const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+          if (u.series === "LetsSmile") {
+            return `LS|${u.book}|${unitNum}`
+          }
           return `L${u.book}U${unitNum}`
         })
 
