@@ -366,10 +366,13 @@ async function syncWithUpstashOnLoad() {
           playerNameInput.value = names.join(", ")
         }
         localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(names))
+        localStorage.setItem("playerNamesInput", names.join(", "))
+        loadSavedPlayerNames()
       }
       if (activeClassMatch.profile && Array.isArray(activeClassMatch.profile.units) && activeClassMatch.profile.units.length > 0) {
         applyUnitsToMatchMaker(activeClassMatch.profile.units)
       }
+      enablePlayerDragging()
       const deleteSetBtn = document.getElementById("delete-set-btn")
       if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
     } else {
@@ -2331,6 +2334,9 @@ document.addEventListener("DOMContentLoaded", () => {
           if (playerNameInput) {
             playerNameInput.value = names.join(", ")
           }
+          localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(names))
+          localStorage.setItem("playerNamesInput", names.join(", "))
+          loadSavedPlayerNames()
         }
         if (typeof window.SharedClassSync !== "undefined") {
           try {
@@ -2343,6 +2349,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.warn("Error applying units in MatchMaker:", e)
           }
         }
+        enablePlayerDragging()
         if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
       } else {
         if (deleteSetBtn) deleteSetBtn.style.display = "none"
