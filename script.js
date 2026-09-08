@@ -728,7 +728,10 @@ function disablePlayerDragging(shouldAnnounce = true) {
   }
 }
 
+let isDraggingPlayer = false
+
 function handleDragStart(e) {
+  isDraggingPlayer = true
   const card = e.target.closest(".player-card")
   if (card) {
     e.dataTransfer.setData("text/plain", card.dataset.playerName)
@@ -758,6 +761,9 @@ function handleDragEnd(e) {
   document.querySelectorAll(".player-card").forEach((card) => {
     card.classList.remove("drag-over")
   })
+  setTimeout(() => {
+    isDraggingPlayer = false
+  }, 100)
 }
 
 function handleDrop(e) {
@@ -1405,37 +1411,60 @@ function stopAllTurnVoices() {
     } catch (e) {}
     playingKeepGoingAudio = null
   }
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    try {
+      window.speechSynthesis.cancel()
+    } catch (e) {}
+  }
 }
 
-const announceCurrentPlayerTurn = async () => {
-  if (!isNarratorEnabled) return
-  const apiKey = localStorage.getItem("elevenlabs_api_key")
-  if (!apiKey || players.length === 0) return
+const announceCurrentPlayerTurn = async (isAutomatic = true) => {
+  if (isAutomatic && !isNarratorEnabled) return
+  if (players.length === 0) return
 
   const activePlayer = players[currentPlayerIndex]
   if (!activePlayer) return
 
   const targetPlayerIndex = currentPlayerIndex
 
-  // If player clicked a card before the announcement is made, skip it
-  if (currentTurnCardClicked) return
+  // If automatic and player clicked a card before the announcement is made, skip it
+  if (isAutomatic && currentTurnCardClicked) return
+
+  stopAllTurnVoices()
 
   if (activePlayer.turnAudio) {
     activePlayer.turnAudio.currentTime = 0
     playingTurnAudio = activePlayer.turnAudio
-    // Final check before playing
-    if (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex) return
+    // Final check before playing if automatic
+    if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
     activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
     return
   }
 
-  const audio = await fetchElevenLabsAudio(`${activePlayer.name}'s turn`, activePlayer.voiceId)
-  if (audio) {
-    activePlayer.turnAudio = audio
-    // Final check before playing
-    if (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex) return
-    playingTurnAudio = audio
-    audio.play().catch((e) => console.error("Error playing turn audio:", e))
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (apiKey) {
+    const audio = await fetchElevenLabsAudio(`${activePlayer.name}'s turn`, activePlayer.voiceId)
+    if (audio) {
+      activePlayer.turnAudio = audio
+      // Final check before playing if automatic
+      if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
+      playingTurnAudio = audio
+      audio.play().catch((e) => console.error("Error playing turn audio:", e))
+      return
+    }
+  }
+
+  // Fallback: Web Speech API if ElevenLabs is not configured or failed
+  if (typeof window !== "undefined" && window.speechSynthesis) {
+    if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
+    try {
+      window.speechSynthesis.cancel()
+      const utterance = new SpeechSynthesisUtterance(`${activePlayer.name}'s turn`)
+      utterance.rate = 0.9
+      window.speechSynthesis.speak(utterance)
+    } catch (e) {
+      console.error("SpeechSynthesis error:", e)
+    }
   }
 }
 
@@ -1655,6 +1684,9 @@ function updatePlayerScores() {
       playerScore.className = "player-card"
       if (index === currentPlayerIndex) {
         playerScore.classList.add("current-player")
+        playerScore.setAttribute("role", "button")
+        playerScore.setAttribute("tabindex", "0")
+        playerScore.setAttribute("aria-label", `Replay ${player.name}'s turn announcement`)
       }
 
 
@@ -1711,6 +1743,9 @@ function updatePlayerScores() {
         
         if (isCurrent && !wasCurrent) {
           playerElement.classList.add("current-player")
+          playerElement.setAttribute("role", "button")
+          playerElement.setAttribute("tabindex", "0")
+          playerElement.setAttribute("aria-label", `Replay ${player.name}'s turn announcement`)
           // Animation when becoming active
           playerElement.animate([
             { transform: "scale(1)" },
@@ -1719,6 +1754,9 @@ function updatePlayerScores() {
           ], { duration: 250, easing: "ease-out" })
         } else if (!isCurrent && wasCurrent) {
           playerElement.classList.remove("current-player")
+          playerElement.removeAttribute("role")
+          playerElement.removeAttribute("tabindex")
+          playerElement.removeAttribute("aria-label")
         }
 
         // Update drag handle visibility
@@ -2190,6 +2228,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const dragBtn = document.getElementById("drag-btn")
   if (dragBtn) {
     dragBtn.addEventListener("click", disablePlayerDragging)
+  }
+
+  const scoresDiv = document.getElementById("player-scores")
+  if (scoresDiv) {
+    const handleActivePlayerTrigger = (e) => {
+      if (isDraggingPlayer) return
+      if (lockBoard) return
+
+      // Do not trigger if dragging handle was clicked
+      if (e.target.closest(".drag-handle")) return
+
+      const activeCard = e.target.closest(".player-card.current-player")
+      if (!activeCard) return
+
+      announceCurrentPlayerTurn(false)
+    }
+
+    scoresDiv.addEventListener("click", handleActivePlayerTrigger)
+    scoresDiv.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        const activeCard = document.activeElement?.closest(".player-card.current-player")
+        if (activeCard && scoresDiv.contains(activeCard)) {
+          e.preventDefault()
+          handleActivePlayerTrigger(e)
+        }
+      }
+    })
   }
 
   const rulesButton = document.getElementById("rules-button")

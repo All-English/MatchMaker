@@ -422,12 +422,31 @@ body {
   color: var(--text-primary);
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 0.55));
   transform: scale(1.08);
+  cursor: pointer;
+  user-select: none;
+}
+
+.player-card.current-player .player-name {
+  cursor: pointer;
+}
+
+.player-card.current-player:not(.draggable):hover {
+  transform: scale(1.11);
+  box-shadow: 0 0 0 1px var(--button-background), 0 0 26px rgba(34, 100, 248, 0.55);
+}
+
+.player-card.current-player:active {
+  transform: scale(1.04);
 }
 
 @media (prefers-color-scheme: dark) {
   .player-card.current-player {
     background: linear-gradient(135deg, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.55));
     box-shadow: 0 0 0 1px var(--button-background), 0 0 20px rgba(34, 100, 248, 0.6);
+  }
+
+  .player-card.current-player:not(.draggable):hover {
+    box-shadow: 0 0 0 1px var(--button-background), 0 0 26px rgba(34, 100, 248, 0.75);
   }
 }
 
