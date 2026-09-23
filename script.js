@@ -1,4 +1,4 @@
-import { cardLibrary } from "./cardLibrary.js"
+import { cardLibrary, initCardLibrary } from "./cardLibrary.js"
 const voiceList = [
   "cgSgspJ2msm6clMCkdW9", // Jessica
   "FGY2WhTYpPnrIDTdsKH5", // Laura
@@ -2531,6 +2531,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   loadSavedRulesPreference()
   createUnitSelector()
+
+  if (typeof initCardLibrary === "function") {
+    initCardLibrary().then(() => {
+      createUnitSelector()
+      loadActiveUnits()
+      renderSelectedUnitsList()
+    })
+  }
 
   const resetUnitsBtn = document.getElementById("reset-units-btn")
   if (resetUnitsBtn) {
