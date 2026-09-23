@@ -48,7 +48,11 @@ function resolveUnitInfo(u) {
     const parts = trimmed.split("|")
     if (parts.length === 3) {
       const sPrefix = parts[0].trim()
-      if (/^(?:LetsSmile|LS)$/i.test(sPrefix)) {
+      if (cardLibrary[sPrefix]) {
+        series = sPrefix
+      } else if (window.SharedClassSync && window.SharedClassSync.toPascalCase && cardLibrary[window.SharedClassSync.toPascalCase(sPrefix)]) {
+        series = window.SharedClassSync.toPascalCase(sPrefix)
+      } else if (/^(?:LetsSmile|LS)$/i.test(sPrefix)) {
         series = "LetsSmile"
       } else {
         series = "SmartPhonics"
@@ -65,7 +69,8 @@ function resolveUnitInfo(u) {
     } else {
       const parsed = window.SharedClassSync ? window.SharedClassSync.toCanonicalUnit(trimmed) : null
       if (parsed) {
-        if (parsed.series) series = parsed.series
+        const pSeries = window.SharedClassSync.toPascalCase ? window.SharedClassSync.toPascalCase(parsed.series) : parsed.series
+        series = cardLibrary[pSeries] ? pSeries : (cardLibrary[parsed.series] ? parsed.series : "SmartPhonics")
         book = String(parsed.level)
         unitNum = parsed.unit
       } else {

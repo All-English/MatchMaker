@@ -4780,10 +4780,20 @@ export async function initCardLibrary() {
     try {
       const data = await window.SharedClassSync.CurriculumLoader.load();
       if (data) {
-        const adapted = window.SharedClassSync.CurriculumAdapter.toMatchMaker(data);
-        if (adapted && Object.keys(adapted).length > 0) {
-          cardLibrary["SmartPhonics"] = adapted;
-          return adapted;
+        if (typeof window.SharedClassSync.CurriculumAdapter.toMatchMakerAll === "function") {
+          const allSeries = window.SharedClassSync.CurriculumAdapter.toMatchMakerAll(data);
+          for (const [seriesKey, bookMap] of Object.entries(allSeries)) {
+            if (bookMap && Object.keys(bookMap).length > 0) {
+              cardLibrary[seriesKey] = bookMap;
+            }
+          }
+          return cardLibrary["SmartPhonics"];
+        } else {
+          const adapted = window.SharedClassSync.CurriculumAdapter.toMatchMaker(data);
+          if (adapted && Object.keys(adapted).length > 0) {
+            cardLibrary["SmartPhonics"] = adapted;
+            return adapted;
+          }
         }
       }
     } catch (e) {
