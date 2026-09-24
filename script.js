@@ -239,9 +239,9 @@ function savePlayerSets(sets) {
 }
 
 // Save active session players locally and sync to Upstash
-function saveActiveSessionPlayers(namesArray) {
+function saveActiveSessionPlayers(namesArray, className = currentLoadedClassName) {
   if (window.SharedClassSync?.saveActivePlayers) {
-    window.SharedClassSync.saveActivePlayers(namesArray)
+    window.SharedClassSync.saveActivePlayers(namesArray, className)
   } else {
     localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(namesArray))
     syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, namesArray)
@@ -369,13 +369,12 @@ async function syncWithUpstashOnLoad() {
         playerSetSelect.value = activeClassMatch.className
       }
       const sets = getPlayerSets()
-      const names = sets[activeClassMatch.className]
-      if (names && Array.isArray(names)) {
-        const playerNameInput = document.getElementById("player-names-input")
-        if (playerNameInput) {
-          playerNameInput.value = names.join(", ")
-        }
-        localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(names))
+      const rawNames = sets[activeClassMatch.className]
+      if (rawNames && Array.isArray(rawNames)) {
+        const names = window.SharedClassSync?.resolveClassRoster
+          ? window.SharedClassSync.resolveClassRoster(activeClassMatch.className, rawNames)
+          : rawNames
+        saveActiveSessionPlayers(names, activeClassMatch.className)
         localStorage.setItem("playerNamesInput", names.join(", "))
         loadSavedPlayerNames()
       }
