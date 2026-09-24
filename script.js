@@ -252,6 +252,7 @@ function saveActiveSessionPlayers(namesArray) {
 function handleUpstashError(errorMessage) {
   localStorage.removeItem(UPSTASH_URL_KEY)
   localStorage.removeItem(UPSTASH_TOKEN_KEY)
+  window.SharedClassSync?.clearCredentials?.()
   
   const statusEl = document.getElementById("sync-status")
   const syncSummary = document.getElementById("sync-settings-summary")
@@ -2515,6 +2516,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (testRes.ok) {
           localStorage.setItem(UPSTASH_URL_KEY, url)
           localStorage.setItem(UPSTASH_TOKEN_KEY, token)
+          window.SharedClassSync?.saveCredentials?.(url, token)
 
           if (syncStatus) {
             syncStatus.textContent = "Connected & synced successfully!"
@@ -2597,8 +2599,11 @@ document.addEventListener("DOMContentLoaded", () => {
     saveApiKeyBtn.addEventListener("click", async () => {
       const key = apiKeyInput.value.trim()
       if (!key) {
-        apiKeyStatus.textContent = "Please enter an API Key"
-        apiKeyStatus.className = "api-key-status error"
+        localStorage.removeItem("elevenlabs_api_key")
+        window.SharedClassSync?.setSharedApiKey?.("")
+        apiKeyStatus.textContent = "API Key cleared."
+        apiKeyStatus.className = "api-key-status success"
+        voiceSummary.textContent = "ElevenLabs Config"
         return
       }
 
@@ -2611,6 +2616,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (isValid) {
         localStorage.setItem("elevenlabs_api_key", key)
+        window.SharedClassSync?.setSharedApiKey?.(key)
         apiKeyStatus.textContent = "API Key verified and saved!"
         apiKeyStatus.className = "api-key-status success"
         voiceSummary.textContent = "ElevenLabs Config (Connected)"
@@ -2620,6 +2626,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }, 1000)
       } else {
         localStorage.removeItem("elevenlabs_api_key")
+        window.SharedClassSync?.setSharedApiKey?.("")
         apiKeyStatus.textContent = "Verification failed. Invalid API Key."
         apiKeyStatus.className = "api-key-status error"
         voiceSummary.textContent = "ElevenLabs Config (Error)"
