@@ -882,7 +882,17 @@ function createUnitSelector() {
   defaultOption.textContent = "Add unit..."
   selector.appendChild(defaultOption)
 
-  Object.keys(cardLibrary).forEach((series) => {
+  const allSeries = Object.keys(cardLibrary)
+  const hiddenSlugs = window.SharedClassSync ? window.SharedClassSync.getHiddenBooks() : []
+  let visibleSeries = allSeries.filter((series) => {
+    const slug = window.SharedClassSync ? window.SharedClassSync.toSeriesSlug(series) : series.toLowerCase()
+    return !hiddenSlugs.includes(slug)
+  })
+  if (visibleSeries.length === 0 && allSeries.length > 0) {
+    visibleSeries = [allSeries[0]]
+  }
+
+  visibleSeries.forEach((series) => {
     const seriesGroup = document.createElement("optgroup")
     seriesGroup.label = series
 
