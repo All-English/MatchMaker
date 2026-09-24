@@ -240,8 +240,12 @@ function savePlayerSets(sets) {
 
 // Save active session players locally and sync to Upstash
 function saveActiveSessionPlayers(namesArray) {
-  localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(namesArray))
-  syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, namesArray)
+  if (window.SharedClassSync?.saveActivePlayers) {
+    window.SharedClassSync.saveActivePlayers(namesArray)
+  } else {
+    localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(namesArray))
+    syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, namesArray)
+  }
   
   const playerNameInput = document.getElementById("player-names-input")
   if (playerNameInput) {
