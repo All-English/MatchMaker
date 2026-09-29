@@ -326,14 +326,69 @@ async function fetchFromUpstash(key) {
   return null;
 }
 
+function loadPlayerSet(setName, preferActiveSession = false, shouldLoadUnits = true) {
+  if (!setName) {
+    currentLoadedClassName = null
+    const deleteSetBtn = document.getElementById("delete-set-btn")
+    if (deleteSetBtn) deleteSetBtn.style.display = "none"
+    return
+  }
+
+  currentLoadedClassName = setName
+  const playerSetSelect = document.getElementById("player-set-select")
+  if (playerSetSelect && playerSetSelect.value !== setName) {
+    playerSetSelect.value = setName
+  }
+
+  const sets = getPlayerSets()
+  let rawNames = sets[setName]
+
+  if (!rawNames && window.SharedClassSync?.getActiveSession) {
+    const session = window.SharedClassSync.getActiveSession()
+    if (session && session.className === setName && Array.isArray(session.players) && session.players.length > 0) {
+      rawNames = session.players
+    }
+  }
+
+  if (rawNames && Array.isArray(rawNames)) {
+    const names = (preferActiveSession && window.SharedClassSync?.resolveClassRoster)
+      ? window.SharedClassSync.resolveClassRoster(setName, rawNames)
+      : rawNames
+
+    const playerNameInput = document.getElementById("player-names-input")
+    if (playerNameInput) {
+      playerNameInput.value = names.join(", ")
+    }
+    saveActiveSessionPlayers(names, setName)
+    localStorage.setItem("playerNamesInput", names.join(", "))
+    loadSavedPlayerNames()
+  }
+
+  if (shouldLoadUnits && typeof window.SharedClassSync !== "undefined") {
+    try {
+      const rawProfiles = localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY)
+      const profiles = rawProfiles ? JSON.parse(rawProfiles) : {}
+      if (profiles[setName] && Array.isArray(profiles[setName].units) && profiles[setName].units.length > 0) {
+        applyUnitsToMatchMaker(profiles[setName].units)
+      }
+    } catch (e) {
+      console.warn("Error applying units in MatchMaker:", e)
+    }
+  }
+
+  enablePlayerDragging()
+  const deleteSetBtn = document.getElementById("delete-set-btn")
+  if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
+}
+
 // Perform full sync (pull database updates and merge/overwrite local storage)
 async function syncWithUpstashOnLoad() {
   const { url, token } = getUpstashCredentials()
-  if (!url || !token) return
+  const hasCreds = Boolean(url && token)
 
   const statusEl = document.getElementById("sync-status")
   const syncSummary = document.getElementById("sync-settings-summary")
-  if (statusEl) {
+  if (hasCreds && statusEl) {
     statusEl.textContent = "Syncing..."
     statusEl.className = "api-key-status"
   }
@@ -344,11 +399,9 @@ async function syncWithUpstashOnLoad() {
       const { playerSets, classProfiles } = await window.SharedClassSync.loadAllClasses()
       populatePlayerSetSelect()
       activeClassMatch = window.SharedClassSync.findActiveScheduledClass(classProfiles)
-    } else {
+    } else if (hasCreds) {
       // 1. Sync sets (Database is source of truth if it exists)
       const dbSets = await fetchFromUpstash(SHARED_SETS_KEY)
-      if (!localStorage.getItem(UPSTASH_URL_KEY)) return
-
       if (dbSets) {
         localStorage.setItem(SHARED_SETS_KEY, JSON.stringify(dbSets))
         populatePlayerSetSelect()
@@ -361,67 +414,76 @@ async function syncWithUpstashOnLoad() {
       }
     }
 
-    // Priority 1: Scheduled active class in session right now
-    if (activeClassMatch) {
-      currentLoadedClassName = activeClassMatch.className
-      const playerSetSelect = document.getElementById("player-set-select")
-      if (playerSetSelect) {
-        playerSetSelect.value = activeClassMatch.className
-      }
-      const sets = getPlayerSets()
-      const rawNames = sets[activeClassMatch.className]
-      if (rawNames && Array.isArray(rawNames)) {
-        const names = window.SharedClassSync?.resolveClassRoster
-          ? window.SharedClassSync.resolveClassRoster(activeClassMatch.className, rawNames)
-          : rawNames
-        saveActiveSessionPlayers(names, activeClassMatch.className)
-        localStorage.setItem("playerNamesInput", names.join(", "))
-        loadSavedPlayerNames()
-      }
-      if (activeClassMatch.profile && Array.isArray(activeClassMatch.profile.units) && activeClassMatch.profile.units.length > 0) {
-        applyUnitsToMatchMaker(activeClassMatch.profile.units)
-      }
-      enablePlayerDragging()
-      const deleteSetBtn = document.getElementById("delete-set-btn")
-      if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
+    // Check URL parameters for explicit class or unit override
+    const urlParams = new URLSearchParams(window.location.search)
+    const explicitClass = urlParams.get("class") || urlParams.get("set")
+    const hasExplicitClassOverride = Boolean(explicitClass)
+    const hasExplicitUnitParams = Boolean(urlParams.get("units")?.trim()) || (urlParams.has("series") && urlParams.has("book") && urlParams.has("unit"))
+
+    if (hasExplicitClassOverride) {
+      loadPlayerSet(explicitClass, true, !hasExplicitUnitParams)
+    } else if (activeClassMatch) {
+      // Priority 1: Scheduled active class in session right now
+      loadPlayerSet(activeClassMatch.className, true, !hasExplicitUnitParams)
     } else {
       // Priority 2: Outside class hours, fall back to active session
-      const dbActive = await fetchFromUpstash(SHARED_ACTIVE_PLAYERS_KEY)
-      if (!localStorage.getItem(UPSTASH_URL_KEY)) return
-
-      if (dbActive && Array.isArray(dbActive)) {
-        localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(dbActive))
-        loadSavedPlayerNames()
-      } else {
-        // If cloud is empty but we have local active players, initialize the cloud
-        const localActiveJSON = localStorage.getItem(SHARED_ACTIVE_PLAYERS_KEY)
-        if (localActiveJSON) {
-          try {
-            const localActive = JSON.parse(localActiveJSON)
-            if (Array.isArray(localActive) && localActive.length > 0) {
-              await syncToUpstash(SHARED_ACTIVE_PLAYERS_KEY, localActive)
-            }
-          } catch (e) {
-            console.error(e)
+      let activePlayers = window.SharedClassSync?.getActivePlayers?.()
+      if (!activePlayers || activePlayers.length === 0) {
+        if (hasCreds) {
+          const dbActive = await fetchFromUpstash(SHARED_ACTIVE_PLAYERS_KEY)
+          if (Array.isArray(dbActive) && dbActive.length > 0) {
+            activePlayers = dbActive
+            localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(dbActive))
           }
+        }
+      }
+
+      if (Array.isArray(activePlayers) && activePlayers.length > 0) {
+        const playerNameInput = document.getElementById("player-names-input")
+        if (playerNameInput) {
+          playerNameInput.value = activePlayers.join(", ")
+        }
+        localStorage.setItem("playerNamesInput", activePlayers.join(", "))
+        loadSavedPlayerNames()
+      }
+
+      const activeSession = window.SharedClassSync?.getActiveSession?.()
+      if (activeSession && activeSession.className) {
+        const playerSetSelect = document.getElementById("player-set-select")
+        if (playerSetSelect) {
+          playerSetSelect.value = activeSession.className
+        }
+        currentLoadedClassName = activeSession.className
+        const deleteSetBtn = document.getElementById("delete-set-btn")
+        if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
+
+        // If no explicit unit parameters are set, try applying the active session's class units
+        if (!hasExplicitUnitParams && activeUnits.length === 0 && typeof window.SharedClassSync !== "undefined") {
+          try {
+            const rawProfiles = localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY)
+            const profiles = rawProfiles ? JSON.parse(rawProfiles) : {}
+            if (profiles[activeSession.className] && Array.isArray(profiles[activeSession.className].units) && profiles[activeSession.className].units.length > 0) {
+              applyUnitsToMatchMaker(profiles[activeSession.className].units)
+            }
+          } catch (e) {}
         }
       }
     }
 
-    if (statusEl) {
+    if (hasCreds && statusEl) {
       statusEl.textContent = "Synced successfully!"
       statusEl.className = "api-key-status success"
     }
-    if (syncSummary) {
+    if (hasCreds && syncSummary) {
       syncSummary.textContent = "Upstash Redis Config (Connected)"
     }
   } catch (err) {
     console.error("Error running onload sync:", err)
-    if (statusEl) {
+    if (hasCreds && statusEl) {
       statusEl.textContent = "Sync failed."
       statusEl.className = "api-key-status error"
     }
-    if (syncSummary) {
+    if (hasCreds && syncSummary) {
       syncSummary.textContent = "Upstash Redis Config (Error)"
     }
   }
@@ -850,9 +912,8 @@ function createUnitSelector() {
   const bookParam = urlParams.get("book")
   const unitParam = urlParams.get("unit")
 
-  activeUnits = []
-
-  if (unitsParam) {
+  if (unitsParam !== null && unitsParam.trim() !== "") {
+    activeUnits = []
     const unitSpecs = unitsParam.split(",")
     unitSpecs.forEach((spec) => {
       const resolved = resolveUnitInfo(spec)
@@ -869,6 +930,7 @@ function createUnitSelector() {
       }
     })
   } else if (seriesParam && bookParam && unitParam) {
+    activeUnits = []
     const resolved = resolveUnitInfo({ series: seriesParam, book: bookParam, unit: unitParam })
     if (resolved) {
       activeUnits.push(resolved)
@@ -1303,19 +1365,23 @@ function renderSelectedUnitsList() {
 
 function updateUnitsURL() {
   const url = new URL(window.location)
-  const unitsParam = activeUnits
-    .map((u) => {
-      const unitNumber = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
-      return `${u.series}|${u.book}|${unitNumber}`
-    })
-    .join(",")
-  url.searchParams.set("units", unitsParam)
+  if (activeUnits.length > 0) {
+    const unitsParam = activeUnits
+      .map((u) => {
+        const unitNumber = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+        return `${u.series}|${u.book}|${unitNumber}`
+      })
+      .join(",")
+    url.searchParams.set("units", unitsParam)
+  } else {
+    url.searchParams.delete("units")
+  }
 
   url.searchParams.delete("series")
   url.searchParams.delete("book")
   url.searchParams.delete("unit")
 
-  window.history.pushState({}, "", url)
+  window.history.replaceState({}, "", url)
 }
 
 function resetGame() {
@@ -2225,7 +2291,7 @@ document.getElementById("completion-modal").addEventListener("click", (e) => {
   }
 })
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const settingsSidebar = document.getElementById("settings-sidebar")
   const sidebarOverlay = document.getElementById("sidebar-overlay")
 
@@ -2295,9 +2361,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initialize player sets dropdown
   populatePlayerSetSelect()
 
-  // Pull updates from Upstash on load
-  syncWithUpstashOnLoad()
-
   // Saved Sets UI event listeners
   const playerSetSelect = document.getElementById("player-set-select")
   const deleteSetBtn = document.getElementById("delete-set-btn")
@@ -2343,36 +2406,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (playerSetSelect) {
     playerSetSelect.addEventListener("change", () => {
-      const selectedSetName = playerSetSelect.value
-      currentLoadedClassName = selectedSetName || null
-      if (selectedSetName) {
-        const sets = getPlayerSets()
-        const names = sets[selectedSetName]
-        if (names && Array.isArray(names)) {
-          const playerNameInput = document.getElementById("player-names-input")
-          if (playerNameInput) {
-            playerNameInput.value = names.join(", ")
-          }
-          localStorage.setItem(SHARED_ACTIVE_PLAYERS_KEY, JSON.stringify(names))
-          localStorage.setItem("playerNamesInput", names.join(", "))
-          loadSavedPlayerNames()
-        }
-        if (typeof window.SharedClassSync !== "undefined") {
-          try {
-            const rawProfiles = localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY)
-            const profiles = rawProfiles ? JSON.parse(rawProfiles) : {}
-            if (profiles[selectedSetName] && Array.isArray(profiles[selectedSetName].units) && profiles[selectedSetName].units.length > 0) {
-              applyUnitsToMatchMaker(profiles[selectedSetName].units)
-            }
-          } catch (e) {
-            console.warn("Error applying units in MatchMaker:", e)
-          }
-        }
-        enablePlayerDragging()
-        if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
-      } else {
-        if (deleteSetBtn) deleteSetBtn.style.display = "none"
-      }
+      loadPlayerSet(playerSetSelect.value, false)
     })
   }
 
@@ -2550,15 +2584,25 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
   loadSavedRulesPreference()
+
+  // Initialize card library curriculum (Upstash -> CDN -> Local fallback)
+  if (typeof initCardLibrary === "function") {
+    try {
+      await initCardLibrary()
+    } catch (e) {
+      console.warn("Error initializing card library:", e)
+    }
+  }
+
+  // Populate unit selector and parse any explicit URL unit params
   createUnitSelector()
 
-  if (typeof initCardLibrary === "function") {
-    initCardLibrary().then(() => {
-      createUnitSelector()
-      loadActiveUnits()
-      renderSelectedUnitsList()
-    })
-  }
+  // Pull updates from Upstash, match scheduled class, or load active session
+  await syncWithUpstashOnLoad()
+
+  // Render initial active units (from class profile, URL params, or empty state)
+  loadActiveUnits()
+  renderSelectedUnitsList()
 
   const resetUnitsBtn = document.getElementById("reset-units-btn")
   if (resetUnitsBtn) {
@@ -2848,4 +2892,6 @@ window.createCards = createCards
 window.adjustGridSizing = adjustGridSizing
 window.adjustCardWordFontSize = adjustCardWordFontSize
 window.announceCurrentPlayerTurn = announceCurrentPlayerTurn
+window.loadPlayerSet = loadPlayerSet
+window.syncWithUpstashOnLoad = syncWithUpstashOnLoad
 
