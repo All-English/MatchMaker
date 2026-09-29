@@ -137,7 +137,7 @@
     return { days: matchedDays, startTime, endTime };
   }
 
-  // ── 2. In-Session & Upcoming Time Matching ─────────────────────
+  // ── 2. Strict In-Session Time Matching ─────────────────────────
   function findActiveScheduledClass(classProfiles, date = new Date()) {
     if (!classProfiles || typeof classProfiles !== 'object') return null;
 
@@ -145,8 +145,7 @@
     const currentDay = dayNames[date.getDay()];
     const currentMinutes = date.getHours() * 60 + date.getMinutes();
 
-    const inSessionCandidates = [];
-    const upcomingCandidates = [];
+    const candidates = [];
 
     for (const [className, profile] of Object.entries(classProfiles)) {
       const schedule = profile.schedule || parseScheduleFromName(className);
@@ -163,27 +162,14 @@
         endMin = startMin + 60;
       }
 
-      // 1. Strict in-session match
       if (currentMinutes >= startMin && currentMinutes < endMin) {
-        inSessionCandidates.push({ className, profile, startMin, endMin });
-      }
-      // 2. Upcoming class starting within 15 minutes
-      else if (currentMinutes >= startMin - 15 && currentMinutes < startMin) {
-        upcomingCandidates.push({ className, profile, startMin, endMin, diff: startMin - currentMinutes });
+        candidates.push({ className, profile, startMin, endMin });
       }
     }
 
-    if (inSessionCandidates.length > 0) {
-      inSessionCandidates.sort((a, b) => b.startMin - a.startMin);
-      return inSessionCandidates[0];
-    }
-
-    if (upcomingCandidates.length > 0) {
-      upcomingCandidates.sort((a, b) => a.diff - b.diff);
-      return upcomingCandidates[0];
-    }
-
-    return null;
+    if (candidates.length === 0) return null;
+    candidates.sort((a, b) => b.startMin - a.startMin);
+    return candidates[0];
   }
 
   // ── 3. Universal Phonics Unit Translators & Slug Helpers ──────
