@@ -190,6 +190,8 @@ if (savedNarratorEnabled !== null) {
 }
 let images = []
 let lockBoard = false
+let isBoardReady = false
+let boardReadyTimeout = null
 let matchedPairs = 0
 let maxPairs = 8
 let minPairs = 2
@@ -544,21 +546,29 @@ function preloadSingleSound(src) {
 
 function playSound(sound) {
   return new Promise((resolve) => {
-    const onEnded = () => {
-      sound.removeEventListener("interrupted", onInterrupted)
+    let settled = false
+
+    const cleanup = () => {
+      if (settled) return
+      settled = true
+      clearTimeout(safetyTimeout)
+      sound.removeEventListener("ended", cleanup)
+      sound.removeEventListener("interrupted", cleanup)
+      sound.removeEventListener("error", cleanup)
       resolve()
     }
-    const onInterrupted = () => {
-      sound.removeEventListener("ended", onEnded)
-      resolve()
-    }
-    sound.addEventListener("ended", onEnded, { once: true })
-    sound.addEventListener("interrupted", onInterrupted, { once: true })
+
+    sound.addEventListener("ended", cleanup, { once: true })
+    sound.addEventListener("interrupted", cleanup, { once: true })
+    sound.addEventListener("error", cleanup, { once: true })
+
+    // Safety timeout: no phonics clip in MatchMaker exceeds 4s.
+    // If ended event never fires for any reason, release lock after 5s max so game never gets stuck.
+    const safetyTimeout = setTimeout(cleanup, 5000)
+
     sound.play().catch((error) => {
       console.error("Error playing sound:", error)
-      sound.removeEventListener("ended", onEnded)
-      sound.removeEventListener("interrupted", onInterrupted)
-      resolve() // Resolve even on error to prevent hanging
+      cleanup()
     })
   })
 }
@@ -988,9 +998,6 @@ function createUnitSelector() {
     const [series, book, unitNumber] = e.target.value.split("|")
     addActiveUnit(series, book, unitNumber)
   })
-
-  loadActiveUnits()
-  renderSelectedUnitsList()
 }
 
 function createCards() {
@@ -1037,7 +1044,11 @@ function createCards() {
   // Target number of pairs: the user's maxPairs, with a minimum of minWordLength.
   // totalUniqueCount is NOT a cap — the duplication logic fills any shortfall.
   const totalUniqueCount = allUniquePairs.length
-  if (totalUniqueCount === 0) return
+  if (totalUniqueCount === 0) {
+    isBoardReady = true
+    if (gameBoard) gameBoard.classList.remove("board-animating")
+    return
+  }
 
   // numPairs = whatever the user chose (bounded by input min/max attributes)
   numPairs = maxPairs
@@ -1211,6 +1222,40 @@ function createCards() {
   })
 
   adjustGridSizing()
+
+  // Kid-proof: Lock the board while cards are animating into the grid
+  const containers = gameBoard.querySelectorAll(".card-container")
+  const totalContainers = containers.length
+
+  const onBoardReady = () => {
+    if (boardReadyTimeout) {
+      clearTimeout(boardReadyTimeout)
+      boardReadyTimeout = null
+    }
+    isBoardReady = true
+    if (gameBoard) {
+      gameBoard.classList.remove("board-animating")
+    }
+  }
+
+  if (totalContainers === 0) {
+    onBoardReady()
+  } else {
+    isBoardReady = false
+    if (gameBoard) {
+      gameBoard.classList.add("board-animating")
+    }
+
+    const lastContainer = containers[totalContainers - 1]
+    if (lastContainer) {
+      lastContainer.addEventListener("animationend", onBoardReady, { once: true })
+    }
+
+    // Safety fallback timeout: each card has 0.075s stagger + 0.5s duration.
+    // Add 100ms safety buffer so board is guaranteed to unlock even if animationend is dropped.
+    const maxAnimMs = Math.ceil(((totalContainers - 1) * 0.075 + 0.5) * 1000) + 100
+    boardReadyTimeout = setTimeout(onBoardReady, maxAnimMs)
+  }
 }
 
 function loadActiveUnits() {
@@ -1236,7 +1281,9 @@ function loadActiveUnits() {
 
     if (gameBoard) {
       gameBoard.innerHTML = '<div class="no-units-message">Please select a card unit in settings to start playing!</div>'
+      gameBoard.classList.remove("board-animating")
     }
+    isBoardReady = true
 
     disablePlayerDragging(false)
 
@@ -1385,7 +1432,20 @@ function updateUnitsURL() {
 }
 
 function resetGame() {
-  gameBoard.innerHTML = ""
+  stopActiveCardAudio()
+  stopAllTurnVoices()
+
+  if (boardReadyTimeout) {
+    clearTimeout(boardReadyTimeout)
+    boardReadyTimeout = null
+  }
+
+  isBoardReady = false
+  if (gameBoard) {
+    gameBoard.classList.add("board-animating")
+    gameBoard.innerHTML = ""
+  }
+
   firstSelected = null
   lockBoard = false
   matchedPairs = 0
@@ -2105,7 +2165,7 @@ gameBoard.addEventListener("click", async function (event) {
   const target = event.target
   if (target instanceof HTMLElement) {
     const clicked = target.closest(".card")
-    if (!clicked || clicked.classList.contains("revealed") || lockBoard) return
+    if (!clicked || clicked.classList.contains("revealed") || !isBoardReady || lockBoard) return
 
     // Immediately flag that a card was clicked this turn and stop any active turn announcement!
     currentTurnCardClicked = true
@@ -2129,102 +2189,111 @@ gameBoard.addEventListener("click", async function (event) {
 
     if (soundItem) {
       lockBoard = true
-      const isImageCard =
-        clickedContent.includes(".jpg") ||
-        clickedContent.includes(".png") ||
-        clickedContent.includes(".jpeg") ||
-        clickedContent.includes(".webp")
+      try {
+        const isImageCard =
+          clickedContent.includes(".jpg") ||
+          clickedContent.includes(".png") ||
+          clickedContent.includes(".jpeg") ||
+          clickedContent.includes(".webp")
 
-      // For Smart Phonics 1, images and words have different sounds
-      if (
-        currentBook === "1" &&
-        currentSeries === "SmartPhonics" &&
-        isImageCard
-      ) {
-        // Play the image vocabulary sound
-        activeCardAudio = new Audio(soundItem.imageSound)
-      } else {
-        // Play the regular sound
-        activeCardAudio = soundMap[soundItem.word]
-      }
+        // For Smart Phonics 1, images and words have different sounds
+        if (
+          currentBook === "1" &&
+          currentSeries === "SmartPhonics" &&
+          isImageCard
+        ) {
+          // Play the image vocabulary sound
+          activeCardAudio = new Audio(soundItem.imageSound)
+        } else {
+          // Play the regular sound
+          activeCardAudio = soundMap[soundItem.word]
+        }
 
-      if (activeCardAudio) {
-        await playSound(activeCardAudio)
+        if (activeCardAudio) {
+          await playSound(activeCardAudio)
+        }
+      } catch (err) {
+        console.error("Error playing card audio:", err)
+      } finally {
+        activeCardAudio = null
+        lockBoard = false
       }
-      activeCardAudio = null
-      lockBoard = false
     }
 
-    // Check if the card was reset/flipped back down while the audio was playing
-    if (clicked.classList.contains("hidden")) return
+    // Check if the card was reset or removed from board while audio was playing
+    if (clicked.classList.contains("hidden") || !clicked.isConnected || !gameBoard.contains(clicked)) return
+
+    // Clean up firstSelected if it became disconnected
+    if (firstSelected && (!firstSelected.isConnected || !gameBoard.contains(firstSelected))) {
+      firstSelected = null
+    }
 
     if (!firstSelected) {
       firstSelected = clicked
     } else {
       lockBoard = true // Prevent more clicks until this check is done
-      tries++
-      updateScore()
-      let nextPlayer = false
-      let changePlayerPromise = Promise.resolve()
+      try {
+        tries++
+        updateScore()
+        let nextPlayer = false
+        let changePlayerPromise = Promise.resolve()
 
-      if (isMatch(firstSelected, clicked)) {
-        // Play match sound
-        const matchSoundPromise = playSound(matchSound)
-        firstSelected = null
-        lockBoard = false
-        matchedPairs += 1 // Increment the matched pair count
-        if (players[currentPlayerIndex]) {
-          updateStatsForMatch(players[currentPlayerIndex].name)
-        }
+        if (isMatch(firstSelected, clicked)) {
+          // Play match sound
+          const matchSoundPromise = playSound(matchSound)
+          firstSelected = null
+          matchedPairs += 1 // Increment the matched pair count
+          if (players[currentPlayerIndex]) {
+            updateStatsForMatch(players[currentPlayerIndex].name)
+          }
 
-        currentTurnCardClicked = false
-
-        // Check if the game is complete
-        if (matchedPairs === numPairs) {
-          // Play completion sound
-          playSound(completeSound)
-          triggerConfetti()
-          showCompletionModal(tries)
-        } else {
-          // Play ElevenLabs "Keep going!" after match sound finishes
-          matchSoundPromise.then(() => {
-            playKeepGoingAnnouncement()
-          })
-        }
-
-        if (!keepTurnOnMatch) {
-          nextPlayer = true
-        }
-      } else {
-        // Reset the sound to the beginning, so it plays if a match is tried quickly
-        wrongSound.currentTime = 0
-        const wrongSoundPromise = playSound(wrongSound)
-        // Delay to allow users to see the cards
-        // setTimeout(() => {
-        firstSelected.classList.remove("revealed")
-        firstSelected.classList.add("hidden")
-        clicked.classList.remove("revealed")
-        clicked.classList.add("hidden")
-
-        firstSelected = null
-        lockBoard = false
-        // }, 1000)
-
-        nextPlayer = true
-        changePlayerPromise = wrongSoundPromise
-      }
-      // change to next player
-      if (nextPlayer && players.length > 0) {
-        const prevIndex = currentPlayerIndex
-        currentPlayerIndex = (currentPlayerIndex + 1) % players.length
-        if (currentPlayerIndex !== prevIndex) {
           currentTurnCardClicked = false
-          changePlayerPromise.then(() => {
-            announceCurrentPlayerTurn()
-          })
+
+          // Check if the game is complete
+          if (matchedPairs === numPairs) {
+            // Play completion sound
+            playSound(completeSound)
+            triggerConfetti()
+            showCompletionModal(tries)
+          } else {
+            // Play ElevenLabs "Keep going!" after match sound finishes
+            matchSoundPromise.then(() => {
+              playKeepGoingAnnouncement()
+            })
+          }
+
+          if (!keepTurnOnMatch) {
+            nextPlayer = true
+          }
+        } else {
+          // Reset the sound to the beginning, so it plays if a match is tried quickly
+          wrongSound.currentTime = 0
+          const wrongSoundPromise = playSound(wrongSound)
+          firstSelected.classList.remove("revealed")
+          firstSelected.classList.add("hidden")
+          clicked.classList.remove("revealed")
+          clicked.classList.add("hidden")
+
+          firstSelected = null
+
+          nextPlayer = true
+          changePlayerPromise = wrongSoundPromise
         }
+        // change to next player
+        if (nextPlayer && players.length > 0) {
+          const prevIndex = currentPlayerIndex
+          currentPlayerIndex = (currentPlayerIndex + 1) % players.length
+          if (currentPlayerIndex !== prevIndex) {
+            currentTurnCardClicked = false
+            changePlayerPromise.then(() => {
+              announceCurrentPlayerTurn()
+            })
+          }
+        }
+        updatePlayerScores()
+      } finally {
+        lockBoard = false
       }
-      updatePlayerScores()
     }
   }
 })
@@ -2322,7 +2391,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (scoresDiv) {
     const handleActivePlayerTrigger = (e) => {
       if (isDraggingPlayer) return
-      if (lockBoard) return
+      if (!isBoardReady || lockBoard) return
 
       // Do not trigger if dragging handle was clicked
       if (e.target.closest(".drag-handle")) return
@@ -2871,6 +2940,7 @@ Object.defineProperty(window, "words", { get: () => words })
 Object.defineProperty(window, "images", { get: () => images })
 Object.defineProperty(window, "firstSelected", { get: () => firstSelected })
 Object.defineProperty(window, "lockBoard", { get: () => lockBoard })
+Object.defineProperty(window, "isBoardReady", { get: () => isBoardReady })
 Object.defineProperty(window, "matchedPairs", { get: () => matchedPairs })
 Object.defineProperty(window, "numPairs", { get: () => numPairs })
 Object.defineProperty(window, "tries", { get: () => tries })

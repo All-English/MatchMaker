@@ -654,6 +654,26 @@ body {
   margin-inline: auto;
 }
 
+.game-board.board-animating {
+  pointer-events: none;
+  user-select: none;
+}
+
+.game-board.board-animating .card-container {
+  pointer-events: none;
+}
+
+.game-board.board-animating .card {
+  cursor: default !important;
+  pointer-events: none !important;
+}
+
+.game-board.board-animating .card:hover {
+  transform: none !important;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05) !important;
+  border-color: var(--border) !important;
+}
+
 @keyframes slideIn {
   from {
     opacity: 0;
