@@ -77,8 +77,23 @@
           </svg>
         </button>
       </div>
-      <select id="unit-selector" class="sidebar-select"></select>
-      <div id="selected-units-list" class="selected-units-list"></div>
+      <div class="word-selection-container">
+        <label class="series-select-field" id="series-select-field">
+          <span class="series-select-label">Textbook Series</span>
+          <select id="series-select" class="sidebar-select"></select>
+        </label>
+
+        <!-- Level Tabs Navigation -->
+        <div id="unit-level-tabs" class="unit-level-tabs" role="tablist" aria-label="Textbook Levels"></div>
+
+        <!-- Active Level Toolbar -->
+        <div id="active-level-toolbar" class="active-level-toolbar">
+          <button type="button" id="toggle-level-all-btn" class="toggle-level-all-btn">Select All</button>
+        </div>
+
+        <!-- Unit Chips Grid -->
+        <div id="unit-chips-grid" class="unit-chips-grid" role="group" aria-label="Unit Selection"></div>
+      </div>
     </div>
 
     <div class="sidebar-section">

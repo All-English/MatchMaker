@@ -28,6 +28,8 @@ resetButton.addEventListener("click", () => {
 
 let activeCardAudio = null
 let activeUnits = []
+let activeSeriesKey = "SmartPhonics"
+let currentActiveLevelKey = "1"
 let currentLoadedClassName = null
 
 function resolveUnitInfo(u) {
@@ -91,6 +93,10 @@ function resolveUnitInfo(u) {
   // Normalize series name to match cardLibrary keys
   if (/^(?:LetsSmile|LS)$/i.test(series)) {
     series = "LetsSmile"
+  } else if (cardLibrary[series]) {
+    // Already matches a cardLibrary key
+  } else if (window.SharedClassSync && window.SharedClassSync.toPascalCase && cardLibrary[window.SharedClassSync.toPascalCase(series)]) {
+    series = window.SharedClassSync.toPascalCase(series)
   } else {
     series = "SmartPhonics"
   }
@@ -157,8 +163,12 @@ function applyUnitsToMatchMaker(canonicalUnits) {
       }
     }
   })
+  if (activeUnits.length > 0) {
+    activeSeriesKey = activeUnits[0].series
+    currentActiveLevelKey = String(activeUnits[0].book)
+  }
   if (typeof loadActiveUnits === "function") loadActiveUnits()
-  if (typeof renderSelectedUnitsList === "function") renderSelectedUnitsList()
+  if (typeof renderWordSelectionUI === "function") renderWordSelectionUI()
 }
 
 function autoSaveCurrentClassUnits() {
@@ -914,7 +924,307 @@ function isMatch(first, second) {
   return false
 }
 
-// Add a dropdown to select units
+// --- Word / Unit Selection (Word-Tac-Toe style) ---
+
+function getUnitDisplayInfo(series, book, unitName) {
+  const m = unitName.match(/^Unit\s*(\d+)(?::\s*(.*))?/i)
+  const unitNum = m ? m[1] : unitName
+  let title = m && m[2] ? m[2].trim() : ""
+
+  if (!title) {
+    const items = cardLibrary[series]?.[book]?.[unitName]
+    if (Array.isArray(items)) {
+      const meta = items.find((it) => it.targetLetters)
+      if (meta && meta.targetLetters) {
+        title = meta.targetLetters
+      }
+    }
+  }
+
+  return {
+    unitNum,
+    indexLabel: `Unit ${unitNum}`,
+    titleLabel: title
+  }
+}
+
+function populateSeriesSelector() {
+  const seriesSelectEl = document.getElementById("series-select")
+  const seriesSelectField = document.getElementById("series-select-field")
+  if (!seriesSelectEl) return
+
+  const allSeries = Object.keys(cardLibrary)
+  const hiddenSlugs = window.SharedClassSync ? window.SharedClassSync.getHiddenBooks() : []
+  let visibleSeries = allSeries.filter((series) => {
+    const slug = window.SharedClassSync ? window.SharedClassSync.toSeriesSlug(series) : series.toLowerCase()
+    return !hiddenSlugs.includes(slug)
+  })
+  if (visibleSeries.length === 0 && allSeries.length > 0) {
+    visibleSeries = [allSeries[0]]
+  }
+
+  if (!visibleSeries.includes(activeSeriesKey)) {
+    if (allSeries.includes(activeSeriesKey)) {
+      visibleSeries.push(activeSeriesKey)
+    } else if (visibleSeries.length > 0) {
+      activeSeriesKey = visibleSeries[0]
+    }
+  }
+
+  if (seriesSelectField) {
+    seriesSelectField.style.display = allSeries.length > 1 ? "flex" : "none"
+  }
+
+  seriesSelectEl.innerHTML = ""
+  visibleSeries.forEach((series) => {
+    const opt = document.createElement("option")
+    opt.value = series
+    opt.textContent = window.SharedClassSync ? window.SharedClassSync.toSeriesDisplayName(series) : series
+    if (series === activeSeriesKey) opt.selected = true
+    seriesSelectEl.appendChild(opt)
+  })
+
+  seriesSelectEl.onchange = (e) => {
+    handleSeriesChange(e.target.value)
+  }
+}
+
+function renderLevelTabs() {
+  const tabsContainer = document.getElementById("unit-level-tabs")
+  if (!tabsContainer) return
+
+  tabsContainer.innerHTML = ""
+
+  const seriesData = cardLibrary[activeSeriesKey] || {}
+  const levelKeys = Object.keys(seriesData).sort((a, b) => {
+    const numA = parseInt(a, 10)
+    const numB = parseInt(b, 10)
+    if (!isNaN(numA) && !isNaN(numB)) return numA - numB
+    return a.localeCompare(b)
+  })
+
+  if (levelKeys.length === 0) return
+
+  if (!levelKeys.includes(String(currentActiveLevelKey))) {
+    currentActiveLevelKey = levelKeys[0]
+  }
+
+  levelKeys.forEach((lvlKey) => {
+    const btn = document.createElement("button")
+    btn.type = "button"
+    btn.role = "tab"
+    btn.className = "level-tab-btn"
+    const isSelected = String(lvlKey) === String(currentActiveLevelKey)
+    btn.setAttribute("aria-selected", isSelected ? "true" : "false")
+    btn.setAttribute("tabindex", isSelected ? "0" : "-1")
+
+    const labelSpan = document.createElement("span")
+    labelSpan.textContent = `Level ${lvlKey}`
+    btn.appendChild(labelSpan)
+
+    // Count selected units belonging to this level and series
+    let levelSelectedCount = 0
+    activeUnits.forEach((u) => {
+      if (u.series === activeSeriesKey && String(u.book) === String(lvlKey)) {
+        levelSelectedCount++
+      }
+    })
+
+    if (levelSelectedCount > 0) {
+      btn.title = `Level ${lvlKey} (${levelSelectedCount} unit${levelSelectedCount > 1 ? "s" : ""} selected)`
+      const dot = document.createElement("span")
+      dot.className = "level-tab-dot"
+      dot.setAttribute("aria-hidden", "true")
+      btn.appendChild(dot)
+    } else {
+      btn.title = `Level ${lvlKey}`
+    }
+
+    btn.addEventListener("click", () => {
+      currentActiveLevelKey = String(lvlKey)
+      renderLevelTabs()
+      renderActiveLevelToolbar()
+      renderUnitChipsGrid()
+    })
+
+    tabsContainer.appendChild(btn)
+  })
+}
+
+function renderActiveLevelToolbar() {
+  const toggleBtn = document.getElementById("toggle-level-all-btn")
+  if (!toggleBtn) return
+
+  const seriesData = cardLibrary[activeSeriesKey] || {}
+  const currentUnits = seriesData[currentActiveLevelKey] || {}
+  const unitKeys = Object.keys(currentUnits)
+  const totalUnitsInLevel = unitKeys.length
+
+  if (totalUnitsInLevel === 0) {
+    toggleBtn.style.display = "none"
+    return
+  }
+  toggleBtn.style.display = "inline-flex"
+
+  let selectedInLevel = 0
+  unitKeys.forEach((uKey) => {
+    const exists = activeUnits.some(
+      (u) => u.series === activeSeriesKey && String(u.book) === String(currentActiveLevelKey) && u.unitName === uKey
+    )
+    if (exists) selectedInLevel++
+  })
+
+  if (selectedInLevel === totalUnitsInLevel && totalUnitsInLevel > 0) {
+    toggleBtn.textContent = "Deselect All"
+  } else {
+    toggleBtn.textContent = "Select All"
+  }
+
+  toggleBtn.onclick = () => {
+    toggleLevelAll()
+  }
+}
+
+function toggleLevelAll() {
+  const seriesData = cardLibrary[activeSeriesKey] || {}
+  const currentUnits = seriesData[currentActiveLevelKey] || {}
+  const unitKeys = Object.keys(currentUnits)
+  if (unitKeys.length === 0) return
+
+  let selectedCount = 0
+  unitKeys.forEach((uKey) => {
+    const exists = activeUnits.some(
+      (u) => u.series === activeSeriesKey && String(u.book) === String(currentActiveLevelKey) && u.unitName === uKey
+    )
+    if (exists) selectedCount++
+  })
+
+  if (selectedCount === unitKeys.length) {
+    // Deselect all in this level
+    activeUnits = activeUnits.filter(
+      (u) => !(u.series === activeSeriesKey && String(u.book) === String(currentActiveLevelKey))
+    )
+  } else {
+    // Select all in this level
+    unitKeys.forEach((uKey) => {
+      const exists = activeUnits.some(
+        (u) => u.series === activeSeriesKey && String(u.book) === String(currentActiveLevelKey) && u.unitName === uKey
+      )
+      if (!exists) {
+        const resolved = resolveUnitInfo({
+          series: activeSeriesKey,
+          book: currentActiveLevelKey,
+          unitName: uKey
+        })
+        if (resolved) {
+          activeUnits.push(resolved)
+        }
+      }
+    })
+  }
+
+  loadActiveUnits()
+  autoSaveCurrentClassUnits()
+  updateUnitsURL()
+  renderLevelTabs()
+  renderActiveLevelToolbar()
+  renderUnitChipsGrid()
+}
+
+function renderUnitChipsGrid() {
+  const grid = document.getElementById("unit-chips-grid")
+  if (!grid) return
+
+  grid.innerHTML = ""
+
+  const seriesData = cardLibrary[activeSeriesKey] || {}
+  const currentUnits = seriesData[currentActiveLevelKey] || {}
+  const unitKeys = Object.keys(currentUnits)
+
+  unitKeys.forEach((unitName) => {
+    const isSelected = activeUnits.some(
+      (u) => u.series === activeSeriesKey && String(u.book) === String(currentActiveLevelKey) && u.unitName === unitName
+    )
+
+    const chip = document.createElement("button")
+    chip.type = "button"
+    chip.className = "unit-chip"
+    chip.setAttribute("aria-pressed", isSelected ? "true" : "false")
+
+    const info = getUnitDisplayInfo(activeSeriesKey, currentActiveLevelKey, unitName)
+
+    const indexSpan = document.createElement("span")
+    indexSpan.className = "unit-chip-index"
+    indexSpan.textContent = info.indexLabel
+    chip.appendChild(indexSpan)
+
+    if (info.titleLabel) {
+      const titleSpan = document.createElement("span")
+      titleSpan.className = "unit-chip-title"
+      titleSpan.textContent = info.titleLabel
+      titleSpan.title = info.titleLabel
+      chip.appendChild(titleSpan)
+    }
+
+    chip.addEventListener("click", () => {
+      toggleUnit(activeSeriesKey, currentActiveLevelKey, unitName)
+    })
+
+    grid.appendChild(chip)
+  })
+}
+
+function toggleUnit(series, book, unitName) {
+  const index = activeUnits.findIndex(
+    (u) => u.series === series && String(u.book) === String(book) && u.unitName === unitName
+  )
+
+  if (index >= 0) {
+    activeUnits.splice(index, 1)
+  } else {
+    const resolved = resolveUnitInfo({ series, book, unitName })
+    if (resolved) {
+      activeUnits.push(resolved)
+    }
+  }
+
+  loadActiveUnits()
+  autoSaveCurrentClassUnits()
+  updateUnitsURL()
+  renderLevelTabs()
+  renderActiveLevelToolbar()
+  renderUnitChipsGrid()
+}
+
+function handleSeriesChange(newSeries) {
+  if (activeSeriesKey === newSeries) return
+  activeSeriesKey = newSeries
+  activeUnits = []
+  currentActiveLevelKey = "1"
+
+  loadActiveUnits()
+  autoSaveCurrentClassUnits()
+  updateUnitsURL()
+  renderWordSelectionUI()
+}
+
+function handleResetUnits() {
+  activeUnits = []
+  loadActiveUnits()
+  autoSaveCurrentClassUnits()
+  updateUnitsURL()
+  renderLevelTabs()
+  renderActiveLevelToolbar()
+  renderUnitChipsGrid()
+}
+
+function renderWordSelectionUI() {
+  populateSeriesSelector()
+  renderLevelTabs()
+  renderActiveLevelToolbar()
+  renderUnitChipsGrid()
+}
+
 function createUnitSelector() {
   const urlParams = new URLSearchParams(window.location.search)
   const unitsParam = urlParams.get("units")
@@ -947,57 +1257,18 @@ function createUnitSelector() {
     }
   }
 
-
-
-  const selector = document.getElementById("unit-selector")
-  selector.innerHTML = "" // Clear existing options
-
-  const defaultOption = document.createElement("option")
-  defaultOption.value = ""
-  defaultOption.selected = true
-  defaultOption.textContent = "Add unit..."
-  selector.appendChild(defaultOption)
-
-  const allSeries = Object.keys(cardLibrary)
-  const hiddenSlugs = window.SharedClassSync ? window.SharedClassSync.getHiddenBooks() : []
-  let visibleSeries = allSeries.filter((series) => {
-    const slug = window.SharedClassSync ? window.SharedClassSync.toSeriesSlug(series) : series.toLowerCase()
-    return !hiddenSlugs.includes(slug)
-  })
-  if (visibleSeries.length === 0 && allSeries.length > 0) {
-    visibleSeries = [allSeries[0]]
+  if (activeUnits.length > 0) {
+    activeSeriesKey = activeUnits[0].series
+    currentActiveLevelKey = String(activeUnits[0].book)
+  } else if (seriesParam) {
+    const sSlug = window.SharedClassSync ? window.SharedClassSync.toPascalCase(seriesParam) : seriesParam
+    if (cardLibrary[sSlug]) activeSeriesKey = sSlug
+    if (bookParam && cardLibrary[activeSeriesKey]?.[bookParam]) {
+      currentActiveLevelKey = String(bookParam)
+    }
   }
 
-  visibleSeries.forEach((series) => {
-    const seriesGroup = document.createElement("optgroup")
-    seriesGroup.label = series
-
-    Object.keys(cardLibrary[series]).forEach((book, bookIndex) => {
-      if (bookIndex > 0) {
-        const separator = document.createElement("option")
-        separator.textContent = `---`
-        separator.disabled = true
-        seriesGroup.appendChild(separator)
-      }
-
-      Object.keys(cardLibrary[series][book]).forEach((unit) => {
-        const option = document.createElement("option")
-        const unitNumber = unit.match(/Unit (\d+)/)[1]
-        option.value = `${series}|${book}|${unitNumber}`
-        option.textContent = `L${book}: ${unit}`
-        seriesGroup.appendChild(option)
-      })
-    })
-    const separator = document.createElement("hr")
-    selector.appendChild(separator)
-    selector.appendChild(seriesGroup)
-  })
-
-  selector.addEventListener("change", (e) => {
-    if (!e.target.value) return
-    const [series, book, unitNumber] = e.target.value.split("|")
-    addActiveUnit(series, book, unitNumber)
-  })
+  renderWordSelectionUI()
 }
 
 function createCards() {
@@ -1368,45 +1639,19 @@ function addActiveUnit(series, book, unitNumber) {
 
   activeUnits.push(resolved)
   loadActiveUnits()
-  renderSelectedUnitsList()
+  renderWordSelectionUI()
   autoSaveCurrentClassUnits()
-
-  const selector = document.getElementById("unit-selector")
-  if (selector) selector.value = ""
 }
 
 function removeActiveUnit(index) {
   activeUnits.splice(index, 1)
   loadActiveUnits()
-  renderSelectedUnitsList()
+  renderWordSelectionUI()
   autoSaveCurrentClassUnits()
 }
 
 function renderSelectedUnitsList() {
-  const container = document.getElementById("selected-units-list")
-  if (!container) return
-
-  container.innerHTML = ""
-
-  activeUnits.forEach((u, index) => {
-    const pill = document.createElement("div")
-    pill.className = "unit-pill"
-
-    const label = document.createElement("span")
-    const seriesPrefix = u.series === "SmartPhonics" ? "SP" : (u.series === "LetsSmile" ? "LS" : u.series)
-    label.textContent = `${seriesPrefix}: L${u.book}: ${u.unitName}`
-    pill.appendChild(label)
-
-    const removeBtn = document.createElement("button")
-    removeBtn.className = "remove-unit-btn"
-    removeBtn.innerHTML = "&times;"
-    removeBtn.title = "Remove unit"
-    removeBtn.addEventListener("click", () => removeActiveUnit(index))
-    pill.appendChild(removeBtn)
-
-    container.appendChild(pill)
-  })
-
+  renderWordSelectionUI()
   updateUnitsURL()
 }
 
@@ -2676,9 +2921,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const resetUnitsBtn = document.getElementById("reset-units-btn")
   if (resetUnitsBtn) {
     resetUnitsBtn.addEventListener("click", () => {
-      activeUnits = []
-      loadActiveUnits()
-      renderSelectedUnitsList()
+      handleResetUnits()
     })
   }
 
@@ -2958,6 +3201,12 @@ window.loadActiveUnits = loadActiveUnits
 window.addActiveUnit = addActiveUnit
 window.removeActiveUnit = removeActiveUnit
 window.renderSelectedUnitsList = renderSelectedUnitsList
+window.applyUnitsToMatchMaker = applyUnitsToMatchMaker
+window.renderWordSelectionUI = renderWordSelectionUI
+window.toggleUnit = toggleUnit
+window.handleSeriesChange = handleSeriesChange
+window.handleResetUnits = handleResetUnits
+window.toggleLevelAll = toggleLevelAll
 window.createCards = createCards
 window.adjustGridSizing = adjustGridSizing
 window.adjustCardWordFontSize = adjustCardWordFontSize
