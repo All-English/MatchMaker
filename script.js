@@ -1198,9 +1198,16 @@ function toggleUnit(series, book, unitName) {
 
 function handleSeriesChange(newSeries) {
   if (activeSeriesKey === newSeries) return
+  if (activeUnits.length > 0 &&
+      !confirm("Switch series? This will clear your current unit selections.")) {
+    const seriesSelect = document.getElementById("series-select")
+    if (seriesSelect) seriesSelect.value = activeSeriesKey
+    return
+  }
   activeSeriesKey = newSeries
   activeUnits = []
-  currentActiveLevelKey = "1"
+  const firstLevel = Object.keys(cardLibrary[newSeries] || {})[0] || "1"
+  currentActiveLevelKey = firstLevel
 
   loadActiveUnits()
   autoSaveCurrentClassUnits()
@@ -1623,36 +1630,6 @@ function loadActiveUnits() {
   // Reset the game with new words and images
   resetGame()
   enablePlayerDragging()
-}
-
-function addActiveUnit(series, book, unitNumber) {
-  const resolved = resolveUnitInfo({ series, book, unit: unitNumber })
-  if (!resolved) return
-
-  const alreadyExists = activeUnits.some(
-    (u) =>
-      u.series === resolved.series &&
-      u.book === resolved.book &&
-      u.unitName === resolved.unitName
-  )
-  if (alreadyExists) return
-
-  activeUnits.push(resolved)
-  loadActiveUnits()
-  renderWordSelectionUI()
-  autoSaveCurrentClassUnits()
-}
-
-function removeActiveUnit(index) {
-  activeUnits.splice(index, 1)
-  loadActiveUnits()
-  renderWordSelectionUI()
-  autoSaveCurrentClassUnits()
-}
-
-function renderSelectedUnitsList() {
-  renderWordSelectionUI()
-  updateUnitsURL()
 }
 
 function updateUnitsURL() {
@@ -2916,7 +2893,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Render initial active units (from class profile, URL params, or empty state)
   loadActiveUnits()
-  renderSelectedUnitsList()
 
   const resetUnitsBtn = document.getElementById("reset-units-btn")
   if (resetUnitsBtn) {
@@ -3198,9 +3174,6 @@ window.enablePlayerDragging = enablePlayerDragging
 window.disablePlayerDragging = disablePlayerDragging
 window.shufflePlayers = shufflePlayers
 window.loadActiveUnits = loadActiveUnits
-window.addActiveUnit = addActiveUnit
-window.removeActiveUnit = removeActiveUnit
-window.renderSelectedUnitsList = renderSelectedUnitsList
 window.applyUnitsToMatchMaker = applyUnitsToMatchMaker
 window.renderWordSelectionUI = renderWordSelectionUI
 window.toggleUnit = toggleUnit
