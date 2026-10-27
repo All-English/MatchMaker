@@ -168,19 +168,25 @@ function applyUnitsToMatchMaker(canonicalUnits) {
     currentActiveLevelKey = String(activeUnits[0].book)
   }
   if (typeof loadActiveUnits === "function") loadActiveUnits()
+  if (typeof updateUnitsURL === "function") updateUnitsURL()
   if (typeof renderWordSelectionUI === "function") renderWordSelectionUI()
 }
 
 function autoSaveCurrentClassUnits() {
-  if (!currentLoadedClassName || typeof window.SharedClassSync === "undefined") return
-  const canonicals = activeUnits.map((u) => {
-    const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
-    if (u.series === "LetsSmile") {
-      return `LS|${u.book}|${unitNum}`
+  if (typeof window.SharedClassSync === "undefined") return
+  const canonicals = activeUnits
+    .map((u) => {
+      const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+      return window.SharedClassSync.toCanonicalUnit(`${u.series}|${u.book}|${unitNum}`)?.id
+    })
+    .filter(Boolean)
+  if (canonicals.length > 0) {
+    if (currentLoadedClassName) {
+      window.SharedClassSync.saveClassUnits(currentLoadedClassName, canonicals, activeSeriesKey)
+    } else if (typeof window.SharedClassSync.saveActiveUnits === "function") {
+      window.SharedClassSync.saveActiveUnits(canonicals, activeSeriesKey, null)
     }
-    return `L${u.book}U${unitNum}`
-  })
-  window.SharedClassSync.saveClassUnits(currentLoadedClassName, canonicals)
+  }
 }
 
 let combinedUnitItems = []
@@ -380,8 +386,21 @@ function loadPlayerSet(setName, preferActiveSession = false, shouldLoadUnits = t
     try {
       const rawProfiles = localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY)
       const profiles = rawProfiles ? JSON.parse(rawProfiles) : {}
-      if (profiles[setName] && Array.isArray(profiles[setName].units) && profiles[setName].units.length > 0) {
-        applyUnitsToMatchMaker(profiles[setName].units)
+      const prof = profiles[setName]
+      const latestActiveUnits = window.SharedClassSync.getActiveUnits?.()
+
+      let unitsToApply = (prof && Array.isArray(prof.units) && prof.units.length > 0) ? prof.units : null
+      if (
+        latestActiveUnits &&
+        Array.isArray(latestActiveUnits.units) &&
+        latestActiveUnits.units.length > 0 &&
+        (Date.now() - (latestActiveUnits.updatedAt || 0) < 2 * 60 * 60 * 1000) &&
+        (latestActiveUnits.updatedAt || 0) > (prof?.updatedAt || 0)
+      ) {
+        unitsToApply = latestActiveUnits.units
+      }
+      if (unitsToApply && unitsToApply.length > 0) {
+        applyUnitsToMatchMaker(unitsToApply)
       }
     } catch (e) {
       console.warn("Error applying units in MatchMaker:", e)
@@ -460,6 +479,7 @@ async function syncWithUpstashOnLoad() {
       }
 
       const activeSession = window.SharedClassSync?.getActiveSession?.()
+      const latestActiveUnits = window.SharedClassSync?.getActiveUnits?.()
       if (activeSession && activeSession.className) {
         const playerSetSelect = document.getElementById("player-set-select")
         if (playerSetSelect) {
@@ -469,16 +489,28 @@ async function syncWithUpstashOnLoad() {
         const deleteSetBtn = document.getElementById("delete-set-btn")
         if (deleteSetBtn) deleteSetBtn.style.display = "inline-block"
 
-        // If no explicit unit parameters are set, try applying the active session's class units
-        if (!hasExplicitUnitParams && activeUnits.length === 0 && typeof window.SharedClassSync !== "undefined") {
+        // Apply the newest units from either the active session's class profile or shared active units
+        if (!hasExplicitUnitParams && typeof window.SharedClassSync !== "undefined") {
           try {
             const rawProfiles = localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY)
             const profiles = rawProfiles ? JSON.parse(rawProfiles) : {}
-            if (profiles[activeSession.className] && Array.isArray(profiles[activeSession.className].units) && profiles[activeSession.className].units.length > 0) {
-              applyUnitsToMatchMaker(profiles[activeSession.className].units)
+            const prof = profiles[activeSession.className]
+            let unitsToApply = (prof && Array.isArray(prof.units) && prof.units.length > 0) ? prof.units : null
+            if (
+              latestActiveUnits &&
+              Array.isArray(latestActiveUnits.units) &&
+              latestActiveUnits.units.length > 0 &&
+              (latestActiveUnits.updatedAt || 0) >= (prof?.updatedAt || 0)
+            ) {
+              unitsToApply = latestActiveUnits.units
+            }
+            if (unitsToApply && unitsToApply.length > 0) {
+              applyUnitsToMatchMaker(unitsToApply)
             }
           } catch (e) {}
         }
+      } else if (!hasExplicitUnitParams && latestActiveUnits && Array.isArray(latestActiveUnits.units) && latestActiveUnits.units.length > 0) {
+        applyUnitsToMatchMaker(latestActiveUnits.units)
       }
     }
 
@@ -2890,6 +2922,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Pull updates from Upstash, match scheduled class, or load active session
   await syncWithUpstashOnLoad()
+
+  // Re-sync when switching back to an open MatchMaker tab
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "visible") {
+      syncWithUpstashOnLoad()
+    }
+  })
 
   // Render initial active units (from class profile, URL params, or empty state)
   loadActiveUnits()
