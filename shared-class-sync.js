@@ -1515,9 +1515,30 @@
 
         for (const unit of lvl.units || []) {
           const cardList = [];
-          if (unit.targetLetters && unit.targetLetters.length) {
-            const tl = Array.isArray(unit.targetLetters) ? unit.targetLetters.join(', ') : unit.targetLetters;
-            cardList.push({ targetLetters: tl });
+          const rawTarget = unit.targetLetters || unit.targetSound || unit.sound;
+          let tl = "";
+          if (Array.isArray(rawTarget) && rawTarget.length) {
+            tl = rawTarget.join(', ');
+          } else if (typeof rawTarget === 'string' && rawTarget.trim()) {
+            tl = rawTarget.trim();
+          } else if (unit.name) {
+            const m = unit.name.match(/:\s*(.+)$/);
+            if (m) {
+              const candidate = m[1].trim();
+              const longVowelMatch = candidate.match(/long\s+vowel\s+([a-z])/i);
+              const shortVowelMatch = candidate.match(/short\s+vowel\s+([a-z])/i);
+              if (longVowelMatch) {
+                tl = `${longVowelMatch[1].toLowerCase()}_e`;
+              } else if (shortVowelMatch) {
+                tl = shortVowelMatch[1].toLowerCase();
+              } else if (!/vowel/i.test(candidate)) {
+                tl = candidate;
+              }
+            }
+          }
+
+          if (tl) {
+            cardList.push({ targetLetters: tl, targetSound: tl });
           }
 
           for (const w of unit.words || []) {

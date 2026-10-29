@@ -1310,6 +1310,85 @@ function createUnitSelector() {
   renderWordSelectionUI()
 }
 
+function highlightTargetSounds(word, targetSoundString) {
+  if (!word) return ""
+  if (!targetSoundString) {
+    if (
+      currentBook === "1" &&
+      currentSeries === "SmartPhonics" &&
+      word.length === 2 &&
+      word[0].toUpperCase() === word[0] &&
+      word[1].toLowerCase() === word[1]
+    ) {
+      return `${word[0]}<span class="target-sounds">${word[1]}</span>`
+    }
+    return word
+  }
+
+  // Parse target sounds: split by comma, slash, or space; trim; filter empty
+  const rawTargets = targetSoundString
+    .split(/[,/]+/)
+    .flatMap((s) => s.trim().includes(" ") && !s.includes("_") ? s.trim().split(/\s+/) : [s.trim()])
+    .map((s) => s.toLowerCase())
+    .filter(Boolean)
+
+  if (rawTargets.length === 0) {
+    return word
+  }
+
+  // Sort longest targets first so letter combinations (e.g. "ai", "str", "bl")
+  // take precedence over single letters (e.g. "a", "s", "b")
+  const targetSounds = [...rawTargets].sort((a, b) => b.length - a.length)
+
+  let resultHTML = ""
+  let i = 0
+  const len = word.length
+
+  while (i < len) {
+    let foundMatch = false
+
+    for (const sound of targetSounds) {
+      // Split-vowel support (e.g., "a_e", "i_e", "o_e", "u_e")
+      if (sound.includes("_")) {
+        const parts = sound.split("_")
+        if (
+          parts.length === 2 &&
+          parts[0] &&
+          parts[1] &&
+          i + 2 < len &&
+          word[i].toLowerCase() === parts[0] &&
+          word[i + 2].toLowerCase() === parts[1]
+        ) {
+          resultHTML += `<span class="target-sounds">${word[i]}</span>`
+          resultHTML += word[i + 1]
+          resultHTML += `<span class="target-sounds">${word[i + 2]}</span>`
+          i += 3
+          foundMatch = true
+          break
+        }
+      } else {
+        // Standard contiguous sound match (e.g., "fr", "bl", "ea", "a")
+        if (word.slice(i, i + sound.length).toLowerCase() === sound) {
+          resultHTML += `<span class="target-sounds">${word.slice(
+            i,
+            i + sound.length
+          )}</span>`
+          i += sound.length
+          foundMatch = true
+          break
+        }
+      }
+    }
+
+    if (!foundMatch) {
+      resultHTML += word[i]
+      i++
+    }
+  }
+
+  return resultHTML
+}
+
 function createCards() {
   // console.log("Creating cards...")
   // console.log("Words:", words)
@@ -1464,66 +1543,7 @@ function createCards() {
     } else {
       const wordContainer = document.createElement("div")
       wordContainer.classList.add("word")
-
-      // targetLetters will be highlighted. The list comes from the cardLibrary
-      if (!targetLetters) {
-        // If no targetLetters specified, wrap the second letter in a span
-        if (currentBook === "1" && currentSeries === "SmartPhonics") {
-          const modifiedWord =
-            item.slice(0, 1) +
-            `<span class="target-sounds">${item.slice(1, 2)}</span>` +
-            item.slice(2)
-          wordContainer.innerHTML = modifiedWord
-        } else {
-          wordContainer.textContent = item
-        }
-      } else {
-        // Split target letters into array (e.g., ["bl", "cl", "fl"] or ["a", "e"])
-        const targetLetterArray = targetLetters.split(", ")
-        // Store original word to process
-        let remainingWord = item
-        // Initialize empty result string to build highlighted word
-        let result = ""
-
-        // Process word character by character
-        let i = 0
-        while (i < remainingWord.length) {
-          // Track if we found a target sound at current position
-          let foundTarget = false
-
-          // Check each target sound (e.g., "bl" or "a")
-          for (const target of targetLetterArray) {
-            // Look ahead in word for target sound match
-            // e.g., in "blade", check if "bl" matches at position 0
-            if (
-              remainingWord.slice(i, i + target.length).toLowerCase() ===
-              target.toLowerCase()
-            ) {
-              // Found target sound - wrap in span for highlighting
-              // e.g., <span class="target-sounds">bl</span>ade
-              result += `<span class="target-sounds">${remainingWord.slice(
-                i,
-                i + target.length
-              )}</span>`
-              // Skip past entire target sound
-              i += target.length
-              foundTarget = true
-              break // Exit target sound loop
-            }
-          }
-
-          // If no target sound found at current position
-          // add single character and move to next position
-          // e.g., add "a" in "blade" after processing "bl"
-          if (!foundTarget) {
-            result += remainingWord[i]
-            i++
-          }
-        }
-
-        wordContainer.innerHTML = result
-      }
-
+      wordContainer.innerHTML = highlightTargetSounds(item, targetLetters)
       card.appendChild(wordContainer)
     }
 
@@ -1639,11 +1659,43 @@ function loadActiveUnits() {
   // Combine target letters from all active units
   let combinedTargetLetters = []
   activeUnits.forEach((u) => {
-    const unitItems = cardLibrary[u.series]?.[u.book]?.[u.unitName]
-    if (!Array.isArray(unitItems)) return
-    const metaItem = unitItems.find((item) => item.targetLetters)
-    if (metaItem && metaItem.targetLetters) {
-      combinedTargetLetters.push(metaItem.targetLetters)
+    let unitItems = cardLibrary[u.series]?.[u.book]?.[u.unitName]
+    if (!unitItems) {
+      const resolved = resolveUnitInfo(u)
+      if (resolved) {
+        unitItems = cardLibrary[resolved.series]?.[resolved.book]?.[resolved.unitName]
+      }
+    }
+    let tl = ""
+    if (Array.isArray(unitItems)) {
+      const metaItem = unitItems.find((item) => item.targetLetters || item.targetSound || item.sound)
+      if (metaItem) {
+        const raw = metaItem.targetLetters || metaItem.targetSound || metaItem.sound
+        if (Array.isArray(raw)) {
+          tl = raw.join(", ")
+        } else if (typeof raw === "string") {
+          tl = raw.trim()
+        }
+      }
+    }
+    // Fallback to unit name if no metaItem exists
+    if (!tl && u.unitName) {
+      const m = u.unitName.match(/:\s*(.+)$/)
+      if (m) {
+        const candidate = m[1].trim()
+        const longVowelMatch = candidate.match(/long\s+vowel\s+([a-z])/i)
+        const shortVowelMatch = candidate.match(/short\s+vowel\s+([a-z])/i)
+        if (longVowelMatch) {
+          tl = `${longVowelMatch[1].toLowerCase()}_e`
+        } else if (shortVowelMatch) {
+          tl = shortVowelMatch[1].toLowerCase()
+        } else if (!/vowel/i.test(candidate)) {
+          tl = candidate
+        }
+      }
+    }
+    if (tl) {
+      combinedTargetLetters.push(tl)
     }
   })
   targetLetters = combinedTargetLetters.join(", ")
@@ -3225,4 +3277,5 @@ window.adjustCardWordFontSize = adjustCardWordFontSize
 window.announceCurrentPlayerTurn = announceCurrentPlayerTurn
 window.loadPlayerSet = loadPlayerSet
 window.syncWithUpstashOnLoad = syncWithUpstashOnLoad
+window.highlightTargetSounds = highlightTargetSounds
 

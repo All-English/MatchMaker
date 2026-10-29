@@ -829,6 +829,7 @@ body {
 
 .card .target-sounds {
   color: var(--color-accent);
+  font-weight: 700;
 }
 
 /* Update the image styles */
