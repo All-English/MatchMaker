@@ -394,8 +394,14 @@ function loadPlayerSet(setName, preferActiveSession = false, shouldLoadUnits = t
         latestActiveUnits &&
         Array.isArray(latestActiveUnits.units) &&
         latestActiveUnits.units.length > 0 &&
-        (Date.now() - (latestActiveUnits.updatedAt || 0) < 2 * 60 * 60 * 1000) &&
-        (latestActiveUnits.updatedAt || 0) > (prof?.updatedAt || 0)
+        (latestActiveUnits.updatedAt || 0) > (prof?.updatedAt || 0) &&
+        (
+          latestActiveUnits.className === setName ||
+          (
+            !latestActiveUnits.className &&
+            window.SharedClassSync.isTimestampInCurrentClassSession?.(latestActiveUnits.updatedAt, setName, prof)
+          )
+        )
       ) {
         unitsToApply = latestActiveUnits.units
       }
