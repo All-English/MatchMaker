@@ -5,13 +5,15 @@ const voiceList = [
   "EXAVITQu4vr4xnSDxMaL", // Sarah
   "hpp4J3VqNfWAUOO0d1Us", // Bella
   "XrExE9yKIg1WjnnlVkGX", // Matilda
+  "Z3R5wn05IrDiVCyEkUrK", // Arabella
   "SAz9YHcvj6GT2YYXdXww", // River
   "iP95p4xoKVk53GoZ742B", // Chris
   "TX3LPaxmHKxFdv7VOQHJ", // Liam
+  "cjVigY5qzO86Huf0OWal", // Eric
+  "N2lVS1w4EtoT3dr4eOWO", // Callum
   "nPczCjzI2devNBz1zQrb", // Brian
   "pqHfZKP75CvOlQylNhV4", // Bill
   "bIHbv24MWmeRgasZH58o", // Will
-  "pNInz6obpgDQGcFmaJgB", // Adam
   "CwhRBWXzGAHq8TQ4Fs17"  // Roger
 ]
 
