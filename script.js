@@ -1819,7 +1819,7 @@ const verifyApiKey = async (apiKey) => {
 }
 
 const ELEVENLABS_PRONUNCIATION_DICT_ID = "sKcMTMc7IZdOIqGSuKGL"
-const ELEVENLABS_PRONUNCIATION_VERSION_ID = "5wJKv5m0cQSYvi7mjFS1"
+const ELEVENLABS_PRONUNCIATION_VERSION_ID = "lBWAKvEKQsfx4Ajakhf7"
 
 async function fetchElevenLabsAudio(text, voiceId) {
   const apiKey = localStorage.getItem("elevenlabs_api_key")
