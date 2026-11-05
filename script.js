@@ -409,6 +409,12 @@ function loadPlayerSet(setName, preferActiveSession = false, shouldLoadUnits = t
       }
       if (unitsToApply && unitsToApply.length > 0) {
         applyUnitsToMatchMaker(unitsToApply)
+        if (setName && window.SharedClassSync?.saveClassUnits) {
+          const canonicals = unitsToApply.map((s) => window.SharedClassSync.toCanonicalUnit(s)?.id).filter(Boolean)
+          if (canonicals.length > 0) {
+            window.SharedClassSync.saveClassUnits(setName, canonicals, activeSeriesKey)
+          }
+        }
       }
     } catch (e) {
       console.warn("Error applying units in MatchMaker:", e)
