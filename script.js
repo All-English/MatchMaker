@@ -1979,12 +1979,16 @@ const keepGoingAudioFiles = voiceList.flatMap((voiceId) => [
   `audio/keep_going/${voiceId}_v3.mp3`
 ])
 
+const unavailableKeepGoingFiles = new Set()
 let remainingKeepGoingPool = []
 let nextKeepGoingAudio = null
 
 function getNextKeepGoingAudioPath() {
+  const availableFiles = keepGoingAudioFiles.filter((path) => !unavailableKeepGoingFiles.has(path))
+  if (availableFiles.length === 0) return null
+
   if (remainingKeepGoingPool.length === 0) {
-    remainingKeepGoingPool = [...keepGoingAudioFiles]
+    remainingKeepGoingPool = [...availableFiles]
   }
   const randomIndex = Math.floor(Math.random() * remainingKeepGoingPool.length)
   return remainingKeepGoingPool.splice(randomIndex, 1)[0]
@@ -1993,7 +1997,25 @@ function getNextKeepGoingAudioPath() {
 function precacheNextKeepGoingAudio() {
   if (nextKeepGoingAudio) return
   const audioPath = getNextKeepGoingAudioPath()
+  if (!audioPath) return
+
   const audio = new Audio(audioPath)
+
+  // Gracefully handle missing files or 404s so an absent file never breaks playback
+  audio.addEventListener(
+    "error",
+    () => {
+      console.warn(`Keep-going audio unavailable (${audioPath}). Removing from pool.`)
+      unavailableKeepGoingFiles.add(audioPath)
+      remainingKeepGoingPool = remainingKeepGoingPool.filter((p) => p !== audioPath)
+      if (nextKeepGoingAudio === audio) {
+        nextKeepGoingAudio = null
+        precacheNextKeepGoingAudio()
+      }
+    },
+    { once: true }
+  )
+
   audio.load()
   nextKeepGoingAudio = audio
 }
@@ -2014,12 +2036,23 @@ async function playKeepGoingAnnouncement() {
   // Immediately pre-cache the next audio file for the upcoming match
   precacheNextKeepGoingAudio()
 
+  if (!currentAudio) return
+
   playingKeepGoingAudio = currentAudio
-  currentAudio.currentTime = 0
+  try {
+    currentAudio.currentTime = 0
+  } catch (e) {}
 
   // Final check before playing
   if (currentTurnCardClicked) return
-  currentAudio.play().catch((e) => console.error("Error playing 'Keep going!' audio:", e))
+
+  try {
+    await currentAudio.play()
+  } catch (e) {
+    if (e.name !== "AbortError") {
+      console.warn("Could not play 'Keep going!' audio (skipped):", e.message)
+    }
+  }
 }
 
 function resetCachedVoices() {
