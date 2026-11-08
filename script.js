@@ -2898,9 +2898,13 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (!selectedSetName) return
 
       if (confirm(`Are you sure you want to delete the list "${selectedSetName}"?`)) {
-        const sets = getPlayerSets()
-        delete sets[selectedSetName]
-        savePlayerSets(sets)
+        if (window.SharedClassSync?.deleteClass) {
+          window.SharedClassSync.deleteClass(selectedSetName)
+        } else {
+          const sets = getPlayerSets()
+          delete sets[selectedSetName]
+          savePlayerSets(sets)
+        }
 
         populatePlayerSetSelect()
         playerSetSelect.value = ""
@@ -3010,8 +3014,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Silently refresh saved class list dropdown on background Convex updates without interrupting active game
   window.addEventListener("ae-cloud-sync-updated", () => {
-    if (typeof renderPlayerSetsDropdown === "function") {
-      renderPlayerSetsDropdown()
+    if (typeof populatePlayerSetSelect === "function") {
+      populatePlayerSetSelect()
     }
   })
   loadSavedRulesPreference()
