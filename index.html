@@ -137,17 +137,21 @@
       <h3 class="sidebar-section-title">Sync Settings</h3>
       <details id="sync-settings-details" class="voice-settings-details">
         <summary id="sync-settings-summary"
-          data-tooltip="Sync player lists and active player sessions across devices.">Upstash Redis Config</summary>
+          data-tooltip="Sync class rosters, schedules, and units across devices.">Cloud Sync</summary>
         <div class="voice-settings-content">
           <div class="api-key-container">
-            <label for="upstash-url-input">Upstash REST URL</label>
-            <input type="text" id="upstash-url-input" class="sidebar-input" placeholder="https://...upstash.io">
+            <label for="sync-code-input">Sync Code</label>
+            <input type="text" id="sync-code-input" class="sidebar-input" placeholder="e.g. judson-english" autocomplete="off">
           </div>
           <div class="api-key-container">
-            <label for="upstash-token-input">Upstash REST Token</label>
-            <input type="password" id="upstash-token-input" class="sidebar-input" placeholder="Enter Token">
+            <label for="sync-pin-input">4-Digit PIN (Optional)</label>
+            <input type="password" id="sync-pin-input" class="sidebar-input" placeholder="Optional 4-digit PIN" maxlength="4" inputmode="numeric" autocomplete="off">
           </div>
-          <button id="save-sync-btn" class="sidebar-btn">Save & Sync</button>
+          <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+            <button id="connect-sync-btn" type="button" class="sidebar-btn" style="flex: 1;">Connect Existing</button>
+            <button id="create-sync-btn" type="button" class="sidebar-btn secondary-btn" style="flex: 1;">Create New</button>
+          </div>
+          <button id="disconnect-sync-btn" type="button" class="sidebar-btn secondary-btn" style="display: none; margin-top: 0.35rem; width: 100%;">Disconnect</button>
           <div id="sync-status" class="api-key-status"></div>
         </div>
       </details>
