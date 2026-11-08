@@ -139,18 +139,24 @@
         <summary id="sync-settings-summary"
           data-tooltip="Sync class rosters, schedules, and units across devices.">Convex Cloud Sync</summary>
         <div class="voice-settings-content">
+          <p style="font-size: 0.73rem; color: var(--theme-text-muted, #718096); line-height: 1.35; margin: 0 0 0.55rem 0;">
+            Pick your own unique Sync Code (e.g. your name or school) to sync class rosters, attendance, and active units in real-time across all your devices and games.
+          </p>
           <div class="api-key-container">
-            <label for="sync-code-input">Sync Code</label>
-            <input type="text" id="sync-code-input" class="sidebar-input" placeholder="e.g. judson-english" autocomplete="off">
+            <label for="sync-code-input">Sync Code <span style="font-size: 0.72rem; font-weight: normal; opacity: 0.85;">(choose your own)</span></label>
+            <input type="text" id="sync-code-input" class="sidebar-input" placeholder="Pick a code (e.g. teacher-sarah)" autocomplete="off">
           </div>
           <div class="api-key-container">
-            <label for="sync-pin-input">4-Digit PIN (Optional)</label>
-            <input type="password" id="sync-pin-input" class="sidebar-input" placeholder="Optional 4-digit PIN" maxlength="4" inputmode="numeric" autocomplete="off">
+            <label for="sync-pin-input">4-Digit PIN <span style="font-size: 0.72rem; font-weight: normal; opacity: 0.85;">(optional lock)</span></label>
+            <input type="password" id="sync-pin-input" class="sidebar-input" placeholder="Optional PIN to protect code" maxlength="4" inputmode="numeric" autocomplete="off">
           </div>
           <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
             <button id="connect-sync-btn" type="button" class="sidebar-btn" style="flex: 1;">Connect Existing</button>
             <button id="create-sync-btn" type="button" class="sidebar-btn secondary-btn" style="flex: 1;">Create New</button>
           </div>
+          <p style="font-size: 0.68rem; color: var(--theme-text-muted, #718096); margin: 0.4rem 0 0 0; line-height: 1.3;">
+            First time? Pick a code and click <strong>Create New</strong>.<br>On another device? Enter your code and click <strong>Connect Existing</strong>.
+          </p>
           <button id="disconnect-sync-btn" type="button" class="sidebar-btn secondary-btn" style="display: none; margin-top: 0.35rem; width: 100%;">Disconnect</button>
           <div id="sync-status" class="api-key-status"></div>
         </div>
