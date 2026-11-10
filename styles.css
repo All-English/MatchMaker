@@ -1642,6 +1642,83 @@ option {
   }
 }
 
+.word-voice-container {
+  margin-top: var(--space-xs);
+  margin-bottom: var(--space-2xs);
+}
+
+.word-voice-container label {
+  font-size: var(--fs-200);
+  color: var(--text-secondary);
+  display: block;
+  margin-bottom: var(--space-3xs);
+}
+
+select.sidebar-input,
+#word-voice-mode-select {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.35);
+  color: var(--text-primary);
+  border: 1px solid rgba(11, 30, 81, 0.25);
+  transform: none !important;
+  margin-top: 0;
+}
+
+select.sidebar-input:hover,
+#word-voice-mode-select:hover {
+  background-color: rgba(255, 255, 255, 0.65) !important;
+  border-color: var(--button-background) !important;
+  color: var(--text-primary) !important;
+  transform: none !important;
+  box-shadow: 0 0 0 2px rgba(34, 100, 248, 0.18) !important;
+}
+
+select.sidebar-input:focus,
+#word-voice-mode-select:focus {
+  background-color: rgba(255, 255, 255, 0.75) !important;
+  border-color: var(--button-background) !important;
+  color: var(--text-primary) !important;
+  box-shadow: 0 0 0 3px rgba(34, 100, 248, 0.25) !important;
+  outline: none;
+  transform: none !important;
+}
+
+select.sidebar-input option,
+#word-voice-mode-select option {
+  background-color: #ffffff;
+  color: hsl(224, 76%, 18%);
+}
+
+@media (prefers-color-scheme: dark) {
+  select.sidebar-input,
+  #word-voice-mode-select {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.25);
+    color: var(--text-primary);
+  }
+
+  select.sidebar-input:hover,
+  #word-voice-mode-select:hover {
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    border-color: var(--button-background) !important;
+    color: var(--text-primary) !important;
+    transform: none !important;
+    box-shadow: 0 0 0 2px rgba(34, 100, 248, 0.3) !important;
+  }
+
+  select.sidebar-input:focus,
+  #word-voice-mode-select:focus {
+    background-color: rgba(0, 0, 0, 0.65) !important;
+    color: var(--text-primary) !important;
+  }
+
+  select.sidebar-input option,
+  #word-voice-mode-select option {
+    background-color: hsl(224, 76%, 15%);
+    color: #ffffff;
+  }
+}
+
 .api-key-status {
   font-family: var(--font-primary);
   font-size: var(--fs-200);
