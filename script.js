@@ -1867,6 +1867,19 @@ function stopAllTurnVoices() {
   }
 }
 
+function getPlayerTurnAudioUrls(playerName) {
+  if (typeof window !== "undefined" && window.SharedClassSync?.getPlayerTurnAudioUrls) {
+    return window.SharedClassSync.getPlayerTurnAudioUrls(playerName);
+  }
+  const clean = String(playerName || "").trim().toLowerCase().replace(/[^a-z0-9_-]+/g, "_");
+  if (!clean) return [];
+  return [
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v1.mp3`,
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v2.mp3`,
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v3.mp3`
+  ];
+}
+
 const announceCurrentPlayerTurn = async (isAutomatic = true) => {
   if (isAutomatic && !isNarratorEnabled) return
   if (players.length === 0) return
@@ -1881,6 +1894,38 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
 
   stopAllTurnVoices()
 
+  // 1. Try pre-recorded CDN audio variation first (randomly choose 1 of 3 variations)
+  if (!activePlayer.preloadedTurnAudios) {
+    activePlayer.preloadedTurnAudios = []
+    const urls = getPlayerTurnAudioUrls(activePlayer.name)
+    urls.forEach((url) => {
+      try {
+        const a = new Audio()
+        a.preload = "auto"
+        a.src = url
+        activePlayer.preloadedTurnAudios.push(a)
+      } catch (e) {}
+    })
+  }
+
+  if (activePlayer.preloadedTurnAudios && activePlayer.preloadedTurnAudios.length > 0) {
+    const candidateAudio = activePlayer.preloadedTurnAudios[Math.floor(Math.random() * activePlayer.preloadedTurnAudios.length)]
+    if (candidateAudio) {
+      candidateAudio.currentTime = 0
+      playingTurnAudio = candidateAudio
+
+      try {
+        if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
+        await candidateAudio.play()
+        return
+      } catch (e) {
+        // Fall back gracefully if CDN audio is unreachable or not yet downloaded
+        console.debug("Pre-recorded audio playback fallback:", e.message)
+      }
+    }
+  }
+
+  // 2. Fallback: cached dynamic ElevenLabs audio
   if (activePlayer.turnAudio) {
     activePlayer.turnAudio.currentTime = 0
     playingTurnAudio = activePlayer.turnAudio
@@ -1890,6 +1935,7 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
     return
   }
 
+  // 3. Fallback: Dynamic ElevenLabs generation (if API key configured)
   const apiKey = localStorage.getItem("elevenlabs_api_key")
   if (apiKey) {
     const audio = await fetchElevenLabsAudio(`${activePlayer.name}'s turn`, activePlayer.voiceId)
@@ -1903,7 +1949,7 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
     }
   }
 
-  // Fallback: Web Speech API if ElevenLabs is not configured or failed
+  // 4. Final Fallback: Web Speech API
   if (typeof window !== "undefined" && window.speechSynthesis) {
     if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
     try {
@@ -1918,10 +1964,28 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
 }
 
 async function precachePlayerTurnAudios() {
-  const apiKey = localStorage.getItem("elevenlabs_api_key")
-  if (!apiKey || players.length === 0) return
+  if (players.length === 0) return
 
-  // Run caching sequentially in the background for each player
+  // 1. Preload pre-recorded CDN audio variations for all players
+  for (const player of players) {
+    if (!player.preloadedTurnAudios) {
+      player.preloadedTurnAudios = []
+      const urls = getPlayerTurnAudioUrls(player.name)
+      urls.forEach((url) => {
+        try {
+          const a = new Audio()
+          a.preload = "auto"
+          a.src = url
+          player.preloadedTurnAudios.push(a)
+        } catch (e) {}
+      })
+    }
+  }
+
+  // 2. Fallback: Dynamic ElevenLabs caching if API key is configured
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  if (!apiKey) return
+
   for (const player of players) {
     if (player.turnAudio) continue
 
