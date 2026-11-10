@@ -2594,16 +2594,37 @@ gameBoard.addEventListener("click", async function (event) {
           clickedContent.includes(".jpeg") ||
           clickedContent.includes(".webp")
 
+        const wordVoiceMode = (document.getElementById("word-voice-mode-select")?.value || localStorage.getItem("word_voice_mode") || "mixed").toLowerCase()
+
         // For Smart Phonics 1, images and words have different sounds
         if (
           currentBook === "1" &&
           currentSeries === "SmartPhonics" &&
-          isImageCard
+          isImageCard &&
+          soundItem.imageSound
         ) {
-          // Play the image vocabulary sound
-          activeCardAudio = new Audio(soundItem.imageSound)
+          // Play the image vocabulary sound (with multi-voice support)
+          const vocab = soundItem.imageSound.split("/").pop().replace(/\.mp3$/i, "")
+          let candidateUrls = [soundItem.imageSound]
+          if (typeof window !== "undefined" && window.SharedClassSync?.getWordAudioUrls) {
+            candidateUrls = window.SharedClassSync.getWordAudioUrls(vocab, { officialUrl: soundItem.imageSound, mode: wordVoiceMode })
+          }
+          const chosenUrl = candidateUrls[Math.floor(Math.random() * candidateUrls.length)]
+          activeCardAudio = new Audio(chosenUrl)
+        } else if (soundItem.word && soundItem.word.length > 1) {
+          // Play word sound (with multi-voice support)
+          let candidateUrls = soundItem.sound ? [soundItem.sound] : []
+          if (typeof window !== "undefined" && window.SharedClassSync?.getWordAudioUrls) {
+            candidateUrls = window.SharedClassSync.getWordAudioUrls(soundItem.word, { officialUrl: soundItem.sound, mode: wordVoiceMode })
+          }
+          if (candidateUrls.length > 0) {
+            const chosenUrl = candidateUrls[Math.floor(Math.random() * candidateUrls.length)]
+            activeCardAudio = new Audio(chosenUrl)
+          } else {
+            activeCardAudio = soundMap[soundItem.word]
+          }
         } else {
-          // Play the regular sound
+          // Play the regular single-letter sound (Aa..Zz) or fallback
           activeCardAudio = soundMap[soundItem.word]
         }
 
@@ -3204,6 +3225,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (!isNarratorEnabled) {
           stopAllTurnVoices()
         }
+      })
+    }
+
+    const wordVoiceModeSelect = document.getElementById("word-voice-mode-select")
+    if (wordVoiceModeSelect) {
+      wordVoiceModeSelect.value = localStorage.getItem("word_voice_mode") || "mixed"
+      wordVoiceModeSelect.addEventListener("change", (e) => {
+        localStorage.setItem("word_voice_mode", e.target.value)
       })
     }
   }
