@@ -1954,8 +1954,86 @@ function getPlayerTurnAudioUrls(playerName) {
   return [
     `https://all-english-media.allenglish.link/audio/players/${clean}_v1.mp3`,
     `https://all-english-media.allenglish.link/audio/players/${clean}_v2.mp3`,
-    `https://all-english-media.allenglish.link/audio/players/${clean}_v3.mp3`
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v3.mp3`,
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v4.mp3`,
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v5.mp3`,
+    `https://all-english-media.allenglish.link/audio/players/${clean}_v6.mp3`
   ];
+}
+
+const dynamicPlayerTurnCache = new Map()
+
+function getDynamicTurnEntry(playerName) {
+  const key = String(playerName || "").trim().toLowerCase()
+  if (!key) return null
+  if (!dynamicPlayerTurnCache.has(key)) {
+    dynamicPlayerTurnCache.set(key, {
+      audios: [],
+      usedVoiceIds: [],
+      playedIndices: new Set(),
+      lastPlayedIndex: -1,
+      pendingPromise: null
+    })
+  }
+  return dynamicPlayerTurnCache.get(key)
+}
+
+async function generateNextDynamicTurnAudio(playerName, preferredVoiceId = null) {
+  const entry = getDynamicTurnEntry(playerName)
+  if (!entry) return null
+  if (entry.pendingPromise) return entry.pendingPromise
+
+  const spec = window.SharedClassSync?.getNextDynamicTurnSpec?.(
+    playerName,
+    entry.usedVoiceIds,
+    entry.audios.length,
+    preferredVoiceId
+  )
+  if (!spec) return null
+
+  entry.pendingPromise = (async () => {
+    try {
+      const audio = await fetchElevenLabsAudio(spec.text, spec.voiceId)
+      if (audio) {
+        entry.usedVoiceIds.push(spec.voiceId)
+        entry.audios.push(audio)
+        return audio
+      }
+    } finally {
+      entry.pendingPromise = null
+    }
+    return null
+  })()
+
+  return entry.pendingPromise
+}
+
+function pickDynamicTurnAudio(playerName) {
+  const entry = getDynamicTurnEntry(playerName)
+  if (!entry || entry.audios.length === 0) return null
+  let candidates = entry.audios.map((_, i) => i).filter((i) => !entry.playedIndices.has(i))
+  if (candidates.length === 0) {
+    entry.playedIndices.clear()
+    candidates = entry.audios.map((_, i) => i).filter((i) => i !== entry.lastPlayedIndex)
+    if (candidates.length === 0) candidates = [0]
+  }
+  const chosenIdx = candidates[Math.floor(Math.random() * candidates.length)]
+  entry.playedIndices.add(chosenIdx)
+  entry.lastPlayedIndex = chosenIdx
+  return entry.audios[chosenIdx]
+}
+
+function clearDynamicTurnCache() {
+  for (const entry of dynamicPlayerTurnCache.values()) {
+    for (const audio of entry.audios) {
+      if (audio?.src && audio.src.startsWith("blob:")) {
+        try {
+          URL.revokeObjectURL(audio.src)
+        } catch (e) {}
+      }
+    }
+  }
+  dynamicPlayerTurnCache.clear()
 }
 
 const announceCurrentPlayerTurn = async (isAutomatic = true) => {
@@ -1972,16 +2050,14 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
 
   stopAllTurnVoices()
 
-  // 1. Try pre-recorded CDN audio variation first (randomly choose 1 of 3 variations)
+  // 1. Try pre-recorded CDN audio variation first (randomly choose 1 of available variations)
   if (!activePlayer.preloadedTurnAudios) {
     activePlayer.preloadedTurnAudios = []
     const urls = getPlayerTurnAudioUrls(activePlayer.name)
     urls.forEach((url) => {
       try {
-        const a = new Audio()
-        a.preload = "auto"
-        a.src = url
-        activePlayer.preloadedTurnAudios.push(a)
+        const a = getOrCreatePreloadedAudio(url)
+        if (a) activePlayer.preloadedTurnAudios.push(a)
       } catch (e) {}
     })
   }
@@ -2003,26 +2079,34 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
     }
   }
 
-  // 2. Fallback: cached dynamic ElevenLabs audio
-  if (activePlayer.turnAudio) {
-    activePlayer.turnAudio.currentTime = 0
-    playingTurnAudio = activePlayer.turnAudio
-    // Final check before playing if automatic
+  // 2. Fallback: lazy multi-variation ElevenLabs caching (Option B)
+  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  const cachedDynamic = pickDynamicTurnAudio(activePlayer.name)
+  if (cachedDynamic) {
+    cachedDynamic.currentTime = 0
+    playingTurnAudio = cachedDynamic
     if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
-    activePlayer.turnAudio.play().catch((e) => console.error("Error playing turn audio:", e))
+    cachedDynamic.play().catch((e) => console.error("Error playing turn audio:", e))
+    if (apiKey) {
+      generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId).catch(() => {})
+    }
     return
   }
 
-  // 3. Fallback: Dynamic ElevenLabs generation (if API key configured)
-  const apiKey = localStorage.getItem("elevenlabs_api_key")
+  // 3. Fallback: generate first dynamic ElevenLabs variation on demand (if API key configured)
   if (apiKey) {
-    const audio = await fetchElevenLabsAudio(`${activePlayer.name}'s turn`, activePlayer.voiceId)
+    const audio = await generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId)
     if (audio) {
-      activePlayer.turnAudio = audio
-      // Final check before playing if automatic
+      const entry = getDynamicTurnEntry(activePlayer.name)
+      if (entry && entry.audios.length > 0) {
+        entry.playedIndices.add(0)
+        entry.lastPlayedIndex = 0
+      }
       if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
       playingTurnAudio = audio
       audio.play().catch((e) => console.error("Error playing turn audio:", e))
+      // Warm up next variation in the background for the player's next turn
+      generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId).catch(() => {})
       return
     }
   }
@@ -2032,7 +2116,8 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
     if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
     try {
       window.speechSynthesis.cancel()
-      const utterance = new SpeechSynthesisUtterance(`${activePlayer.name}'s turn`)
+      const phrase = window.SharedClassSync?.getRandomTurnPhrase?.(activePlayer.name) || `${activePlayer.name}'s turn!`
+      const utterance = new SpeechSynthesisUtterance(phrase)
       utterance.rate = 0.9
       window.speechSynthesis.speak(utterance)
     } catch (e) {
@@ -2064,16 +2149,15 @@ async function precachePlayerTurnAudios() {
     }
   }
 
-  // 2. Fallback: Dynamic ElevenLabs caching only for players without pre-recorded CDN audio
+  // 2. Fallback: Lazy-seed variation #1 via ElevenLabs only for players without pre-recorded CDN audio
   const apiKey = localStorage.getItem("elevenlabs_api_key")
   if (!apiKey) return
 
   for (const player of players) {
-    if (player.turnAudio || (player.preloadedTurnAudios && player.preloadedTurnAudios.length > 0)) continue
-
-    const audio = await fetchElevenLabsAudio(`${player.name}'s turn`, player.voiceId)
-    if (audio) {
-      player.turnAudio = audio
+    if (player.preloadedTurnAudios && player.preloadedTurnAudios.length > 0) continue
+    const entry = getDynamicTurnEntry(player.name)
+    if (entry && entry.audios.length === 0) {
+      await generateNextDynamicTurnAudio(player.name, player.voiceId)
     }
   }
 }
@@ -2169,6 +2253,7 @@ function resetCachedVoices() {
       player.turnAudio = null
     }
   })
+  clearDynamicTurnCache()
   if (nextKeepGoingAudio) {
     try {
       nextKeepGoingAudio.pause()
