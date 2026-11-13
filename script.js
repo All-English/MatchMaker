@@ -559,33 +559,65 @@ function preloadSingleSound(src) {
   return audio
 }
 
-function playSound(sound) {
+function playSound(sound, { suppressErrorLog = false } = {}) {
   return new Promise((resolve) => {
     let settled = false
 
-    const cleanup = () => {
+    const finish = (success = true) => {
       if (settled) return
       settled = true
       clearTimeout(safetyTimeout)
-      sound.removeEventListener("ended", cleanup)
-      sound.removeEventListener("interrupted", cleanup)
-      sound.removeEventListener("error", cleanup)
-      resolve()
+      sound.removeEventListener("ended", onEnded)
+      sound.removeEventListener("interrupted", onEnded)
+      sound.removeEventListener("error", onError)
+      resolve(success)
     }
 
-    sound.addEventListener("ended", cleanup, { once: true })
-    sound.addEventListener("interrupted", cleanup, { once: true })
-    sound.addEventListener("error", cleanup, { once: true })
+    const onEnded = () => finish(true)
+    const onError = () => finish(false)
+
+    sound.addEventListener("ended", onEnded, { once: true })
+    sound.addEventListener("interrupted", onEnded, { once: true })
+    sound.addEventListener("error", onError, { once: true })
 
     // Safety timeout: no phonics clip in MatchMaker exceeds 4s.
     // If ended event never fires for any reason, release lock after 5s max so game never gets stuck.
-    const safetyTimeout = setTimeout(cleanup, 5000)
+    const safetyTimeout = setTimeout(() => finish(true), 5000)
 
     sound.play().catch((error) => {
-      console.error("Error playing sound:", error)
-      cleanup()
+      if (!suppressErrorLog) {
+        console.error("Error playing sound:", error)
+      }
+      finish(false)
     })
   })
+}
+
+async function playCardAudioWithFallback(candidateUrls, fallbackAudio) {
+  const uniqueUrls = [...new Set((candidateUrls || []).filter(Boolean))]
+  if (uniqueUrls.length > 0) {
+    const firstIndex = Math.floor(Math.random() * uniqueUrls.length)
+    const orderedUrls = [
+      uniqueUrls[firstIndex],
+      ...uniqueUrls.filter((_, idx) => idx !== firstIndex),
+    ]
+
+    for (let i = 0; i < orderedUrls.length; i++) {
+      const audio = new Audio(orderedUrls[i])
+      activeCardAudio = audio
+      const hasFallback = i < orderedUrls.length - 1 || Boolean(fallbackAudio)
+      const ok = await playSound(audio, { suppressErrorLog: hasFallback })
+      if (ok) return true
+    }
+  }
+
+  if (fallbackAudio) {
+    fallbackAudio.currentTime = 0
+    activeCardAudio = fallbackAudio
+    return await playSound(fallbackAudio)
+  }
+
+  return false
 }
 
 function getRandomMatchColor() {
@@ -1982,12 +2014,12 @@ async function precachePlayerTurnAudios() {
     }
   }
 
-  // 2. Fallback: Dynamic ElevenLabs caching if API key is configured
+  // 2. Fallback: Dynamic ElevenLabs caching only for players without pre-recorded CDN audio
   const apiKey = localStorage.getItem("elevenlabs_api_key")
   if (!apiKey) return
 
   for (const player of players) {
-    if (player.turnAudio) continue
+    if (player.turnAudio || (player.preloadedTurnAudios && player.preloadedTurnAudios.length > 0)) continue
 
     const audio = await fetchElevenLabsAudio(`${player.name}'s turn`, player.voiceId)
     if (audio) {
@@ -2595,6 +2627,14 @@ gameBoard.addEventListener("click", async function (event) {
           clickedContent.includes(".webp")
 
         const wordVoiceMode = (document.getElementById("word-voice-mode-select")?.value || localStorage.getItem("word_voice_mode") || "mixed").toLowerCase()
+        const trimmedWord = (soundItem.word || "").trim()
+        const isSingleLetterWord =
+          trimmedWord.length <= 1 ||
+          (/^([A-Z])[a-z]$/.test(trimmedWord) && trimmedWord[0].toLowerCase() === trimmedWord[1]) ||
+          Boolean(soundItem.sound && soundItem.sound.includes("SingleLetters/"))
+        const isLocalLetsSmile =
+          currentSeries === "LetsSmile" ||
+          Boolean(soundItem.sound && /^(\.\/)?data\/LetsSmile\//i.test(soundItem.sound))
 
         // For Smart Phonics 1, images and words have different sounds
         if (
@@ -2609,27 +2649,22 @@ gameBoard.addEventListener("click", async function (event) {
           if (typeof window !== "undefined" && window.SharedClassSync?.getWordAudioUrls) {
             candidateUrls = window.SharedClassSync.getWordAudioUrls(vocab, { officialUrl: soundItem.imageSound, mode: wordVoiceMode })
           }
-          const chosenUrl = candidateUrls[Math.floor(Math.random() * candidateUrls.length)]
-          activeCardAudio = new Audio(chosenUrl)
-        } else if (soundItem.word && soundItem.word.length > 1) {
+          await playCardAudioWithFallback(candidateUrls, soundMap[soundItem.image])
+        } else if (!isSingleLetterWord && !isLocalLetsSmile && trimmedWord.length > 1) {
           // Play word sound (with multi-voice support)
           let candidateUrls = soundItem.sound ? [soundItem.sound] : []
           if (typeof window !== "undefined" && window.SharedClassSync?.getWordAudioUrls) {
             candidateUrls = window.SharedClassSync.getWordAudioUrls(soundItem.word, { officialUrl: soundItem.sound, mode: wordVoiceMode })
           }
-          if (candidateUrls.length > 0) {
-            const chosenUrl = candidateUrls[Math.floor(Math.random() * candidateUrls.length)]
-            activeCardAudio = new Audio(chosenUrl)
-          } else {
-            activeCardAudio = soundMap[soundItem.word]
-          }
+          await playCardAudioWithFallback(candidateUrls, soundMap[soundItem.word])
         } else {
-          // Play the regular single-letter sound (Aa..Zz) or fallback
-          activeCardAudio = soundMap[soundItem.word]
-        }
-
-        if (activeCardAudio) {
-          await playSound(activeCardAudio)
+          // Play the regular single-letter sound (Aa..Zz), local LetsSmile audio, or fallback
+          const directAudio = soundMap[soundItem.word] || (soundItem.sound ? new Audio(soundItem.sound) : null)
+          if (directAudio) {
+            directAudio.currentTime = 0
+            activeCardAudio = directAudio
+            await playSound(directAudio)
+          }
         }
       } catch (err) {
         console.error("Error playing card audio:", err)
