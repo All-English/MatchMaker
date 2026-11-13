@@ -529,34 +529,79 @@ const matchSound = preloadSingleSound("data/soundfx/match-sound.mp3")
 const completeSound = preloadSingleSound("data/soundfx/complete-sound.mp3")
 const wrongSound = preloadSingleSound("data/soundfx/wrong-sound.mp3")
 
+const cardWordAudioCache = new Map()
+
+function getOrCreatePreloadedAudio(src) {
+  if (!src) return null
+  const key = String(src).trim()
+  if (!key) return null
+  if (cardWordAudioCache.has(key)) {
+    return cardWordAudioCache.get(key)
+  }
+  const audio = new Audio()
+  audio.preload = "auto"
+  audio.src = key
+  try {
+    audio.load()
+  } catch (e) {}
+  cardWordAudioCache.set(key, audio)
+  return audio
+}
+
 // Function to preload audio
 function preloadSoundsArray(items) {
-  return items
-    .filter((item) => item.sound)
-    .reduce((acc, item) => {
-      // Preload the regular sound
-      const audio = new Audio()
-      audio.preload = "auto"
-      audio.src = item.sound
-      acc[item.word] = audio
+  const validItems = items.filter((item) => item.sound)
+  const map = validItems.reduce((acc, item) => {
+    acc[item.word] = getOrCreatePreloadedAudio(item.sound)
+    if (item.imageSound) {
+      acc[item.image] = getOrCreatePreloadedAudio(item.imageSound)
+    }
+    return acc
+  }, {})
 
-      // Preload the image sound for Book1
-      if (item.imageSound) {
-        const imgAudio = new Audio()
-        imgAudio.preload = "auto"
-        imgAudio.src = item.imageSound
-        acc[item.image] = imgAudio
-      }
+  // Also preload multi-voice CDN variations once the word manifest is ready
+  if (typeof window !== "undefined" && window.SharedClassSync?.getWordAudioUrls) {
+    Promise.resolve(window.SharedClassSync.loadWordAudioManifest?.())
+      .catch(() => null)
+      .then(() => {
+        const mode = (
+          document.getElementById("word-voice-mode-select")?.value ||
+          localStorage.getItem("word_voice_mode") ||
+          "mixed"
+        ).toLowerCase()
+        for (const item of validItems) {
+          const trimmedWord = (item.word || "").trim()
+          const isSingleLetterWord =
+            trimmedWord.length <= 1 ||
+            (/^([A-Z])[a-z]$/.test(trimmedWord) && trimmedWord[0].toLowerCase() === trimmedWord[1]) ||
+            Boolean(item.sound && item.sound.includes("SingleLetters/"))
+          const isLocalLetsSmile =
+            currentSeries === "LetsSmile" ||
+            Boolean(item.sound && /^(\.\/)?data\/LetsSmile\//i.test(item.sound))
 
-      return acc
-    }, {})
+          if (item.imageSound) {
+            const vocab = item.imageSound.split("/").pop().replace(/\.mp3$/i, "")
+            const urls = window.SharedClassSync.getWordAudioUrls(vocab, {
+              officialUrl: item.imageSound,
+              mode,
+            })
+            urls.forEach((u) => getOrCreatePreloadedAudio(u))
+          } else if (!isSingleLetterWord && !isLocalLetsSmile && trimmedWord.length > 1) {
+            const urls = window.SharedClassSync.getWordAudioUrls(trimmedWord, {
+              officialUrl: item.sound,
+              mode,
+            })
+            urls.forEach((u) => getOrCreatePreloadedAudio(u))
+          }
+        }
+      })
+  }
+
+  return map
 }
 
 function preloadSingleSound(src) {
-  const audio = new Audio()
-  audio.preload = "auto"
-  audio.src = src
-  return audio
+  return getOrCreatePreloadedAudio(src)
 }
 
 function playSound(sound, { suppressErrorLog = false } = {}) {
@@ -603,7 +648,8 @@ async function playCardAudioWithFallback(candidateUrls, fallbackAudio) {
     ]
 
     for (let i = 0; i < orderedUrls.length; i++) {
-      const audio = new Audio(orderedUrls[i])
+      const audio = getOrCreatePreloadedAudio(orderedUrls[i]) || new Audio(orderedUrls[i])
+      audio.currentTime = 0
       activeCardAudio = audio
       const hasFallback = i < orderedUrls.length - 1 || Boolean(fallbackAudio)
       const ok = await playSound(audio, { suppressErrorLog: hasFallback })
@@ -1998,17 +2044,21 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
 async function precachePlayerTurnAudios() {
   if (players.length === 0) return
 
+  try {
+    await window.SharedClassSync?.loadPlayerAudioManifest?.()
+  } catch (e) {}
+
+  if (players.length === 0) return
+
   // 1. Preload pre-recorded CDN audio variations for all players
   for (const player of players) {
-    if (!player.preloadedTurnAudios) {
+    const urls = getPlayerTurnAudioUrls(player.name)
+    if (!player.preloadedTurnAudios || (urls.length > 0 && player.preloadedTurnAudios.length !== urls.length)) {
       player.preloadedTurnAudios = []
-      const urls = getPlayerTurnAudioUrls(player.name)
       urls.forEach((url) => {
         try {
-          const a = new Audio()
-          a.preload = "auto"
-          a.src = url
-          player.preloadedTurnAudios.push(a)
+          const a = getOrCreatePreloadedAudio(url)
+          if (a) player.preloadedTurnAudios.push(a)
         } catch (e) {}
       })
     }
