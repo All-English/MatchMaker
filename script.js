@@ -524,12 +524,12 @@ function populatePlayerSetSelect() {
   if (deleteBtn) deleteBtn.style.display = "none"
 }
 
+const cardWordAudioCache = new Map()
+
 // Preload sound files
 const matchSound = preloadSingleSound("data/soundfx/match-sound.mp3")
 const completeSound = preloadSingleSound("data/soundfx/complete-sound.mp3")
 const wrongSound = preloadSingleSound("data/soundfx/wrong-sound.mp3")
-
-const cardWordAudioCache = new Map()
 
 function getOrCreatePreloadedAudio(src) {
   if (!src) return null
