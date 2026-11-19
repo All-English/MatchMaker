@@ -22,7 +22,7 @@ const VARIATIONS = [
 ];
 
 const ELEVENLABS_PRONUNCIATION_DICT_ID = "sKcMTMc7IZdOIqGSuKGL";
-const ELEVENLABS_PRONUNCIATION_VERSION_ID = "mP7aeKcxpImcYdvw1JQt";
+const ELEVENLABS_PRONUNCIATION_VERSION_ID = "3mTzTQzzgwh88Eo3YcRd";
 
 function getVoicesFromScript() {
   const content = fs.readFileSync(SCRIPT_PATH, "utf8");
