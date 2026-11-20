@@ -1962,6 +1962,55 @@ function getPlayerTurnAudioUrls(playerName) {
 }
 
 const dynamicPlayerTurnCache = new Map()
+const preloadedTurnHistory = new Map()
+const turnPhraseHistory = new Map()
+let turnAnnouncementSeq = 0
+
+const TURN_FALLBACK_PHRASE_FNS = [
+  (name) => `${name}'s turn!`,
+  (name) => `It's ${name}'s turn!`,
+  (name) => `Your turn, ${name}!`,
+  (name) => `You're up, ${name}!`,
+  (name) => `Ready, ${name}? It's your turn!`,
+  (name) => `Go for it, ${name}!`
+]
+
+function getTurnCycleEntry(historyMap, playerName) {
+  const key = String(playerName || "").trim().toLowerCase()
+  if (!key) return null
+  if (!historyMap.has(key)) {
+    historyMap.set(key, {
+      playedKeys: new Set(),
+      lastKey: null
+    })
+  }
+  return historyMap.get(key)
+}
+
+/** Pick an unplayed entry for a player, resetting only after all entries are exhausted. */
+function pickUnexhaustedEntry(historyMap, playerName, items, getKey, excludeKeys = null) {
+  if (!Array.isArray(items) || items.length === 0) return null
+  const indexed = items
+    .map((item, idx) => ({ item, key: String(getKey(item, idx)) }))
+    .filter(({ item, key }) => Boolean(item) && (!excludeKeys || !excludeKeys.has(key)))
+  if (indexed.length === 0) return null
+
+  const entry = getTurnCycleEntry(historyMap, playerName)
+  if (!entry) {
+    return indexed[Math.floor(Math.random() * indexed.length)]
+  }
+
+  let candidates = indexed.filter(({ key }) => !entry.playedKeys.has(key))
+  if (candidates.length === 0) {
+    entry.playedKeys.clear()
+    candidates = indexed.filter(({ key }) => key !== entry.lastKey)
+    if (candidates.length === 0) {
+      candidates = indexed
+    }
+  }
+
+  return candidates[Math.floor(Math.random() * candidates.length)]
+}
 
 function getDynamicTurnEntry(playerName) {
   const key = String(playerName || "").trim().toLowerCase()
@@ -2048,9 +2097,14 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
   // If automatic and player clicked a card before the announcement is made, skip it
   if (isAutomatic && currentTurnCardClicked) return
 
+  const mySeq = ++turnAnnouncementSeq
   stopAllTurnVoices()
 
-  // 1. Try pre-recorded CDN audio variation first (randomly choose 1 of available variations)
+  const shouldAbortTurnAnnouncement = () =>
+    mySeq !== turnAnnouncementSeq ||
+    (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex))
+
+  // 1. Try pre-recorded CDN audio variation (exhaust all variations before repeating)
   if (!activePlayer.preloadedTurnAudios) {
     activePlayer.preloadedTurnAudios = []
     const urls = getPlayerTurnAudioUrls(activePlayer.name)
@@ -2063,16 +2117,43 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
   }
 
   if (activePlayer.preloadedTurnAudios && activePlayer.preloadedTurnAudios.length > 0) {
-    const candidateAudio = activePlayer.preloadedTurnAudios[Math.floor(Math.random() * activePlayer.preloadedTurnAudios.length)]
-    if (candidateAudio) {
+    const failedKeys = new Set()
+    const historyEntry = getTurnCycleEntry(preloadedTurnHistory, activePlayer.name)
+
+    while (failedKeys.size < activePlayer.preloadedTurnAudios.length) {
+      const picked = pickUnexhaustedEntry(
+        preloadedTurnHistory,
+        activePlayer.name,
+        activePlayer.preloadedTurnAudios,
+        (audio, idx) => audio?.src || idx,
+        failedKeys
+      )
+      if (!picked?.item) break
+      if (shouldAbortTurnAnnouncement()) return
+
+      const candidateAudio = picked.item
+      const candidateKey = picked.key
+      const hadPlayedKey = historyEntry ? historyEntry.playedKeys.has(candidateKey) : false
+      const prevLastKey = historyEntry ? historyEntry.lastKey : null
+
+      if (historyEntry) {
+        historyEntry.playedKeys.add(candidateKey)
+        historyEntry.lastKey = candidateKey
+      }
+
       candidateAudio.currentTime = 0
       playingTurnAudio = candidateAudio
 
       try {
-        if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
         await candidateAudio.play()
         return
       } catch (e) {
+        if (e?.name === "AbortError" || shouldAbortTurnAnnouncement()) return
+        if (historyEntry) {
+          if (!hadPlayedKey) historyEntry.playedKeys.delete(candidateKey)
+          historyEntry.lastKey = prevLastKey
+        }
+        failedKeys.add(candidateKey)
         // Fall back gracefully if CDN audio is unreachable or not yet downloaded
         console.debug("Pre-recorded audio playback fallback:", e.message)
       }
@@ -2081,42 +2162,65 @@ const announceCurrentPlayerTurn = async (isAutomatic = true) => {
 
   // 2. Fallback: lazy multi-variation ElevenLabs caching (Option B)
   const apiKey = localStorage.getItem("elevenlabs_api_key")
-  const cachedDynamic = pickDynamicTurnAudio(activePlayer.name)
-  if (cachedDynamic) {
-    cachedDynamic.currentTime = 0
-    playingTurnAudio = cachedDynamic
-    if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
-    cachedDynamic.play().catch((e) => console.error("Error playing turn audio:", e))
-    if (apiKey) {
-      generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId).catch(() => {})
-    }
-    return
-  }
+  const dynamicEntry = getDynamicTurnEntry(activePlayer.name)
+  const hasUnplayedDynamic = Boolean(
+    dynamicEntry && dynamicEntry.audios.some((_, i) => !dynamicEntry.playedIndices.has(i))
+  )
 
-  // 3. Fallback: generate first dynamic ElevenLabs variation on demand (if API key configured)
-  if (apiKey) {
-    const audio = await generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId)
-    if (audio) {
-      const entry = getDynamicTurnEntry(activePlayer.name)
-      if (entry && entry.audios.length > 0) {
-        entry.playedIndices.add(0)
-        entry.lastPlayedIndex = 0
+  if (apiKey && dynamicEntry && !hasUnplayedDynamic) {
+    const nextAudio = await generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId)
+    if (shouldAbortTurnAnnouncement()) return
+    if (nextAudio) {
+      const newIdx = dynamicEntry.audios.indexOf(nextAudio)
+      if (newIdx !== -1) {
+        dynamicEntry.playedIndices.add(newIdx)
+        dynamicEntry.lastPlayedIndex = newIdx
       }
-      if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
-      playingTurnAudio = audio
-      audio.play().catch((e) => console.error("Error playing turn audio:", e))
+      nextAudio.currentTime = 0
+      playingTurnAudio = nextAudio
+      nextAudio.play().catch((e) => {
+        if (e?.name !== "AbortError") console.error("Error playing turn audio:", e)
+      })
       // Warm up next variation in the background for the player's next turn
       generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId).catch(() => {})
       return
     }
   }
 
-  // 4. Final Fallback: Web Speech API
+  const cachedDynamic = pickDynamicTurnAudio(activePlayer.name)
+  if (cachedDynamic) {
+    if (shouldAbortTurnAnnouncement()) return
+    cachedDynamic.currentTime = 0
+    playingTurnAudio = cachedDynamic
+    cachedDynamic.play().catch((e) => {
+      if (e?.name !== "AbortError") console.error("Error playing turn audio:", e)
+    })
+    if (apiKey) {
+      generateNextDynamicTurnAudio(activePlayer.name, activePlayer.voiceId).catch(() => {})
+    }
+    return
+  }
+
+  // 3. Final Fallback: Web Speech API
   if (typeof window !== "undefined" && window.speechSynthesis) {
-    if (isAutomatic && (currentTurnCardClicked || currentPlayerIndex !== targetPlayerIndex)) return
+    if (shouldAbortTurnAnnouncement()) return
     try {
       window.speechSynthesis.cancel()
-      const phrase = window.SharedClassSync?.getRandomTurnPhrase?.(activePlayer.name) || `${activePlayer.name}'s turn!`
+      const pickedPhrase = pickUnexhaustedEntry(
+        turnPhraseHistory,
+        activePlayer.name,
+        TURN_FALLBACK_PHRASE_FNS,
+        (_, idx) => idx
+      )
+      let phrase = `${activePlayer.name}'s turn!`
+      if (pickedPhrase) {
+        const phraseHistory = getTurnCycleEntry(turnPhraseHistory, activePlayer.name)
+        if (phraseHistory) {
+          phraseHistory.playedKeys.add(pickedPhrase.key)
+          phraseHistory.lastKey = pickedPhrase.key
+        }
+        phrase = pickedPhrase.item(activePlayer.name)
+      }
       const utterance = new SpeechSynthesisUtterance(phrase)
       utterance.rate = 0.9
       window.speechSynthesis.speak(utterance)
@@ -2138,7 +2242,7 @@ async function precachePlayerTurnAudios() {
   // 1. Preload pre-recorded CDN audio variations for all players
   for (const player of players) {
     const urls = getPlayerTurnAudioUrls(player.name)
-    if (!player.preloadedTurnAudios || (urls.length > 0 && player.preloadedTurnAudios.length !== urls.length)) {
+    if (!player.preloadedTurnAudios || player.preloadedTurnAudios.length !== urls.length) {
       player.preloadedTurnAudios = []
       urls.forEach((url) => {
         try {
@@ -2254,6 +2358,8 @@ function resetCachedVoices() {
     }
   })
   clearDynamicTurnCache()
+  preloadedTurnHistory.clear()
+  turnPhraseHistory.clear()
   if (nextKeepGoingAudio) {
     try {
       nextKeepGoingAudio.pause()
