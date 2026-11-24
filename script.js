@@ -351,6 +351,8 @@ function loadPlayerSet(setName, preferActiveSession = false, shouldLoadUnits = t
       const latestActiveUnits = window.SharedClassSync.getActiveUnits?.()
 
       let unitsToApply = (prof && Array.isArray(prof.units) && prof.units.length > 0) ? prof.units : null
+      let adoptedFromActiveUnits = false
+      let adoptedUpdatedAt = prof?.updatedAt || 0
       if (
         latestActiveUnits &&
         Array.isArray(latestActiveUnits.units) &&
@@ -365,15 +367,22 @@ function loadPlayerSet(setName, preferActiveSession = false, shouldLoadUnits = t
         )
       ) {
         unitsToApply = latestActiveUnits.units
+        adoptedFromActiveUnits = true
+        adoptedUpdatedAt = latestActiveUnits.updatedAt || Date.now()
       }
       if (unitsToApply && unitsToApply.length > 0) {
         applyUnitsToMatchMaker(unitsToApply)
-        if (setName && window.SharedClassSync?.saveClassUnits) {
+        if (adoptedFromActiveUnits && adoptedUpdatedAt > 0 && setName && window.SharedClassSync?.saveClassUnits) {
           const canonicals = unitsToApply.map((s) => window.SharedClassSync.toCanonicalUnit(s)?.id).filter(Boolean)
           if (canonicals.length > 0) {
-            window.SharedClassSync.saveClassUnits(setName, canonicals, activeSeriesKey)
+            window.SharedClassSync.saveClassUnits(setName, canonicals, latestActiveUnits.curriculumId || activeSeriesKey, adoptedUpdatedAt)
           }
         }
+      } else {
+        activeUnits = []
+        if (typeof loadActiveUnits === "function") loadActiveUnits()
+        if (typeof updateUnitsURL === "function") updateUnitsURL()
+        if (typeof renderWordSelectionUI === "function") renderWordSelectionUI()
       }
     } catch (e) {
       console.warn("Error applying units in MatchMaker:", e)
@@ -473,7 +482,14 @@ async function syncWithUpstashOnLoad() {
               latestActiveUnits &&
               Array.isArray(latestActiveUnits.units) &&
               latestActiveUnits.units.length > 0 &&
-              (latestActiveUnits.updatedAt || 0) >= (prof?.updatedAt || 0)
+              (latestActiveUnits.updatedAt || 0) > (prof?.updatedAt || 0) &&
+              (
+                latestActiveUnits.className === activeSession.className ||
+                (
+                  !latestActiveUnits.className &&
+                  window.SharedClassSync.isTimestampInCurrentClassSession?.(latestActiveUnits.updatedAt, activeSession.className, prof)
+                )
+              )
             ) {
               unitsToApply = latestActiveUnits.units
             }
@@ -521,7 +537,12 @@ function populatePlayerSetSelect() {
     select.appendChild(opt)
   })
 
-  if (deleteBtn) deleteBtn.style.display = "none"
+  if (currentLoadedClassName && sets[currentLoadedClassName]) {
+    select.value = currentLoadedClassName
+    if (deleteBtn) deleteBtn.style.display = "inline-block"
+  } else if (deleteBtn) {
+    deleteBtn.style.display = "none"
+  }
 }
 
 const cardWordAudioCache = new Map()
@@ -3211,13 +3232,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const dayChks = document.querySelectorAll(".new-set-day-chk:checked")
         const selectedDays = Array.from(dayChks).map((c) => c.value)
 
-        const canonicals = activeUnits.map((u) => {
-          const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
-          if (u.series === "LetsSmile") {
-            return `LS|${u.book}|${unitNum}`
-          }
-          return `L${u.book}U${unitNum}`
-        })
+        const canonicals = activeUnits
+          .map((u) => {
+            const unitNum = u.unitName.match(/Unit (\d+)/)?.[1] || "1"
+            return window.SharedClassSync.toCanonicalUnit(`${u.series}|${u.book}|${unitNum}`)?.id
+          })
+          .filter(Boolean)
 
         const sched = {
           days: selectedDays.length > 0 ? selectedDays : window.SharedClassSync.parseScheduleFromName(setName).days,
@@ -3230,9 +3250,14 @@ document.addEventListener("DOMContentLoaded", async () => {
           profiles = JSON.parse(localStorage.getItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY) || "{}")
         } catch {}
 
+        const resolvedSeries = window.SharedClassSync.toSeriesSlug
+          ? window.SharedClassSync.toSeriesSlug(activeSeriesKey)
+          : (activeSeriesKey || "smart-phonics")
+
         profiles[setName] = {
           schedule: sched,
-          units: canonicals,
+          units: canonicals.length > 0 ? canonicals : (profiles[setName]?.units || []),
+          curriculumId: resolvedSeries,
           updatedAt: Date.now()
         }
         localStorage.setItem(window.SharedClassSync.SHARED_CLASS_PROFILES_KEY, JSON.stringify(profiles))
